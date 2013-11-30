@@ -11,14 +11,14 @@ namespace RedCell.ProScrum.WebUI.Controllers
 {
     public class ProyectoController : Controller
     {
-        private DB_PROSCRUMContext db = new DB_PROSCRUMContext();
+        private ProScrumContext db = new ProScrumContext();
 
         //
         // GET: /Proyecto/
 
         public ActionResult Index()
         {
-            var proyectoes = db.Proyectoes.Include(p => p.Contacto).Include(p => p.Usuario);
+            var proyectoes = db.Proyectos.Include(p => p.Contacto).Include(p => p.Usuario);
             return View(proyectoes.ToList());
         }
 
@@ -27,7 +27,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Proyecto proyecto = db.Proyectoes.Find(id);
+            Proyecto proyecto = db.Proyectos.Find(id);
             if (proyecto == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.ContactoId = new SelectList(db.Contactoes, "ContactoId", "Nombres");
+            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres");
             ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo");
             return View();
         }
@@ -54,12 +54,12 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Proyectoes.Add(proyecto);
+                db.Proyectos.Add(proyecto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ContactoId = new SelectList(db.Contactoes, "ContactoId", "Nombres", proyecto.ContactoId);
+            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
             ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
             return View(proyecto);
         }
@@ -69,12 +69,12 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Proyecto proyecto = db.Proyectoes.Find(id);
+            Proyecto proyecto = db.Proyectos.Find(id);
             if (proyecto == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ContactoId = new SelectList(db.Contactoes, "ContactoId", "Nombres", proyecto.ContactoId);
+            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
             ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
             return View(proyecto);
         }
@@ -92,7 +92,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ContactoId = new SelectList(db.Contactoes, "ContactoId", "Nombres", proyecto.ContactoId);
+            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
             ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
             return View(proyecto);
         }
@@ -102,7 +102,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Proyecto proyecto = db.Proyectoes.Find(id);
+            Proyecto proyecto = db.Proyectos.Find(id);
             if (proyecto == null)
             {
                 return HttpNotFound();
@@ -117,8 +117,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Proyecto proyecto = db.Proyectoes.Find(id);
-            db.Proyectoes.Remove(proyecto);
+            Proyecto proyecto = db.Proyectos.Find(id);
+            db.Proyectos.Remove(proyecto);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

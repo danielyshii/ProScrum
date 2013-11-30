@@ -1,0 +1,102 @@
+﻿@model RedCell.ProScrum.WebUI.Models.Proyecto
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Proyecto</legend>
+
+        @Html.HiddenFor(model => model.ProyectoId)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.JefeProyectoId, "Usuario")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("JefeProyectoId", String.Empty)
+            @Html.ValidationMessageFor(model => model.JefeProyectoId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ContactoId, "Contacto")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ContactoId", String.Empty)
+            @Html.ValidationMessageFor(model => model.ContactoId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Nombre)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Nombre)
+            @Html.ValidationMessageFor(model => model.Nombre)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Mnemonico)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Mnemonico)
+            @Html.ValidationMessageFor(model => model.Mnemonico)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.InicioEstimado)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.InicioEstimado)
+            @Html.ValidationMessageFor(model => model.InicioEstimado)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FinEstimado)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FinEstimado)
+            @Html.ValidationMessageFor(model => model.FinEstimado)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.HorasEstimadas)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.HorasEstimadas)
+            @Html.ValidationMessageFor(model => model.HorasEstimadas)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EstadoId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EstadoId)
+            @Html.ValidationMessageFor(model => model.EstadoId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EsEliminado)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EsEliminado)
+            @Html.ValidationMessageFor(model => model.EsEliminado)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

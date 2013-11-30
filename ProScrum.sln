@@ -1,15 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TransferObjects", "TransferObjects", "{F309360A-D5B4-45A2-B7EE-0CE887BE89C5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{CE3C099F-812C-489E-8DE2-03E83C181C01}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{869D57CB-4D9B-4F6C-8F85-BA3570C37805}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{BE8AF3C2-41D0-4171-86FC-221ED19E999F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{4F299C03-35C4-4D9A-A153-E70EDB6E617A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCell.ProScrum.WebUI", "RedCell.ProScrum.WebUI\RedCell.ProScrum.WebUI.csproj", "{CC9EFE29-4A1B-410F-9929-B736536581CE}"
 EndProject

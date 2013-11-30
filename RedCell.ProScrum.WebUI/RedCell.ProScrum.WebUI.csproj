@@ -130,9 +130,33 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Actividad.cs" />
+    <Compile Include="Models\Competencia.cs" />
+    <Compile Include="Models\Contacto.cs" />
+    <Compile Include="Models\DB_PROSCRUMContext.cs" />
+    <Compile Include="Models\Empresa.cs" />
+    <Compile Include="Models\IntegranteProyecto.cs" />
+    <Compile Include="Models\Mapping\ActividadMap.cs" />
+    <Compile Include="Models\Mapping\CompetenciaMap.cs" />
+    <Compile Include="Models\Mapping\ContactoMap.cs" />
+    <Compile Include="Models\Mapping\EmpresaMap.cs" />
+    <Compile Include="Models\Mapping\IntegranteProyectoMap.cs" />
+    <Compile Include="Models\Mapping\ProyectoMap.cs" />
+    <Compile Include="Models\Mapping\SprintMap.cs" />
+    <Compile Include="Models\Mapping\sysdiagramMap.cs" />
+    <Compile Include="Models\Mapping\TipoActividadMap.cs" />
+    <Compile Include="Models\Mapping\UserStoryMap.cs" />
+    <Compile Include="Models\Mapping\UsuarioMap.cs" />
+    <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\Sprint.cs" />
+    <Compile Include="Models\sysdiagram.cs" />
+    <Compile Include="Models\TipoActividad.cs" />
+    <Compile Include="Models\UserStory.cs" />
+    <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +232,9 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -220,10 +246,14 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Proyecto\Index.cshtml" />
+    <Content Include="Views\Proyecto\Details.cshtml" />
+    <Content Include="Views\Proyecto\Create.cshtml" />
+    <Content Include="Views\Proyecto\Edit.cshtml" />
+    <Content Include="Views\Proyecto\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

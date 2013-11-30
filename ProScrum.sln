@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedCell.ProScrum.TransferObjects", "RedCell.ProScrum.TransferObjects", "{F309360A-D5B4-45A2-B7EE-0CE887BE89C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedCell.ProSrum.Web", "RedCell.ProSrum.Web", "{CE3C099F-812C-489E-8DE2-03E83C181C01}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedCell.ProScrum.Common", "RedCell.ProScrum.Common", "{869D57CB-4D9B-4F6C-8F85-BA3570C37805}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedCell.ProScrum.Service", "RedCell.ProScrum.Service", "{BE8AF3C2-41D0-4171-86FC-221ED19E999F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedCell.ProScrum.Data", "RedCell.ProScrum.Data", "{4F299C03-35C4-4D9A-A153-E70EDB6E617A}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

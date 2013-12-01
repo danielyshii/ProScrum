@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Recursos = RedCell.ProScrum.WebUI.ProyectoResourceStrings;
 
 namespace RedCell.ProScrum.WebUI.Models
 {
@@ -16,6 +18,8 @@ namespace RedCell.ProScrum.WebUI.Models
         public int JefeProyectoId { get; set; }
         public int ContactoId { get; set; }
         public string Nombre { get; set; }
+
+        [Display(Name = "Mnemonico")]
         public string Mnemonico { get; set; }
         public System.DateTime InicioEstimado { get; set; }
         public System.DateTime FinEstimado { get; set; }

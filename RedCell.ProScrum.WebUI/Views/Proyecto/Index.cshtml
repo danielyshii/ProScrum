@@ -1,81 +1,50 @@
 ﻿@model IEnumerable<RedCell.ProScrum.WebUI.Models.Proyecto>
+@using Recursos = RedCell.ProScrum.WebUI.ProyectoResourceStrings
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@section css
+{
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Usuario.Codigo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Contacto.Nombres)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Mnemonico)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InicioEstimado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FinEstimado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.HorasEstimadas)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EstadoId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EsEliminado)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Usuario.Codigo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Contacto.Nombres)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Mnemonico)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InicioEstimado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FinEstimado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HorasEstimadas)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EstadoId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EsEliminado)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProyectoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProyectoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProyectoId })
-        </td>
-    </tr>
 }
 
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryevents")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Index/loader.js")"></script>
+}
+
+<h2>@Recursos.Proyecto_Titulo
+</h2>
+
+<p>
+    @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create")
+</p>
+
+<table data-bind='visible: proyectos().length > 0'>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+            <th>Encargado</th>
+            <th />
+        </tr>
+    </thead>
+    <tbody data-bind='foreach: proyectos'>
+        <tr>
+            <td data-bind='text: Cliente'></td>
+            <td data-bind='text: Descripcion'></td>
+            <td data-bind='text: Estado'></td>
+            <td data-bind='text: Encargado'></td>
+            <td>
+                <a href="#" data-bind='click: $root.removeProject'>Actualizar</a>
+                <a href="#" data-bind='click: $root.updateProject'>Eliminar</a>
+            </td>
+        </tr>
+    </tbody>
 </table>
+
+<p> <!--ko text: proyectos().length--><!--/ko--> Registros Mostrados</p>

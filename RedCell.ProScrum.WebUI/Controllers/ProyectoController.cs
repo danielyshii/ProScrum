@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RedCell.ProScrum.WebUI.Models;
+using RedCell.ProScrum.WebUI.ViewModels.Proyecto;
 
 namespace RedCell.ProScrum.WebUI.Controllers
 {
@@ -21,6 +22,17 @@ namespace RedCell.ProScrum.WebUI.Controllers
             var proyectoes = db.Proyectos.Include(p => p.Contacto).Include(p => p.Usuario);
             return View(proyectoes.ToList());
         }
+
+
+        public JsonResult ListProyects()
+        {
+            var proyectos = new List<ListaProyectoViewModel>();
+            proyectos.Add(new ListaProyectoViewModel { ProyectoId = 1, Cliente = "Pepo", Descripcion = "Miro", Estado= "Cerrao", Encargado="CDLL1" });
+            proyectos.Add(new ListaProyectoViewModel { ProyectoId = 2, Cliente = "Papa", Descripcion = "Nada", Estado = "Abierto", Encargado = "CDLL2" });
+
+            return Json(proyectos, JsonRequestBehavior.AllowGet);
+        }
+
 
         //
         // GET: /Proyecto/Details/5

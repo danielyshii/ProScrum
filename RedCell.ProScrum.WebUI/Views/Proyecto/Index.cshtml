@@ -12,7 +12,6 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/jqueryevents")
     <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Index/loader.js")"></script>
 }
 
@@ -23,28 +22,44 @@
     @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create")
 </p>
 
-<table data-bind='visible: proyectos().length > 0'>
-    <thead>
-        <tr>
-            <th>Cliente</th>
-            <th>Descripcion</th>
-            <th>Estado</th>
-            <th>Encargado</th>
-            <th />
-        </tr>
-    </thead>
-    <tbody data-bind='foreach: proyectos'>
-        <tr>
-            <td data-bind='text: Cliente'></td>
-            <td data-bind='text: Descripcion'></td>
-            <td data-bind='text: Estado'></td>
-            <td data-bind='text: Encargado'></td>
-            <td>
-                <a href="#" data-bind='click: $root.removeProject'>Actualizar</a>
-                <a href="#" data-bind='click: $root.updateProject'>Eliminar</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div id="pnl-FiltrosConsultaProyecto">
 
-<p> <!--ko text: proyectos().length--><!--/ko--> Registros Mostrados</p>
+    <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione'"></select>
+    <input data-bind="value: descripcion"/>
+    <button data-bind='click: searchProject'>Buscar</button>
+
+    <span data-bind="text: empresaSeleccionada"></span>
+</div>
+
+
+<div id="pnl-ProyectosActivos">
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Descripcion</th>
+                <th>Estado</th>
+                <th>Encargado</th>
+                <th />
+            </tr>
+        </thead>
+        <tbody data-bind='foreach: proyectos'>
+            <tr>
+                <td data-bind='text: Cliente'></td>
+                <td data-bind='text: Descripcion'></td>
+                <td data-bind='text: Estado'></td>
+                <td data-bind='text: Encargado'></td>
+                <td>
+                    <a href="#" data-bind='click: $root.removeProject'>Actualizar</a>
+                    <a href="#" data-bind='click: $root.updateProject'>Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <!--ko text: proyectos().length-->
+        <!--/ko-->
+        Registros Mostrados</p>
+
+</div>

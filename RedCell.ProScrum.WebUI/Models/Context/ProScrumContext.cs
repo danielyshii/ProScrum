@@ -29,6 +29,7 @@ namespace RedCell.ProScrum.WebUI.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
             modelBuilder.Configurations.Add(new ActividadMap());
             modelBuilder.Configurations.Add(new CompetenciaMap());
             modelBuilder.Configurations.Add(new ContactoMap());

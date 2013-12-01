@@ -19,18 +19,72 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Index()
         {
-            var proyectoes = db.Proyectos.Include(p => p.Contacto).Include(p => p.Usuario);
-            return View(proyectoes.ToList());
+            return View();
         }
 
 
-        public JsonResult ListProyects()
+        public JsonResult ListarCliente()
         {
-            var proyectos = new List<ListaProyectoViewModel>();
-            proyectos.Add(new ListaProyectoViewModel { ProyectoId = 1, Cliente = "Pepo", Descripcion = "Miro", Estado= "Cerrao", Encargado="CDLL1" });
-            proyectos.Add(new ListaProyectoViewModel { ProyectoId = 2, Cliente = "Papa", Descripcion = "Nada", Estado = "Abierto", Encargado = "CDLL2" });
+            var resultado = from cliente in db.Empresas
+                            join contacto in db.Contactos
+                            on cliente.EmpresaId equals contacto.EmpresaId
+                            join proyecto in db.Proyectos
+                            on contacto.ContactoId equals proyecto.ContactoId
+                            select new ListaEmpresasViewModel
+                            {
+                                EmpresaId = cliente.EmpresaId,
+                                Nombre = cliente.Nombre
+                            };
 
-            return Json(proyectos, JsonRequestBehavior.AllowGet);
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ListarProyectos(ParametroConsultaProyectoViewModel parametro)
+        {
+
+            int? empresaId = null;
+            string descripcion = null; 
+            
+            if(parametro != null){
+                empresaId = parametro.empresaId;
+                descripcion = parametro.descripcion;
+            }
+
+            var resultado = new List<ListaProyectoViewModel>();
+
+            var proyectos2 = from proyecto in db.Proyectos
+                             join contacto in db.Contactos
+                             on proyecto.ContactoId equals contacto.ContactoId
+                             join empresa in db.Empresas.Where(x => x.EmpresaId == (empresaId.HasValue ? empresaId.Value : x.EmpresaId))
+                             on contacto.EmpresaId equals empresa.EmpresaId
+                             join integrante in db.IntegrantesProyecto
+                             on proyecto.ProyectoId equals integrante.ProyectoId
+                             join encargado in db.Usuarios
+                             on integrante.IntegranteId equals encargado.UsuarioId
+                             where proyecto.EsEliminado == false
+                             && integrante.EsEncargado == true
+                             select new ListaProyectoViewModel
+                             {
+                                 ProyectoId = proyecto.ProyectoId,
+                                 Cliente = empresa.Nombre,
+                                 Descripcion = proyecto.Nombre,
+                                 Estado = "Cerrao!",
+                                 Encargado = encargado.Nombres + " " + encargado.Apellidos 
+                             };
+
+            if (!String.IsNullOrWhiteSpace(descripcion))
+            {
+                proyectos2 = proyectos2.Where(p => p.Descripcion.ToLower().Contains(descripcion.ToLower()));
+            }
+
+            resultado = proyectos2.ToList();
+
+            //var proyectos = new List<ListaProyectoViewModel>();
+            //proyectos.Add(new ListaProyectoViewModel { ProyectoId = 1, Cliente = "Pepo", Descripcion = "Miro", Estado = "Cerrao", Encargado = "CDLL1" });
+            //proyectos.Add(new ListaProyectoViewModel { ProyectoId = 2, Cliente = "Papa", Descripcion = "Nada", Estado = "Abierto", Encargado = "CDLL2" });
+
+            return Json(resultado);
         }
 
 

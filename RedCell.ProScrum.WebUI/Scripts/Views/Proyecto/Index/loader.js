@@ -1,7 +1,6 @@
-﻿
-var ProjectoModel = function () {
+﻿var ProjectoModel = function () {
     var self = this;
-    self.proyectos = ko.observableArray([]);
+    self.proyectos = ko.observableArray();
 
     self.refresh = function (parametros) {
         $.ajax({
@@ -29,27 +28,29 @@ var ProjectoModel = function () {
 
 var listaProyectoViewModel = new ProjectoModel();
 
-var FiltroModel = function (empresas) {
+var FiltroModel = function () {
     var self = this;
     self.empresaSeleccionada = ko.observable();
-    self.empresas = ko.observableArray(empresas);
+    self.empresas = ko.observableArray();
     self.descripcion = ko.observable();
 
     self.searchProject = function () {
         var parametros = ko.toJSON({ parametro: { empresaId: this.empresaSeleccionada(), descripcion: this.descripcion() } });
-        debugger;
         listaProyectoViewModel.refresh(parametros)
+    }
+
+    self.refresh = function () {
+        $.getJSON('/Proyecto/ListarCliente', function (data) {
+            self.empresas(data);
+        });
     }
 };
 
-
+var filtroViewModel = new FiltroModel();
 
 
 ko.applyBindings(listaProyectoViewModel, document.getElementById("pnl-ProyectosActivos"));
 listaProyectoViewModel.refresh();
 
-$.getJSON('/Proyecto/ListarCliente', function (data) {
-    var viewModel = new FiltroModel(data);
-    ko.applyBindings(viewModel, document.getElementById("pnl-FiltrosConsultaProyecto"));
-
-});
+ko.applyBindings(filtroViewModel, document.getElementById("pnl-FiltrosConsultaProyecto"));
+filtroViewModel.refresh();

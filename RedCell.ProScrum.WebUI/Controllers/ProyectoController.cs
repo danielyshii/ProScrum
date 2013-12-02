@@ -22,8 +22,47 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return View();
         }
 
+        public JsonResult ListarIntegrante(string patron)
+        {
+            var resultado = from integrante in db.Usuarios
+                            where integrante.Nombres.ToLower().Contains(patron.ToLower()) ||
+                            integrante.Apellidos.ToLower().Contains(patron.ToLower())
+                            select new ListaIntegranteViewModel
+                            {
+                                IntegranteId = integrante.UsuarioId,
+                                Nombre = integrante.Nombres + " " + integrante.Apellidos
+                            };
 
-        public JsonResult ListarCliente()
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ListarContacto(int empresaId)
+        {
+
+            var resultado = from contacto in db.Contactos
+                            where contacto.EmpresaId == empresaId
+                            select new ListaContactoViewModel
+                            {
+                                ContactoId = contacto.ContactoId,
+                                Nombre = contacto.Nombres + " " + contacto.Apellidos
+                            };
+
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ListarClientes() {
+
+            var resultado = from cliente in db.Empresas
+                           select new ListaEmpresasViewModel
+                           {
+                               EmpresaId = cliente.EmpresaId,
+                               Nombre = cliente.Nombre
+                           };
+
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ListarClienteConProyectos()
         {
             var resultado = from cliente in db.Empresas
                             join contacto in db.Contactos
@@ -106,8 +145,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres");
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo");
             return View();
         }
 

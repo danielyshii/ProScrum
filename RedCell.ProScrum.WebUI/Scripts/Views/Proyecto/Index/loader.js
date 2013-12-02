@@ -40,7 +40,7 @@ var FiltroModel = function () {
     }
 
     self.refresh = function () {
-        $.getJSON('/Proyecto/ListarCliente', function (data) {
+        $.getJSON('/Proyecto/ListarClienteConProyectos', function (data) {
             self.empresas(data);
         });
     }

@@ -21,8 +21,8 @@ namespace RedCell.ProScrum.WebUI.Models
 
         [Display(Name = "Mnemonico")]
         public string Mnemonico { get; set; }
-        public System.DateTime InicioEstimado { get; set; }
-        public System.DateTime FinEstimado { get; set; }
+        public DateTime InicioEstimado { get; set; }
+        public DateTime FinEstimado { get; set; }
         public int HorasEstimadas { get; set; }
         public int EstadoId { get; set; }
         public bool EsEliminado { get; set; }

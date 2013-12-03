@@ -30,6 +30,13 @@
         <input data-bind="value: mnemonico" />
     </div>
 
+    <div class="editor-label">
+        Nombre
+    </div>
+    <div class="editor-field">
+        <input data-bind="value: nombre" />
+    </div>
+
     <p>
         <button data-bind='click: save'>Registrar</button>
         <button data-bind='click: reset'>Limpiar</button>
@@ -47,6 +54,33 @@
     </div>
 
 </fieldset>
+
+<fieldset>
+    <legend>Datos adicionales</legend>
+
+    <div class="editor-label">
+        Inicio Estimado
+    </div>
+    <div class="editor-field">
+        <input data-bind="datepicker: inicioEstimado , datepickerOptions: { minDate: new Date() }" />        
+    </div>
+
+    <div class="editor-label">
+        Fin Estimado
+    </div>
+    <div class="editor-field">
+        <input data-bind="datepicker: finEstimado , datepickerOptions: { minDate: new Date() }" />
+    </div>
+
+    <div class="editor-label">
+        Horas Asignadas
+    </div>
+    <div class="editor-field">
+        <input type="text" data-bind="value: horasEstimadas" />
+    </div>
+
+</fieldset>
+
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>

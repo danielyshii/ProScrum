@@ -151,20 +151,39 @@ namespace RedCell.ProScrum.WebUI.Controllers
         //
         // POST: /Proyecto/Create
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Proyecto proyecto)
+        //[ValidateAntiForgeryToken]
+        [HttpPost]        
+        public ActionResult Create(RegistroProyectoViewModel proyecto)
         {
             if (ModelState.IsValid)
             {
-                db.Proyectos.Add(proyecto);
+                var oProyecto = new Proyecto();
+
+                oProyecto.ContactoId = proyecto.ContactoId;
+                oProyecto.JefeProyectoId = 2;
+                oProyecto.Nombre = proyecto.Nombre;
+                oProyecto.Mnemonico = proyecto.Mnemonico;
+                oProyecto.InicioEstimado = proyecto.InicioEstimado;
+                oProyecto.FinEstimado = proyecto.FinEstimado;
+                oProyecto.HorasEstimadas = proyecto.HorasEstimadas;
+                oProyecto.EstadoId = 1;
+                oProyecto.EsEliminado = false;
+
+                foreach (var integrante in proyecto.Integrantes)
+                {
+                    var oIntegrante = new IntegranteProyecto();
+                    oIntegrante.IntegranteId = integrante.IntegranteId;
+                    oIntegrante.EsEncargado = integrante.EsEncargado;
+                    oIntegrante.EsEliminado = false;
+                    oProyecto.IntegranteProyectoes.Add(oIntegrante);
+                }
+                
+                db.Proyectos.Add(oProyecto);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                
             }
 
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
-            return View(proyecto);
+            return RedirectToAction("Index");
         }
 
         //

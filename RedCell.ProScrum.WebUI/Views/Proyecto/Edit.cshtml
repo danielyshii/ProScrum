@@ -1,102 +1,95 @@
-﻿@model RedCell.ProScrum.WebUI.Models.Proyecto
+﻿@model RedCell.ProScrum.WebUI.ViewModels.Proyecto.RegistroProyectoViewModel
 
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Nuevo Proyecto</h2>
 
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+<fieldset>
+    <legend>Datos de Proyecto</legend>
 
-    <fieldset>
-        <legend>Proyecto</legend>
+    <div class="editor-label">
+        Empresa
+    </div>
+    <div class="editor-field">
+        <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione', event: { change: empresaChange }"></select>
+    </div>
 
-        @Html.HiddenFor(model => model.ProyectoId)
+    <div class="editor-label">
+        Contacto
+    </div>
+    <div class="editor-field">
+        <select data-bind="options: contactos, optionsText: 'Nombre', optionsValue: 'ContactoId', value: contactoSeleccionado, optionsCaption: 'Seleccione'"></select>
+    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.JefeProyectoId, "Usuario")
-        </div>
-        <div class="editor-field">
-            @Html.DropDownList("JefeProyectoId", String.Empty)
-            @Html.ValidationMessageFor(model => model.JefeProyectoId)
-        </div>
+    <div class="editor-label">
+        Mnemonico
+    </div>
+    <div class="editor-field">
+        <input data-bind="value: mnemonico" />
+    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ContactoId, "Contacto")
-        </div>
-        <div class="editor-field">
-            @Html.DropDownList("ContactoId", String.Empty)
-            @Html.ValidationMessageFor(model => model.ContactoId)
-        </div>
+    <div class="editor-label">
+        Nombre
+    </div>
+    <div class="editor-field">
+        <input data-bind="value: nombre" />
+    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Nombre)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Nombre)
-            @Html.ValidationMessageFor(model => model.Nombre)
-        </div>
+    <p>
+        <button data-bind='click: save'>Registrar</button>
+        <button data-bind='click: reset'>Limpiar</button>
+    </p>
+</fieldset>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Mnemonico)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Mnemonico)
-            @Html.ValidationMessageFor(model => model.Mnemonico)
-        </div>
+<fieldset>
+    <legend>Equipo de Proyecto</legend>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.InicioEstimado)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.InicioEstimado)
-            @Html.ValidationMessageFor(model => model.InicioEstimado)
-        </div>
+    <div class="editor-label">
+        Nombre del Integrante
+    </div>
+    <div class="editor-field">
+        <input type="text" data-bind="autoComplete: integrantesProyecto, source: '/Proyecto/ListarIntegrante'" />
+    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.FinEstimado)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.FinEstimado)
-            @Html.ValidationMessageFor(model => model.FinEstimado)
-        </div>
+</fieldset>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.HorasEstimadas)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.HorasEstimadas)
-            @Html.ValidationMessageFor(model => model.HorasEstimadas)
-        </div>
+<fieldset>
+    <legend>Datos adicionales</legend>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.EstadoId)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EstadoId)
-            @Html.ValidationMessageFor(model => model.EstadoId)
-        </div>
+    <div class="editor-label">
+        Inicio Estimado
+    </div>
+    <div class="editor-field">
+        <input data-bind="datepicker: inicioEstimado, datepickerOptions: { minDate: new Date() }" />        
+    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.EsEliminado)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EsEliminado)
-            @Html.ValidationMessageFor(model => model.EsEliminado)
-        </div>
+    <div class="editor-label">
+        Fin Estimado
+    </div>
+    <div class="editor-field">
+        <input data-bind="datepicker: finEstimado, datepickerOptions: { minDate: new Date() }" />
+    </div>
 
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
+    <div class="editor-label">
+        Horas Asignadas
+    </div>
+    <div class="editor-field">
+        <input type="text" data-bind="value: horasEstimadas" />
+    </div>
+
+</fieldset>
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+@section css {
+    @Styles.Render("~/Content/themes/base/css")
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Edit/loader.js")"></script>
 }

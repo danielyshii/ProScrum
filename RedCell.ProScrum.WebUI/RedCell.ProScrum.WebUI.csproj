@@ -238,6 +238,7 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\Views\Proyecto\Create\loader.js" />
+    <Content Include="Scripts\Views\Proyecto\Edit\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Index\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">

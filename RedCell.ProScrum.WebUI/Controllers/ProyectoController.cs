@@ -188,19 +188,12 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         //
         // GET: /Proyecto/Edit/5
-        [HttpPost]
-        public JsonResult Edit(int id = 0)
+        
+        public ActionResult Edit(int id = 0)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
 
             var proyectoViewModel = new EdicionProyectoViewModel();
-
-    //public class IntegranteProyectoViewModel
-    //{
-    //    public int IntegranteId { get; set; }
-    //    public string Nombre { get; set; }
-    //    public bool EsEncargado { get; set; }
-    //}
 
             proyectoViewModel.ContactoId = proyecto.ContactoId;
             proyectoViewModel.Mnemonico = proyecto.Mnemonico;
@@ -208,6 +201,38 @@ namespace RedCell.ProScrum.WebUI.Controllers
             proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
             proyectoViewModel.FinEstimado = proyecto.FinEstimado;
             proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
+            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
+
+            foreach (var integrante in proyecto.IntegranteProyectoes)
+            {
+                var integranteViewModel = new IntegranteProyectoViewModel();
+                integranteViewModel.IntegranteId = integrante.IntegranteId;
+                integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
+                integranteViewModel.EsEncargado = integrante.EsEncargado;
+                proyectoViewModel.Integrantes.Add(integranteViewModel);
+            }
+
+            return View(proyectoViewModel); 
+        }
+
+        //
+        // POST: /Proyecto/Edit/5
+
+
+
+        public JsonResult BuscarProyecto(int id = 0)
+        {
+            Proyecto proyecto = db.Proyectos.Find(id);
+
+            var proyectoViewModel = new EdicionProyectoViewModel();
+
+            proyectoViewModel.ContactoId = proyecto.ContactoId;
+            proyectoViewModel.Mnemonico = proyecto.Mnemonico;
+            proyectoViewModel.Nombre = proyecto.Nombre;
+            proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
+            proyectoViewModel.FinEstimado = proyecto.FinEstimado;
+            proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
+            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
 
             foreach (var integrante in proyecto.IntegranteProyectoes)
             {
@@ -219,11 +244,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
             return Json(proyectoViewModel);
-
         }
 
-        //
-        // POST: /Proyecto/Edit/5
 
         //
         // GET: /Proyecto/Delete/5

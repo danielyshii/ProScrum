@@ -44,6 +44,7 @@
 
     self.save = function (parametros) {
         //alert('Se Grabó' + ko.toJSON(Proyecto));
+
         $.ajax({
             type: "POST",
             url: '/Proyecto/Create',
@@ -51,10 +52,11 @@
             dataType: "json",
             contentType: "application/json",
             success: function (data) {
-                //self.contactos(data)
+                window.location = "/Proyecto";
             }
-            
+
         });
+        
     }
 
     self.empresaChange = function (parametros) {
@@ -102,31 +104,57 @@
                         dataType: "json",
                         type: "POST",
                         success: function (data) {
-                            response(data);
+
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.Nombre,
+                                    Elemento : item
+                                };
+                            }))
+
+                            //response(data);
                         }
+
                     });
                 },
                 select: function (event, ui) {
-                    var selectedItem = ui.item;
+                    event.preventDefault();
 
-                    self.integrantesProyecto.push({
-                        IntegranteId: selectedItem.IntegranteId,
-                        Nombre: selectedItem.Nombre,
-                        EsEncargado: false
+                    var selectedItem = ui.item;
+                    var flagEsEncargado = false;
+
+                    var found = ko.utils.arrayFirst(self.integrantesProyecto(), function (integranteProyecto) {
+                        return integranteProyecto.IntegranteId == selectedItem.Elemento.IntegranteId;
                     });
 
+                    if (found) {
+                        alert("El Integrante ya se encuentra registrado")
+                    }
+                    else {
+                        if (self.integrantesProyecto().length == 0)
+                            flagEsEncargado = true;
+
+                        self.integrantesProyecto.push({
+                            IntegranteId: selectedItem.Elemento.IntegranteId,
+                            Nombre: selectedItem.Elemento.Nombre,
+                            EsEncargado: ko.observable(flagEsEncargado)
+                        });
+                    }
+
+                    //Limpiamos el valor ingresado
+                    $('#memo').val('');
                 }
             });
         }
     };
 
     //Datepicker Knockout
-    
+
     self.setToCurrentDate = function () {
         this.inicioEstimado(new Date());
         this.finEstimado(new Date());
     }
-    
+
     ko.bindingHandlers.datepicker = {
         init: function (element, valueAccessor, allBindingsAccessor) {
             //initialize datepicker with some optional options
@@ -164,7 +192,34 @@
         }
     };
 
-    
+    self.removeIntegrante = function (integrante) {
+        self.integrantesProyecto.remove(integrante);
+    }
+
+    self.seleccionarEncargado = function (newEncargado) {
+        var retorno = false;
+
+        if (newEncargado.EsEncargado()) {
+            ko.utils.arrayForEach(self.integrantesProyecto(), function (integranteProyecto) {
+                if (integranteProyecto.IntegranteId != newEncargado.IntegranteId && integranteProyecto.EsEncargado()) {
+                    integranteProyecto.EsEncargado(false);
+                }
+            });
+
+            retorno = true;
+        }
+        else {
+            ko.utils.arrayForEach(self.integrantesProyecto(), function (integranteProyecto) {
+                if (integranteProyecto.IntegranteId == newEncargado.IntegranteId) {
+                    integranteProyecto.EsEncargado(true);
+                }
+            });
+
+            retorno = false;
+        }
+
+        return retorno;
+    }
 
     self.init();
 };

@@ -36,11 +36,6 @@
     <div class="editor-field">
         <input data-bind="value: nombre" />
     </div>
-
-    <p>
-        <button data-bind='click: save'>Registrar</button>
-        <button data-bind='click: reset'>Limpiar</button>
-    </p>
 </fieldset>
 
 <fieldset>
@@ -50,7 +45,29 @@
         Nombre del Integrante
     </div>
     <div class="editor-field">
-        <input type="text" data-bind="autoComplete: integrantesProyecto, source: '/Proyecto/ListarIntegrante'" />
+        <input type="text" id="memo" data-bind="autoComplete: integrantesProyecto, source: '/Proyecto/ListarIntegrante'" />
+    </div>
+
+    <div>
+        <table data-bind="visible: integrantesProyecto().length > 0">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>¿Es Encargado?</th>
+                    <th />
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: integrantesProyecto'>
+                <tr>
+                    <td data-bind='text: Nombre'></td>
+                    <td>
+                        <input type="checkbox" data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
+                    <td>
+                        <a href="#" data-bind='ifnot: EsEncargado, click: $root.removeIntegrante'>Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 </fieldset>
@@ -62,14 +79,24 @@
         Inicio Estimado
     </div>
     <div class="editor-field">
-        <input data-bind="datepicker: inicioEstimado , datepickerOptions: { minDate: new Date() }" />        
+        <input id="dtp-desde" data-bind="datepicker: inicioEstimado, datepickerOptions: {
+            minDate: new Date(),
+            onClose: function (fechaSeleccionada) {
+                $('#dtp-hasta').datepicker('option', 'minDate', fechaSeleccionada);
+            }
+        }" />
     </div>
 
     <div class="editor-label">
         Fin Estimado
     </div>
     <div class="editor-field">
-        <input data-bind="datepicker: finEstimado , datepickerOptions: { minDate: new Date() }" />
+        <input id="dtp-hasta" data-bind="datepicker: finEstimado, datepickerOptions: {
+    minDate: new Date(),
+        onClose: function (fechaSeleccionada) {
+            $('#dtp-desde').datepicker('option', 'maxDate', fechaSeleccionada);
+        }
+}" />
     </div>
 
     <div class="editor-label">
@@ -81,8 +108,12 @@
 
 </fieldset>
 
+<p>
+    <button data-bind='click: save'>Registrar</button>
+</p>
+
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Volver", "Index")
 </div>
 
 @section css {

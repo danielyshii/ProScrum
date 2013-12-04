@@ -50,25 +50,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ListarClientes() {
-
-            var resultado = from cliente in db.Empresas
-                           select new ListaEmpresasViewModel
-                           {
-                               EmpresaId = cliente.EmpresaId,
-                               Nombre = cliente.Nombre
-                           };
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult ListarClienteConProyectos()
+        public JsonResult ListarClientes()
         {
+
             var resultado = from cliente in db.Empresas
-                            join contacto in db.Contactos
-                            on cliente.EmpresaId equals contacto.EmpresaId
-                            join proyecto in db.Proyectos
-                            on contacto.ContactoId equals proyecto.ContactoId
                             select new ListaEmpresasViewModel
                             {
                                 EmpresaId = cliente.EmpresaId,
@@ -78,14 +63,37 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ListarClienteConProyectos()
+        {
+            var consulta = from cliente in db.Empresas
+                           join contacto in db.Contactos
+                           on cliente.EmpresaId equals contacto.EmpresaId
+                           join proyecto in db.Proyectos
+                           on contacto.ContactoId equals proyecto.ContactoId
+                           select new
+                           {
+                               EmpresaId = cliente.EmpresaId,
+                               Nombre = cliente.Nombre
+                           };
+
+            var resultado = consulta.Distinct().Select(d => new ListaEmpresasViewModel
+            {
+                EmpresaId = d.EmpresaId,
+                Nombre = d.Nombre
+            });
+
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult ListarProyectos(ParametroConsultaProyectoViewModel parametro)
         {
 
             int? empresaId = null;
-            string descripcion = null; 
-            
-            if(parametro != null){
+            string descripcion = null;
+
+            if (parametro != null)
+            {
                 empresaId = parametro.empresaId;
                 descripcion = parametro.descripcion;
             }
@@ -109,7 +117,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                  Cliente = empresa.Nombre,
                                  Descripcion = proyecto.Nombre,
                                  Estado = "Cerrao!",
-                                 Encargado = encargado.Nombres + " " + encargado.Apellidos 
+                                 Encargado = encargado.Nombres + " " + encargado.Apellidos
                              };
 
             if (!String.IsNullOrWhiteSpace(descripcion))
@@ -152,8 +160,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
         // POST: /Proyecto/Create
 
         //[ValidateAntiForgeryToken]
-        [HttpPost]        
-        public ActionResult Create(RegistroProyectoViewModel proyecto)
+        [HttpPost]
+        public JsonResult Create(RegistroProyectoViewModel proyecto)
         {
             if (ModelState.IsValid)
             {
@@ -177,13 +185,13 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     oIntegrante.EsEliminado = false;
                     oProyecto.IntegranteProyectoes.Add(oIntegrante);
                 }
-                
+
                 db.Proyectos.Add(oProyecto);
                 db.SaveChanges();
-                
+
             }
 
-            return RedirectToAction("Index");
+            return Json(true);
         }
 
         //

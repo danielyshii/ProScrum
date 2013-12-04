@@ -17,6 +17,17 @@
     }
 
     self.updateProject = function (proyecto) {
+        $.ajax({
+            type: "POST",
+            url: '/Proyecto/Edit',
+            data: ko.toJSON({ id: proyecto.ProyectoId }),
+            success: function (data) {
+                self.proyectos(data)
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
+
         alert(proyecto.ProyectoId)
     };
 

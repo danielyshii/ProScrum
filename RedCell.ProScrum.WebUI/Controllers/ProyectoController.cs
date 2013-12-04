@@ -109,7 +109,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                  Cliente = empresa.Nombre,
                                  Descripcion = proyecto.Nombre,
                                  Estado = "Cerrao!",
-                                 Encargado = encargado.Nombres + " " + encargado.Apellidos 
+                                 Encargado = encargado.Nombres + " " + encargado.Apellidos                                 
                              };
 
             if (!String.IsNullOrWhiteSpace(descripcion))
@@ -188,36 +188,42 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         //
         // GET: /Proyecto/Edit/5
-
-        public ActionResult Edit(int id = 0)
+        [HttpPost]
+        public JsonResult Edit(int id = 0)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
-            if (proyecto == null)
+
+            var proyectoViewModel = new EdicionProyectoViewModel();
+
+    //public class IntegranteProyectoViewModel
+    //{
+    //    public int IntegranteId { get; set; }
+    //    public string Nombre { get; set; }
+    //    public bool EsEncargado { get; set; }
+    //}
+
+            proyectoViewModel.ContactoId = proyecto.ContactoId;
+            proyectoViewModel.Mnemonico = proyecto.Mnemonico;
+            proyectoViewModel.Nombre = proyecto.Nombre;
+            proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
+            proyectoViewModel.FinEstimado = proyecto.FinEstimado;
+            proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
+
+            foreach (var integrante in proyecto.IntegranteProyectoes)
             {
-                return HttpNotFound();
+                var integranteViewModel = new IntegranteProyectoViewModel();
+                integranteViewModel.IntegranteId = integrante.IntegranteId;
+                integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
+                integranteViewModel.EsEncargado = integrante.EsEncargado;
+                proyectoViewModel.Integrantes.Add(integranteViewModel);
             }
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
-            return View(proyecto);
+
+            return Json(proyectoViewModel);
+
         }
 
         //
         // POST: /Proyecto/Edit/5
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Proyecto proyecto)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(proyecto).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
-            return View(proyecto);
-        }
 
         //
         // GET: /Proyecto/Delete/5

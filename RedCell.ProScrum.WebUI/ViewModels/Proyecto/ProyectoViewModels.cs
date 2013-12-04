@@ -50,6 +50,17 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public int HorasEstimadas { get; set; }
     }
 
+    public class EdicionProyectoViewModel
+    {
+        public int ContactoId { get; set; }
+        public string Mnemonico { get; set; }
+        public string Nombre { get; set; }
+        public List<IntegranteProyectoViewModel> Integrantes { get; set; }
+        public DateTime InicioEstimado { get; set; }
+        public DateTime FinEstimado { get; set; }
+        public int HorasEstimadas { get; set; }
+    }
+
     public class IntegranteProyectoViewModel
     {
         public int IntegranteId { get; set; }

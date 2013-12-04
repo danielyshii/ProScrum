@@ -17,7 +17,21 @@
     }
 
     self.updateProject = function (proyecto) {
-        alert(proyecto.ProyectoId)
+
+        window.location = window.location.protocol + "//" + window.location.host + "/proyecto/edit/" + proyecto.ProyectoId;
+
+        //$.ajax({
+        //    type: "POST",
+        //    url: '/Proyecto/Edit',
+        //    data: ko.toJSON({ id: proyecto.ProyectoId }),
+        //    success: function (data) {
+        //        self.proyectos(data)
+        //    },
+        //    dataType: "json",
+        //    contentType: "application/json"
+        //});
+
+        //alert(proyecto.ProyectoId)
     };
 
     self.removeProject = function (proyecto) {

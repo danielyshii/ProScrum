@@ -54,11 +54,11 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
 
             var resultado = from cliente in db.Empresas
-                            select new ListaEmpresasViewModel
-                            {
-                                EmpresaId = cliente.EmpresaId,
-                                Nombre = cliente.Nombre
-                            };
+                           select new ListaEmpresasViewModel
+                           {
+                               EmpresaId = cliente.EmpresaId,
+                               Nombre = cliente.Nombre
+                           };
 
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
@@ -66,15 +66,15 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public JsonResult ListarClienteConProyectos()
         {
             var consulta = from cliente in db.Empresas
-                           join contacto in db.Contactos
-                           on cliente.EmpresaId equals contacto.EmpresaId
-                           join proyecto in db.Proyectos
-                           on contacto.ContactoId equals proyecto.ContactoId
+                            join contacto in db.Contactos
+                            on cliente.EmpresaId equals contacto.EmpresaId
+                            join proyecto in db.Proyectos
+                            on contacto.ContactoId equals proyecto.ContactoId
                            select new
-                           {
-                               EmpresaId = cliente.EmpresaId,
-                               Nombre = cliente.Nombre
-                           };
+                            {
+                                EmpresaId = cliente.EmpresaId,
+                                Nombre = cliente.Nombre
+                            };
 
             var resultado = consulta.Distinct().Select(d => new ListaEmpresasViewModel
             {
@@ -90,8 +90,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
 
             int? empresaId = null;
-            string descripcion = null;
-
+            string descripcion = null; 
+            
             if (parametro != null)
             {
                 empresaId = parametro.empresaId;
@@ -117,7 +117,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                  Cliente = empresa.Nombre,
                                  Descripcion = proyecto.Nombre,
                                  Estado = "Cerrao!",
-                                 Encargado = encargado.Nombres + " " + encargado.Apellidos
+                                 Encargado = encargado.Nombres + " " + encargado.Apellidos 
                              };
 
             if (!String.IsNullOrWhiteSpace(descripcion))
@@ -160,7 +160,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
         // POST: /Proyecto/Create
 
         //[ValidateAntiForgeryToken]
-        [HttpPost]
+        [HttpPost]        
         public JsonResult Create(RegistroProyectoViewModel proyecto)
         {
             if (ModelState.IsValid)
@@ -185,10 +185,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     oIntegrante.EsEliminado = false;
                     oProyecto.IntegranteProyectoes.Add(oIntegrante);
                 }
-
+                
                 db.Proyectos.Add(oProyecto);
                 db.SaveChanges();
-
+                
             }
 
             return Json(true);
@@ -200,32 +200,60 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public ActionResult Edit(int id = 0)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
-            if (proyecto == null)
+
+            var proyectoViewModel = new EdicionProyectoViewModel();
+
+            proyectoViewModel.ContactoId = proyecto.ContactoId;
+            proyectoViewModel.Mnemonico = proyecto.Mnemonico;
+            proyectoViewModel.Nombre = proyecto.Nombre;
+            proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
+            proyectoViewModel.FinEstimado = proyecto.FinEstimado;
+            proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
+            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
+
+            foreach (var integrante in proyecto.IntegranteProyectoes)
             {
-                return HttpNotFound();
+                var integranteViewModel = new IntegranteProyectoViewModel();
+                integranteViewModel.IntegranteId = integrante.IntegranteId;
+                integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
+                integranteViewModel.EsEncargado = integrante.EsEncargado;
+                proyectoViewModel.Integrantes.Add(integranteViewModel);
             }
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
-            return View(proyecto);
+
+            return View(proyectoViewModel); 
         }
 
         //
         // POST: /Proyecto/Edit/5
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Proyecto proyecto)
+
+
+        public JsonResult BuscarProyecto(int id = 0)
         {
-            if (ModelState.IsValid)
+            Proyecto proyecto = db.Proyectos.Find(id);
+
+            var proyectoViewModel = new EdicionProyectoViewModel();
+
+            proyectoViewModel.ContactoId = proyecto.ContactoId;
+            proyectoViewModel.Mnemonico = proyecto.Mnemonico;
+            proyectoViewModel.Nombre = proyecto.Nombre;
+            proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
+            proyectoViewModel.FinEstimado = proyecto.FinEstimado;
+            proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
+            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
+
+            foreach (var integrante in proyecto.IntegranteProyectoes)
             {
-                db.Entry(proyecto).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var integranteViewModel = new IntegranteProyectoViewModel();
+                integranteViewModel.IntegranteId = integrante.IntegranteId;
+                integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
+                integranteViewModel.EsEncargado = integrante.EsEncargado;
+                proyectoViewModel.Integrantes.Add(integranteViewModel);
             }
-            ViewBag.ContactoId = new SelectList(db.Contactos, "ContactoId", "Nombres", proyecto.ContactoId);
-            ViewBag.JefeProyectoId = new SelectList(db.Usuarios, "UsuarioId", "Codigo", proyecto.JefeProyectoId);
-            return View(proyecto);
+
+            return Json(proyectoViewModel);
         }
+
 
         //
         // GET: /Proyecto/Delete/5

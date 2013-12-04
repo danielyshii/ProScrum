@@ -12,7 +12,6 @@
     self.horasEstimadas = ko.observable();
 
     self.integrantes = ko.observableArray();
-    self.integrante = ko.observable();
     self.integrantesProyecto = ko.observableArray();
 
     self.empresas = ko.observableArray();
@@ -31,16 +30,6 @@
         FinEstimado: self.finEstimado,
         HorasEstimadas: self.horasEstimadas
     };
-
-    self.reset = function () {
-        self.contactoId = ko.observable();
-        self.mnemonico = ko.observable();
-        self.nombre = ko.observable();
-        self.inicioEstimado = ko.observable();
-        self.finEstimado = ko.observable();
-        self.horasEstimadas = ko.observable();
-        self.integrantesProyecto = ko.observableArray();
-    }
 
     self.save = function (parametros) {
         //alert('Se Grabó' + ko.toJSON(Proyecto));
@@ -112,7 +101,6 @@
                                 };
                             }))
 
-                            //response(data);
                         }
 
                     });

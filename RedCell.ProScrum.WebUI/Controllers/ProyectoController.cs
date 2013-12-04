@@ -10,7 +10,7 @@ using RedCell.ProScrum.WebUI.ViewModels.Proyecto;
 
 namespace RedCell.ProScrum.WebUI.Controllers
 {
-    public class ProyectoController : Controller
+    public class ProyectoController : BaseController
     {
         private ProScrumContext db = new ProScrumContext();
 
@@ -116,7 +116,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                  ProyectoId = proyecto.ProyectoId,
                                  Cliente = empresa.Nombre,
                                  Descripcion = proyecto.Nombre,
-                                 Estado = "Cerrao!",
+                                 EstadoProyectoId = proyecto.EstadoId,
                                  Encargado = encargado.Nombres + " " + encargado.Apellidos 
                              };
 
@@ -125,7 +125,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 proyectos2 = proyectos2.Where(p => p.Descripcion.ToLower().Contains(descripcion.ToLower()));
             }
 
-            resultado = proyectos2.ToList();
+            resultado = proyectos2.OrderByDescending(x=>x.ProyectoId).ToList();
+
+            resultado.ForEach(x => x.Estado = this.EstadosProyecto[x.EstadoProyectoId].Descripcion);
 
             //var proyectos = new List<ListaProyectoViewModel>();
             //proyectos.Add(new ListaProyectoViewModel { ProyectoId = 1, Cliente = "Pepo", Descripcion = "Miro", Estado = "Cerrao", Encargado = "CDLL1" });
@@ -134,23 +136,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(resultado);
         }
 
-
-        //
-        // GET: /Proyecto/Details/5
-
-        public ActionResult Details(int id = 0)
-        {
-            Proyecto proyecto = db.Proyectos.Find(id);
-            if (proyecto == null)
-            {
-                return HttpNotFound();
-            }
-            return View(proyecto);
-        }
-
         //
         // GET: /Proyecto/Create
-
         public ActionResult Create()
         {
             return View();
@@ -174,7 +161,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 oProyecto.InicioEstimado = proyecto.InicioEstimado;
                 oProyecto.FinEstimado = proyecto.FinEstimado;
                 oProyecto.HorasEstimadas = proyecto.HorasEstimadas;
-                oProyecto.EstadoId = 1;
+                oProyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
                 oProyecto.EsEliminado = false;
 
                 foreach (var integrante in proyecto.Integrantes)
@@ -197,44 +184,27 @@ namespace RedCell.ProScrum.WebUI.Controllers
         //
         // GET: /Proyecto/Edit/5
 
-        public ActionResult Edit(int id = 0)
+        public ActionResult Edit(int id)
         {
-            Proyecto proyecto = db.Proyectos.Find(id);
-
             var proyectoViewModel = new EdicionProyectoViewModel();
-
-            proyectoViewModel.ContactoId = proyecto.ContactoId;
-            proyectoViewModel.Mnemonico = proyecto.Mnemonico;
-            proyectoViewModel.Nombre = proyecto.Nombre;
-            proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
-            proyectoViewModel.FinEstimado = proyecto.FinEstimado;
-            proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
-            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
-
-            foreach (var integrante in proyecto.IntegranteProyectoes)
-            {
-                var integranteViewModel = new IntegranteProyectoViewModel();
-                integranteViewModel.IntegranteId = integrante.IntegranteId;
-                integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
-                integranteViewModel.EsEncargado = integrante.EsEncargado;
-                proyectoViewModel.Integrantes.Add(integranteViewModel);
-            }
+            Proyecto proyecto = db.Proyectos.Find(id);
+            proyectoViewModel.ProyectoId = proyecto.ProyectoId;
+            proyectoViewModel.EsTotalmenteEditable = ((int)EstadoProyectoEnum.PorConfigurar == proyecto.EstadoId);
 
             return View(proyectoViewModel); 
         }
 
         //
-        // POST: /Proyecto/Edit/5
+        // POST: /Proyecto/BuscarProyecto/5
 
-
-
-        public JsonResult BuscarProyecto(int id = 0)
+        public JsonResult BuscarProyecto(int id)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
 
             var proyectoViewModel = new EdicionProyectoViewModel();
 
             proyectoViewModel.ContactoId = proyecto.ContactoId;
+            proyectoViewModel.EmpresaId = proyecto.Contacto.EmpresaId;
             proyectoViewModel.Mnemonico = proyecto.Mnemonico;
             proyectoViewModel.Nombre = proyecto.Nombre;
             proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
@@ -254,31 +224,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(proyectoViewModel);
         }
 
-
-        //
-        // GET: /Proyecto/Delete/5
-
-        public ActionResult Delete(int id = 0)
-        {
-            Proyecto proyecto = db.Proyectos.Find(id);
-            if (proyecto == null)
-            {
-                return HttpNotFound();
-            }
-            return View(proyecto);
-        }
-
         //
         // POST: /Proyecto/Delete/5
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult DeleteConfirmed(int id)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
-            db.Proyectos.Remove(proyecto);
+            proyecto.EsEliminado = true;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(true);
         }
 
         protected override void Dispose(bool disposing)

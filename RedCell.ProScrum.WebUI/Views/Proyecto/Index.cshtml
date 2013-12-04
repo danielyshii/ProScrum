@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<RedCell.ProScrum.WebUI.Models.Proyecto>
 @using Recursos = RedCell.ProScrum.WebUI.ProyectoResourceStrings
+@using Enums = RedCell.ProScrum.WebUI.Controllers.EstadoProyectoEnum
 
 @{
     ViewBag.Title = "Index";
@@ -49,7 +50,7 @@
                 <td data-bind='text: Encargado'></td>
                 <td>
                     <a href="#" data-bind='click: $root.updateProject'>Actualizar</a>
-                    <a href="#" data-bind='click: $root.removeProject'>Eliminar</a>
+                    <a href="#" data-bind='if: EstadoProyectoId == @((int)Enums.PorConfigurar), click: $root.removeProject'>Eliminar</a>
                 </td>
             </tr>
         </tbody>

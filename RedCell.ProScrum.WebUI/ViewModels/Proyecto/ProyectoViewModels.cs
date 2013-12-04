@@ -11,6 +11,7 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public int EmpresaId { get; set; }
         public string Cliente { get; set; }
         public string Descripcion { get; set; }
+        public int EstadoProyectoId { get; set; }
         public string Estado { get; set; }
         public string Encargado { get; set; }
     }
@@ -52,7 +53,10 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
 
     public class EdicionProyectoViewModel
     {
+        public int ProyectoId { get; set; }
+        public bool EsTotalmenteEditable { get; set; }
         public int ContactoId { get; set; }
+        public int EmpresaId { get; set; }
         public string Mnemonico { get; set; }
         public string Nombre { get; set; }
         public List<IntegranteProyectoViewModel> Integrantes { get; set; }

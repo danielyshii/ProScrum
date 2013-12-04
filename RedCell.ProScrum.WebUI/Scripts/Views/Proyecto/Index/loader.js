@@ -17,25 +17,20 @@
     }
 
     self.updateProject = function (proyecto) {
-
-        window.location = window.location.protocol + "//" + window.location.host + "/proyecto/edit/" + proyecto.ProyectoId;
-
-        //$.ajax({
-        //    type: "POST",
-        //    url: '/Proyecto/Edit',
-        //    data: ko.toJSON({ id: proyecto.ProyectoId }),
-        //    success: function (data) {
-        //        self.proyectos(data)
-        //    },
-        //    dataType: "json",
-        //    contentType: "application/json"
-        //});
-
-        //alert(proyecto.ProyectoId)
+        window.location = "/proyecto/edit/" + proyecto.ProyectoId;
     };
 
     self.removeProject = function (proyecto) {
-        alert(proyecto.ProyectoId);
+        $.ajax({
+            type: "POST",
+            url: '/Proyecto/Delete',
+            data: ko.toJSON({ id: proyecto.ProyectoId }),
+            success: function (data) {
+                self.refresh();
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
     };
 
 };

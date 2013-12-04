@@ -2,9 +2,16 @@
     var self = this;
 
     self.init = function () {
+
+        //Asignar Identificador del Proyecto
+        self.proyectoId($('#hd_ProyectoId').val());
+        //debugger;
+        self.esTotalmenteEditable($('#hd_EsTotalmenteEditable').val() == "True");
         self.loadClient();
     }
 
+    self.proyectoId = ko.observable();
+    self.esTotalmenteEditable = ko.observable();
     self.mnemonico = ko.observable();
     self.nombre = ko.observable();
     self.inicioEstimado = ko.observable();
@@ -12,7 +19,6 @@
     self.horasEstimadas = ko.observable();
 
     self.integrantes = ko.observableArray();
-    self.integrante = ko.observable();
     self.integrantesProyecto = ko.observableArray();
 
     self.empresas = ko.observableArray();
@@ -22,6 +28,7 @@
     self.contactoSeleccionado = ko.observable();
 
     var Proyecto = {
+        ProyectoId: self.proyectoId,
         ContactoId: self.contactoSeleccionado,
         Mnemonico: self.mnemonico,
         Nombre: self.nombre,
@@ -32,35 +39,16 @@
         HorasEstimadas: self.horasEstimadas
     };
 
-    self.reset = function () {
-        self.contactoId = ko.observable();
-        self.mnemonico = ko.observable();
-        self.nombre = ko.observable();
-        self.inicioEstimado = ko.observable();
-        self.finEstimado = ko.observable();
-        self.horasEstimadas = ko.observable();
-        self.integrantesProyecto = ko.observableArray();
-    }
-
     self.save = function (parametros) {
-        //alert('Se Grabó' + ko.toJSON(Proyecto));
-        $.ajax({
-            type: "POST",
-            url: '/Proyecto/Create',
-            data: ko.toJSON(Proyecto),
-            dataType: "json",
-            contentType: "application/json",
-            success: function (data) {
-                //self.contactos(data)
-            }
-
-        });
+        alert('Se Grabó' + ko.toJSON(Proyecto));
     }
 
     self.empresaChange = function (parametros) {
-        var parametros = ko.toJSON({ empresaId: Proyecto.EmpresaId() })
 
-        self.loadContact(parametros);
+        var jsonEmpresa = ko.toJSON({ empresaId: Proyecto.EmpresaId() })
+        
+        self.loadContact(jsonEmpresa, Proyecto.ContactoId());
+        
     }
 
     self.loadClient = function () {
@@ -68,25 +56,67 @@
             type: "GET",
             url: '/Proyecto/ListarClientes',
             success: function (data) {
-                self.empresas(data)
+                self.empresas(data);
+                self.loadProject();
             },
             dataType: "json"
         });
     }
 
-    self.loadContact = function (parametros) {
+    self.loadProject = function () {
+        $.ajax({
+            type: "POST",
+            url: '/Proyecto/BuscarProyecto',
+            data: ko.toJSON({ id: Proyecto.ProyectoId() }),
+            success: function (data) {
+                self.setProyecto(data);
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
+    };
+
+    self.setProyecto = function (proyecto)
+    {
+        self.mnemonico(proyecto.Mnemonico);
+        self.empresaSeleccionada(proyecto.EmpresaId);
+        self.nombre(proyecto.Nombre);
+        self.inicioEstimado(proyecto.InicioEstimado);
+        self.finEstimado(proyecto.FinEstimado);
+        self.horasEstimadas(proyecto.HorasEstimadas);
+
+        //self.integrantesProyecto(proyecto.Integrantes);
+
+        self.integrantesProyecto($.map(proyecto.Integrantes, function (integrante) {
+            return {
+                IntegranteId: integrante.IntegranteId,
+                Nombre: integrante.Nombre,
+                EsEncargado: ko.observable(integrante.EsEncargado)
+            };
+        }));
+
+        self.loadContact(ko.toJSON({ empresaId: Proyecto.EmpresaId() }), proyecto.ContactoId);
+    }
+    
+    self.loadContact = function (parametros, idContacto) {
         $.ajax({
             type: "POST",
             url: '/Proyecto/ListarContacto',
             data: parametros,
             success: function (data) {
-                self.contactos(data)
+                self.contactos(data);
+
+                if (idContacto)
+                {
+                    self.contactoSeleccionado(idContacto);
+                }
+
             },
             dataType: "json",
             contentType: "application/json"
         });
     }
-
+    
     ko.bindingHandlers.autoComplete = {
         init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             var postUrl = allBindingsAccessor().source;
@@ -102,19 +132,44 @@
                         dataType: "json",
                         type: "POST",
                         success: function (data) {
-                            response(data);
+
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.Nombre,
+                                    Elemento: item
+                                };
+                            }))
+
                         }
+
                     });
                 },
                 select: function (event, ui) {
-                    var selectedItem = ui.item;
+                    event.preventDefault();
 
-                    self.integrantesProyecto.push({
-                        IntegranteId: selectedItem.IntegranteId,
-                        Nombre: selectedItem.Nombre,
-                        EsEncargado: false
+                    var selectedItem = ui.item;
+                    var flagEsEncargado = false;
+
+                    var found = ko.utils.arrayFirst(self.integrantesProyecto(), function (integranteProyecto) {
+                        return integranteProyecto.IntegranteId == selectedItem.Elemento.IntegranteId;
                     });
 
+                    if (found) {
+                        alert("El Integrante ya se encuentra registrado")
+                    }
+                    else {
+                        if (self.integrantesProyecto().length == 0)
+                            flagEsEncargado = true;
+
+                        self.integrantesProyecto.push({
+                            IntegranteId: selectedItem.Elemento.IntegranteId,
+                            Nombre: selectedItem.Elemento.Nombre,
+                            EsEncargado: ko.observable(flagEsEncargado)
+                        });
+                    }
+
+                    //Limpiamos el valor ingresado
+                    $('#memo').val('');
                 }
             });
         }
@@ -164,7 +219,34 @@
         }
     };
 
+    self.removeIntegrante = function (integrante) {
+        self.integrantesProyecto.remove(integrante);
+    }
 
+    self.seleccionarEncargado = function (newEncargado) {
+        var retorno = false;
+
+        if (newEncargado.EsEncargado()) {
+            ko.utils.arrayForEach(self.integrantesProyecto(), function (integranteProyecto) {
+                if (integranteProyecto.IntegranteId != newEncargado.IntegranteId && integranteProyecto.EsEncargado()) {
+                    integranteProyecto.EsEncargado(false);
+                }
+            });
+
+            retorno = true;
+        }
+        else {
+            ko.utils.arrayForEach(self.integrantesProyecto(), function (integranteProyecto) {
+                if (integranteProyecto.IntegranteId == newEncargado.IntegranteId) {
+                    integranteProyecto.EsEncargado(true);
+                }
+            });
+
+            retorno = false;
+        }
+
+        return retorno;
+    }
 
     self.init();
 };

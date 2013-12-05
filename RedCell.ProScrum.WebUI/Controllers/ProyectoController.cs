@@ -295,7 +295,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     return RedirectToAction("ToConfigure");
                 }
                 else {
-                    return RedirectToAction("Configure", new { proyectoId = proyectoPorConfigurar.First().ProyectoId });
+                    return RedirectToAction("Configure", new { id = proyectoPorConfigurar.First().ProyectoId });
                 }
             }
 

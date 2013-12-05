@@ -275,6 +275,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
             if (id.HasValue)
             {
+                var model = new ConfigurarProyectoViewModel();
+                model.ProyectoId = id.Value;
+
                 return View();
             }
             else

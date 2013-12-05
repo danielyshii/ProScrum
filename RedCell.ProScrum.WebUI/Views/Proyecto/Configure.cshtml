@@ -1,5 +1,37 @@
-﻿@{
+﻿@model RedCell.ProScrum.WebUI.ViewModels.Proyecto.ConfigurarProyectoViewModel
+
+@{
     ViewBag.Title = "Configure";
 }
 
 <h2>Configurar Proyecto</h2>
+
+@Html.HiddenFor(x => x.ProyectoId, new { id = "hd_ProyectoId" })
+
+<div class="row">
+    <div class="block" data-bind="css: { 'selected-block': EsConfiguracion() }">Configuración de Script</div>
+    <div class="block" data-bind="css: { 'selected-block': EsDefinicion() }">Definición del Product Backlog</div>
+    <div class="block" data-bind="css: { 'selected-block': EsResumen() }">Resumen de Configuración</div>
+</div>
+
+<div>
+    <div class="editor-label">
+        Seleccione la duración en semanas
+    </div>
+    <div>
+        <div style="width:200px">
+            <div data-bind="slider: SemanasEstimadas, sliderOptions: { min: 0, max: 10 }"></div>
+            <input data-bind="value: SemanasEstimadas" />
+        </div>
+    </div>
+</div>
+
+@section css
+{
+    @Styles.Render("~/Content/themes/base/css")
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Configure/loader.js")"></script>
+}

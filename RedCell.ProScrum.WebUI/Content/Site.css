@@ -59,3 +59,23 @@ textarea {
 .validation-summary-valid {
     display: none;
 }
+
+/* Custom Styles
+-----------------------------------------------------------*/
+
+.row {
+  width: 100%;
+  margin: 0 auto;
+}
+.block {
+
+  display: inline-block;
+  border: solid;
+  border-width: thin;
+  padding: 4px;
+}
+
+.selected-block
+{
+    font-weight: bolder;
+}

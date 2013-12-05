@@ -87,4 +87,28 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public string Cliente { get; set; }
         public string FechaRegistro { get; set; }
     }
+
+    public class ConfigurarProyectoViewModel
+    {
+        public int ProyectoId { get; set; }
+
+        public int SemanasEstimadas { get; set; }
+        public bool UsarSecuencial { get; set; }
+        public string NombreSprintInicial { get; set; }
+        public DateTime FechaInicioSprintInicial { get; set; }
+        public string ObjetivoSprint { get; set; }
+    }
+
+    public class UserStoryViewModel
+    {
+        public string DescripcionUserStory { get; set; }
+        public int HorasEstimadas { get; set; }
+        public bool PerteneceSprintInicial { get; set; }
+    }
+
+    public class ActividadViewModel
+    {
+        public string Descripcion { get; set; }
+        public bool EsEliminada { get; set; }
+    }
 }

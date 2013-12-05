@@ -59,7 +59,7 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public int EmpresaId { get; set; }
         public string Mnemonico { get; set; }
         public string Nombre { get; set; }
-        public List<IntegranteProyectoViewModel> Integrantes { get; set; }
+        public List<IntegranteEdicionProyectoViewModel> Integrantes { get; set; }
         public DateTime InicioEstimado { get; set; }
         public DateTime FinEstimado { get; set; }
         public int HorasEstimadas { get; set; }
@@ -70,5 +70,13 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public int IntegranteId { get; set; }
         public string Nombre { get; set; }
         public bool EsEncargado { get; set; }
+    }
+
+    public class IntegranteEdicionProyectoViewModel
+    {
+        public int IntegranteId { get; set; }
+        public string Nombre { get; set; }
+        public bool EsEncargado { get; set; }
+        public bool EsNuevo { get; set; }
     }
 }

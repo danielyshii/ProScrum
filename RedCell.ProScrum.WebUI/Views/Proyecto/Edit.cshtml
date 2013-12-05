@@ -64,9 +64,9 @@
                 <tr>
                     <td data-bind='text: Nombre'></td>
                     <td>
-                        <input type="checkbox" data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
+                        <input type="checkbox" data-bind="checked: EsEncargado, disable: true" /></td>
                     <td>
-                        <a href="#" data-bind='ifnot: EsEncargado, click: $root.removeIntegrante'>Eliminar</a>
+                        <a href="#" data-bind='if: EsNuevo(), click: $root.removeIntegrante'>Eliminar</a>
                     </td>
                 </tr>
             </tbody>

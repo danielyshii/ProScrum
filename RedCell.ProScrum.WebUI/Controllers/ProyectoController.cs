@@ -194,6 +194,36 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return View(proyectoViewModel); 
         }
 
+        [HttpPost, ActionName("Edit")]
+        public JsonResult EditConfirmed(EdicionProyectoViewModel model)
+        {
+
+            Proyecto proyecto = db.Proyectos.Find(model.ProyectoId);
+
+            proyecto.ContactoId = model.ContactoId;
+            proyecto.Nombre = model.Nombre;
+
+            if (model.EsTotalmenteEditable)
+            {
+                proyecto.Mnemonico = model.Mnemonico;
+                proyecto.InicioEstimado = model.InicioEstimado;
+                proyecto.FinEstimado = model.FinEstimado;
+                proyecto.HorasEstimadas = model.HorasEstimadas;
+            }
+
+            foreach (var elemento in model.Integrantes)
+            {
+                if (elemento.EsNuevo)
+                {
+                    proyecto.IntegranteProyectoes.Add(new IntegranteProyecto() { ProyectoId = proyecto.ProyectoId, IntegranteId = elemento.IntegranteId, EsEliminado = false });
+                }
+            }
+
+            db.SaveChanges();
+
+            return Json(true);
+        }
+
         //
         // POST: /Proyecto/BuscarProyecto/5
 
@@ -210,14 +240,15 @@ namespace RedCell.ProScrum.WebUI.Controllers
             proyectoViewModel.InicioEstimado = proyecto.InicioEstimado;
             proyectoViewModel.FinEstimado = proyecto.FinEstimado;
             proyectoViewModel.HorasEstimadas = proyecto.HorasEstimadas;
-            proyectoViewModel.Integrantes = new List<IntegranteProyectoViewModel>();
+            proyectoViewModel.Integrantes = new List<IntegranteEdicionProyectoViewModel>();
 
             foreach (var integrante in proyecto.IntegranteProyectoes)
             {
-                var integranteViewModel = new IntegranteProyectoViewModel();
+                var integranteViewModel = new IntegranteEdicionProyectoViewModel();
                 integranteViewModel.IntegranteId = integrante.IntegranteId;
                 integranteViewModel.Nombre = integrante.Usuario.Nombres + " " + integrante.Usuario.Apellidos;
                 integranteViewModel.EsEncargado = integrante.EsEncargado;
+                integranteViewModel.EsNuevo = false;
                 proyectoViewModel.Integrantes.Add(integranteViewModel);
             }
 

@@ -240,6 +240,7 @@
     <Content Include="Scripts\Views\Proyecto\Create\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Edit\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Index\loader.js" />
+    <Content Include="Scripts\Views\Proyecto\ToConfigure\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -258,9 +259,12 @@
     <Content Include="Views\Proyecto\Index.cshtml" />
     <Content Include="Views\Proyecto\Create.cshtml" />
     <Content Include="Views\Proyecto\Edit.cshtml" />
+    <Content Include="Views\Proyecto\Configure.cshtml" />
+    <Content Include="Views\Proyecto\ToConfigure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\Views\Proyecto\Configure\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

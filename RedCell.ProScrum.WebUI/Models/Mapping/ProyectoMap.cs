@@ -29,6 +29,7 @@ namespace RedCell.ProScrum.WebUI.Models.Mapping
             this.Property(t => t.InicioEstimado).HasColumnName("InicioEstimado");
             this.Property(t => t.FinEstimado).HasColumnName("FinEstimado");
             this.Property(t => t.HorasEstimadas).HasColumnName("HorasEstimadas");
+            this.Property(t => t.FechaRegistro).HasColumnName("FechaRegistro");
             this.Property(t => t.EstadoId).HasColumnName("EstadoId");
             this.Property(t => t.EsEliminado).HasColumnName("EsEliminado");
 

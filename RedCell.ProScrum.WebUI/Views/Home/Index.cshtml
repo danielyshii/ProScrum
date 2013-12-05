@@ -3,4 +3,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Hola Mundo! 2 :D1</h2>
+<h2>Bienvenido a ProScrum</h2>
+
+<h3>Seleccione la opción que desea</h3>
+
+<p>
+    @Html.ActionLink("Actualización de Proyectos", "Index", "Proyecto")
+</p>
+<p>
+    @Html.ActionLink("Configuración de Proyectos", "Configure", "Proyecto")
+</p>

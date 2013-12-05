@@ -54,11 +54,11 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
 
             var resultado = from cliente in db.Empresas
-                           select new ListaEmpresasViewModel
-                           {
-                               EmpresaId = cliente.EmpresaId,
-                               Nombre = cliente.Nombre
-                           };
+                            select new ListaEmpresasViewModel
+                            {
+                                EmpresaId = cliente.EmpresaId,
+                                Nombre = cliente.Nombre
+                            };
 
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
@@ -66,10 +66,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public JsonResult ListarClienteConProyectos()
         {
             var consulta = from cliente in db.Empresas
-                            join contacto in db.Contactos
-                            on cliente.EmpresaId equals contacto.EmpresaId
-                            join proyecto in db.Proyectos
-                            on contacto.ContactoId equals proyecto.ContactoId
+                           join contacto in db.Contactos
+                           on cliente.EmpresaId equals contacto.EmpresaId
+                           join proyecto in db.Proyectos
+                           on contacto.ContactoId equals proyecto.ContactoId
                            select new
                             {
                                 EmpresaId = cliente.EmpresaId,
@@ -90,8 +90,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
 
             int? empresaId = null;
-            string descripcion = null; 
-            
+            string descripcion = null;
+
             if (parametro != null)
             {
                 empresaId = parametro.empresaId;
@@ -111,13 +111,14 @@ namespace RedCell.ProScrum.WebUI.Controllers
                              on integrante.IntegranteId equals encargado.UsuarioId
                              where proyecto.EsEliminado == false
                              && integrante.EsEncargado == true
+                             && proyecto.JefeProyectoId == JefeProyectoId
                              select new ListaProyectoViewModel
                              {
                                  ProyectoId = proyecto.ProyectoId,
                                  Cliente = empresa.Nombre,
                                  Descripcion = proyecto.Nombre,
                                  EstadoProyectoId = proyecto.EstadoId,
-                                 Encargado = encargado.Nombres + " " + encargado.Apellidos 
+                                 Encargado = encargado.Nombres + " " + encargado.Apellidos
                              };
 
             if (!String.IsNullOrWhiteSpace(descripcion))
@@ -125,7 +126,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 proyectos2 = proyectos2.Where(p => p.Descripcion.ToLower().Contains(descripcion.ToLower()));
             }
 
-            resultado = proyectos2.OrderByDescending(x=>x.ProyectoId).ToList();
+            resultado = proyectos2.OrderByDescending(x => x.ProyectoId).ToList();
 
             resultado.ForEach(x => x.Estado = this.EstadosProyecto[x.EstadoProyectoId].Descripcion);
 
@@ -147,7 +148,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
         // POST: /Proyecto/Create
 
         //[ValidateAntiForgeryToken]
-        [HttpPost]        
+        [HttpPost]
         public JsonResult Create(RegistroProyectoViewModel proyecto)
         {
             if (ModelState.IsValid)
@@ -155,7 +156,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 var oProyecto = new Proyecto();
 
                 oProyecto.ContactoId = proyecto.ContactoId;
-                oProyecto.JefeProyectoId = 2;
+                oProyecto.JefeProyectoId = JefeProyectoId;
                 oProyecto.Nombre = proyecto.Nombre;
                 oProyecto.Mnemonico = proyecto.Mnemonico;
                 oProyecto.InicioEstimado = proyecto.InicioEstimado;
@@ -163,6 +164,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 oProyecto.HorasEstimadas = proyecto.HorasEstimadas;
                 oProyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
                 oProyecto.EsEliminado = false;
+                oProyecto.FechaRegistro = DateTime.Now;
 
                 foreach (var integrante in proyecto.Integrantes)
                 {
@@ -172,10 +174,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     oIntegrante.EsEliminado = false;
                     oProyecto.IntegranteProyectoes.Add(oIntegrante);
                 }
-                
+
                 db.Proyectos.Add(oProyecto);
                 db.SaveChanges();
-                
+
             }
 
             return Json(true);
@@ -191,7 +193,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             proyectoViewModel.ProyectoId = proyecto.ProyectoId;
             proyectoViewModel.EsTotalmenteEditable = ((int)EstadoProyectoEnum.PorConfigurar == proyecto.EstadoId);
 
-            return View(proyectoViewModel); 
+            return View(proyectoViewModel);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -265,6 +267,80 @@ namespace RedCell.ProScrum.WebUI.Controllers
             proyecto.EsEliminado = true;
             db.SaveChanges();
             return Json(true);
+        }
+
+
+        [HttpGet]
+        public ActionResult Configure(int? id)
+        {
+            if (id.HasValue)
+            {
+                return View();
+            }
+            else
+            {
+                int estadoPorConfigurar = (int)EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
+
+                var proyectoPorConfigurar = from proyecto in db.Proyectos
+                                            join integranteProyecto in db.IntegrantesProyecto
+                                            on proyecto.ProyectoId equals integranteProyecto.ProyectoId
+                                            where (integranteProyecto.EsEncargado == true
+                                            && integranteProyecto.IntegranteId == EncargadoId)
+                                            && proyecto.EsEliminado == false
+                                            && proyecto.EstadoId == estadoPorConfigurar
+                                            select proyecto;
+
+                if (!proyectoPorConfigurar.Any() || proyectoPorConfigurar.Count() > 1)
+                {
+                    return RedirectToAction("ToConfigure");
+                }
+                else {
+                    return RedirectToAction("Configure", new { proyectoId = proyectoPorConfigurar.First().ProyectoId });
+                }
+            }
+
+
+        }
+
+        [HttpGet]
+        public ActionResult ToConfigure()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ProyectosPorConfigurar()
+        {
+            int estadoPorConfigurar = (int)EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
+
+            var resultado = new List<ListaProyectoPorConfigurar>();
+
+            var proyectosPorConfigurar = from proyecto in db.Proyectos
+                                         join integranteProyecto in db.IntegrantesProyecto
+                                         on proyecto.ProyectoId equals integranteProyecto.ProyectoId
+                                         join contacto in db.Contactos
+                                         on proyecto.ContactoId equals contacto.ContactoId
+                                         join empresa in db.Empresas
+                                         on contacto.EmpresaId equals empresa.EmpresaId
+                                         where (integranteProyecto.EsEncargado == true
+                                         && integranteProyecto.IntegranteId == EncargadoId)
+                                         && proyecto.EsEliminado == false
+                                         && proyecto.EstadoId == estadoPorConfigurar
+                                         select new
+                                         {
+                                             ProyectoId = proyecto.ProyectoId,
+                                             Nombre = proyecto.Nombre,
+                                             Cliente = empresa.Nombre,
+                                             FechaRegistro = proyecto.FechaRegistro
+                                         };
+
+            foreach (var elemento in proyectosPorConfigurar)
+            {
+                resultado.Add(new ListaProyectoPorConfigurar() { ProyectoId = elemento.ProyectoId, Nombre = elemento.Nombre, Cliente = elemento.Cliente, FechaRegistro = elemento.FechaRegistro.ToString("dd/MM/yyyy") });
+            }
+
+            return Json(resultado);
         }
 
         protected override void Dispose(bool disposing)

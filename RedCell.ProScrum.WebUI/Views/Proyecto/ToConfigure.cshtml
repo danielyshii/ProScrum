@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "ToConfigure";
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/ToConfigure/loader.js")"></script>
+}
+
+<h2>Proyectos por Configurar</h2>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Proyecto</th>
+            <th>Cliente</th>
+            <th>Fecha Registro</th>
+            <th />
+        </tr>
+    </thead>
+    <tbody data-bind='foreach: proyectos'>
+        <tr>
+            <td data-bind='text: Nombre'></td>
+            <td data-bind='text: Cliente'></td>
+            <td data-bind='text: FechaRegistro'></td>
+            <td>
+                <a href="#" data-bind='click: $root.configure'>Configurar</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

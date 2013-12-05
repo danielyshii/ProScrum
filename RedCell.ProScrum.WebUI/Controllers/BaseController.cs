@@ -10,6 +10,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
     {
         public Dictionary<int, Estado> EstadosProyecto { get; set; }
 
+        public int JefeProyectoId = 4;
+
+        public int EncargadoId = 5;
+
         public BaseController() {
             EstadosProyecto = new Dictionary<int, Estado>();
             

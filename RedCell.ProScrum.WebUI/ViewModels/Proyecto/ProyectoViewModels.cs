@@ -79,4 +79,12 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public bool EsEncargado { get; set; }
         public bool EsNuevo { get; set; }
     }
+
+    public class ListaProyectoPorConfigurar
+    {
+        public int ProyectoId { get; set; }
+        public string Nombre { get; set; }
+        public string Cliente { get; set; }
+        public string FechaRegistro { get; set; }
+    }
 }

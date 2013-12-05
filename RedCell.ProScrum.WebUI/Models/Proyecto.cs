@@ -24,6 +24,7 @@ namespace RedCell.ProScrum.WebUI.Models
         public DateTime InicioEstimado { get; set; }
         public DateTime FinEstimado { get; set; }
         public int HorasEstimadas { get; set; }
+        public DateTime FechaRegistro { get; set; }
         public int EstadoId { get; set; }
         public bool EsEliminado { get; set; }
         public virtual Contacto Contacto { get; set; }

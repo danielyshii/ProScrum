@@ -40,6 +40,10 @@
     };
 
     self.save = function (parametros) {
+
+        if (!validarFormulario())
+            return false;
+
         $.ajax({
             type: "POST",
             url: '/Proyecto/Edit',
@@ -266,3 +270,31 @@
 
 var viewModel = new ProjectoModel();
 ko.applyBindings(viewModel);
+
+//VALIDACIONES
+
+function validarFormulario() {
+
+    var empresa = document.getElementById("cb-empresa");
+    var contacto = document.getElementById("cb-contacto");
+    var nombre = document.getElementById("txt-nombre");
+
+    var mensaje = "";
+
+    if (empresa.value == "")
+        mensaje += "-Empresa\n";
+
+    if (contacto.value == "")
+        mensaje += "-Contacto\n";
+    
+    if (nombre.value == "" || !isNaN(nombre.value))
+        mensaje += "-Nombre\n";
+
+    if (mensaje.length > 0) {
+        mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
+        alert(mensaje);
+        return false;
+    }
+
+    return true;
+}

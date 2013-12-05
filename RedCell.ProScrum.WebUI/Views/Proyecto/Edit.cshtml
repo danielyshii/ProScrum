@@ -16,14 +16,14 @@
         Empresa
     </div>
     <div class="editor-field">
-        <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione', event: { change: empresaChange }"></select>
+        <select id="cb-empresa" data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione', event: { change: empresaChange }"></select>
     </div>
 
     <div class="editor-label">
         Contacto
     </div>
     <div class="editor-field">
-        <select data-bind="options: contactos, optionsText: 'Nombre', optionsValue: 'ContactoId', value: contactoSeleccionado, optionsCaption: 'Seleccione'"></select>
+        <select id="cb-contacto" data-bind="options: contactos, optionsText: 'Nombre', optionsValue: 'ContactoId', value: contactoSeleccionado, optionsCaption: 'Seleccione'"></select>
     </div>
 
     <div class="editor-label">
@@ -37,7 +37,7 @@
         Nombre
     </div>
     <div class="editor-field">
-        <input data-bind="value: nombre" />
+        <input id="txt-nombre" data-bind="value: nombre" />
     </div>
 </fieldset>
 

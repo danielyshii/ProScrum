@@ -34,6 +34,9 @@
     self.save = function (parametros) {
         //alert('Se Grabó' + ko.toJSON(Proyecto));
 
+        if (!validarFormulario())
+            return false;
+        
         $.ajax({
             type: "POST",
             url: '/Proyecto/Create',
@@ -209,8 +212,52 @@
         return retorno;
     }
 
-    self.init();
+   self.init();
 };
 
 var viewModel = new ProjectoModel();
 ko.applyBindings(viewModel);
+
+//VALIDACIONES
+
+function validarFormulario() {
+    
+    var empresa = document.getElementById("cb-empresa");
+    var contacto = document.getElementById("cb-contacto");
+    var mnemonico = document.getElementById("txt-mnemonico");
+    var nombre = document.getElementById("txt-nombre");
+    var desde = document.getElementById("dtp-desde");
+    var hasta = document.getElementById("dtp-hasta");
+    var horasAsignadas = document.getElementById("txt-horasAsignadas");
+
+    var mensaje = "";
+    
+    if (empresa.value == "")
+        mensaje += "-Empresa\n";
+    
+    if (contacto.value == "")
+        mensaje += "-Contacto\n";
+
+    if (mnemonico.value == "" || !isNaN(mnemonico.value))
+        mensaje += "-Mnemonico\n";
+
+    if (nombre.value == "" || !isNaN(nombre.value))
+        mensaje += "-Nombre\n";
+
+    if (desde.value == "")
+        mensaje += "-Inicio Estimado\n";
+
+    if (hasta.value == "")
+        mensaje += "-Fin Estimado\n";
+
+    if (horasAsignadas.value == "" || isNaN(horasAsignadas.value))
+        mensaje += "-Horas Asignadas\n";
+
+    if (mensaje.length > 0) {
+        mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
+        alert(mensaje);
+        return false;
+    }
+
+    return true;
+}

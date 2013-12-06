@@ -82,12 +82,17 @@ var ConfigurarModel = function () {
     }
 
     self.toDefinition = function () {
+
+        if (!validarConfiguracion())
+            return false;
+
         self.EsConfiguracion(false);
         self.EsDefinicion(true);
         self.EsResumen(false);
     }
 
-    self.toResume = function () {
+    self.toResume = function () {        
+
         self.EsConfiguracion(false);
         self.EsDefinicion(false);
         self.EsResumen(true);
@@ -106,6 +111,9 @@ var ConfigurarModel = function () {
     }
 
     self.addUserStory = function () {
+
+        if (!validarUserStory())
+            return false;
 
         var userStory = { DescripcionUserStory: self.DescripcionUserStory(), HorasEstimadas: self.HorasEstimadas(), PerteneceSprintInicial: self.PerteneceSprintInicial() };
         if (self.PerteneceSprintInicial() == true)
@@ -158,3 +166,67 @@ var ConfigurarModel = function () {
 
 var listaProyectoViewModel = new ConfigurarModel();
 ko.applyBindings(listaProyectoViewModel);
+
+//VALIDACIONES
+
+function validarConfiguracion() {
+
+    var semanasEstimadas = document.getElementById("txt-semanasEstimadas");
+    var usarSecuencial = document.getElementById("chb-usarSecuencial");
+    var nombreSprintInicial = document.getElementById("txt-nombreSprintInicial");
+    var fechaInicio = document.getElementById("dtp-inicio");
+    var objetivoSprint = document.getElementById("txt-objetivoSprint");
+
+    var mensaje = "";
+
+    if (semanasEstimadas.value == "")
+        mensaje += "-Semanas Estimadas\n";
+
+    if (usarSecuencial.checked == true && nombreSprintInicial.value == "")
+        mensaje += "-Nombre del Sprint Inicial\n";
+
+    if (fechaInicio.value == "")
+        mensaje += "-Fecha de Inicio del Sprint Actual\n";
+
+    if (objetivoSprint.value == "")
+        mensaje += "-Objetivo del Sprint\n";
+    
+    if (mensaje.length > 0) {
+        mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
+        alert(mensaje);
+        return false;
+    }
+
+    return true;
+}
+
+function validarUserStory() {
+
+    var descripcionUserStory = document.getElementById("txt-descripcionUserStory");
+    var horasEstimadas = document.getElementById("txt-horasEstimadas");
+
+    var mensaje = "";
+
+    if (descripcionUserStory.value == "")
+        mensaje += "-Descripción\n";
+
+    if (horasEstimadas.value == "")
+        mensaje += "-Horas Estimadas\n";
+
+    if (mensaje.length > 0) {
+        mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
+        alert(mensaje);
+        return false;
+    }
+
+    return true;
+}
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}

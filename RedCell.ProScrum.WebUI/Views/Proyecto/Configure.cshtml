@@ -23,28 +23,28 @@
         <div class="editor-field">
             <div style="width: 200px">
                 <div data-bind="slider: SemanasEstimadas, sliderOptions: { min: 2, max: 8 }"></div>
-                <input type="text" data-bind="value: SemanasEstimadas" />
+                <input id="txt-semanasEstimadas" type="text" data-bind="value: SemanasEstimadas" onkeypress="return isNumber(event)" />
             </div>
         </div>
     </div>
 
     <div>
-        <input type="checkbox" data-bind="checked: UsarSecuencial" />
+        <input id="chb-usarSecuencial" type="checkbox" data-bind="checked: UsarSecuencial" />
         &nbsp; Usar Secuencial de Script como nombre de 
     </div>
     <div>
         Ingrese Nombre del Sprint Inicial &nbsp;
-        <input data-bind="value: NombreSprintInicial" />
+        <input id="txt-nombreSprintInicial" data-bind="value: NombreSprintInicial" />
     </div>
 
     <div>
         Ingrese la fecha de inicio del Sprint Inicial
-    <input type="text" data-bind="datepicker: FechaInicioSprintInicial, datepickerOptions: { minDate: new Date() }" />
+    <input id="dtp-inicio" type="text" data-bind="datepicker: FechaInicioSprintInicial, datepickerOptions: { minDate: new Date() }" />
     </div>
 
     <div>
         Ingrese el objetivo del Sprint
-    <textarea rows="2" cols="70" data-bind="value: ObjetivoSprint"></textarea>
+    <textarea id="txt-objetivoSprint" rows="2" cols="70" data-bind="value: ObjetivoSprint"></textarea>
     </div>
 
     <button data-bind="click: toDefinition">Siguiente</button>
@@ -73,14 +73,14 @@
             Descripción
         </div>
         <div class="editor-field">
-            <input data-bind="value: DescripcionUserStory" />
+            <input id="txt-descripcionUserStory" data-bind="value: DescripcionUserStory" />
         </div>
 
         <div class="editor-label">
             Horas Estimadas
         </div>
         <div class="editor-field">
-            <input data-bind="value: HorasEstimadas" />
+            <input id="txt-horasEstimadas" data-bind="value: HorasEstimadas" onkeypress="return isNumber(event)" />
         </div>
 
         <div>

@@ -61,9 +61,11 @@ var ConfigurarModel = function () {
 
     var self = this;
     self.ProyectoId = ko.observable();
+
     self.EsConfiguracion = ko.observable(true);
     self.EsDefinicion = ko.observable(false);
     self.EsResumen = ko.observable(false);
+
     self.SemanasEstimadas = ko.observable(2);
     self.UsarSecuencial = ko.observable(true);
     self.NombreSprintInicial = ko.observable("Sprint 1");
@@ -73,9 +75,30 @@ var ConfigurarModel = function () {
     self.DescripcionUserStory = ko.observable("");
     self.HorasEstimadas = ko.observable(null);
     self.PerteneceSprintInicial = ko.observable(false);
+    self.ActividadesUserStory = ko.observableArray([]);
 
     self.BacklogUserStories = ko.observableArray([]);
     self.SprintUserStories = ko.observableArray([]);
+
+    self.DescripcionActividad = ko.observable();
+
+    var UserStory = {
+        DescripcionUserStory: self.DescripcionUserStory,
+        HorasEstimadas: self.HorasEstimadas,
+        PerteneceSprintInicial: self.PerteneceSprintInicial,
+        ActividadesUserStory: self.ActividadesUserStory
+    }
+
+    var ConfiguracionProyecto = {
+        ProyectoId: self.ProyectoId,
+        SemanasEstimadas: self.SemanasEstimadas,
+        UsarSecuencial: self.UsarSecuencial,
+        NombreSprintInicial: self.NombreSprintInicial,
+        FechaInicioSprintInicial: self.FechaInicioSprintInicial,
+        ObjetivoSprint: self.ObjetivoSprint,
+        SprintUserStories: self.SprintUserStories,
+        BacklogUserStories: self.BacklogUserStories
+    }
 
     self.init = function () {
         self.ProyectoId($("#hd_ProyectoId").val());
@@ -91,7 +114,7 @@ var ConfigurarModel = function () {
         self.EsResumen(false);
     }
 
-    self.toResume = function () {        
+    self.toResume = function () {
 
         self.EsConfiguracion(false);
         self.EsDefinicion(false);
@@ -115,7 +138,7 @@ var ConfigurarModel = function () {
         if (!validarUserStory())
             return false;
 
-        var userStory = { DescripcionUserStory: self.DescripcionUserStory(), HorasEstimadas: self.HorasEstimadas(), PerteneceSprintInicial: self.PerteneceSprintInicial() };
+        var userStory = { DescripcionUserStory: UserStory.DescripcionUserStory(), HorasEstimadas: UserStory.HorasEstimadas(), PerteneceSprintInicial: UserStory.PerteneceSprintInicial(), ActividadesUserStory: UserStory.ActividadesUserStory() };
         if (self.PerteneceSprintInicial() == true)
             self.SprintUserStories.push(userStory);
         else
@@ -128,6 +151,7 @@ var ConfigurarModel = function () {
         self.DescripcionUserStory("");
         self.HorasEstimadas(null);
         self.PerteneceSprintInicial(false);
+        self.ActividadesUserStory([]);
     }
 
     self.showBacklogUserStories = function () {
@@ -139,18 +163,32 @@ var ConfigurarModel = function () {
     }
 
     self.showAddActivity = function () {
-
+        $("#dialog-modal").dialog("open");
     }
+
+    self.addActivity = function (data, event) {
+        if (event.keyCode == 13) {
+            UserStory.ActividadesUserStory.push({ Descripcion: self.DescripcionActividad() });
+            self.DescripcionActividad('');
+        }
+        return true;
+    }
+
+    self.closeActivityWindow = function () {
+        alert(ko.toJSON(UserStory));
+        $("#dialog-modal").dialog("close");
+    }
+
 
     self.showInitialSprintStart = function () {
 
-        var result = self.FechaInicioSprintInicial().getDate() + '/' + (self.FechaInicioSprintInicial().getMonth()+ 1) + '/' + self.FechaInicioSprintInicial().getFullYear();
+        var result = self.FechaInicioSprintInicial().getDate() + '/' + (self.FechaInicioSprintInicial().getMonth() + 1) + '/' + self.FechaInicioSprintInicial().getFullYear();
 
         return result;
     }
 
     self.showInitialSprintEnd = function () {
-        
+
         var endDate = new Date();
 
         endDate.setDate((self.FechaInicioSprintInicial().getDate() + 14));
@@ -160,6 +198,30 @@ var ConfigurarModel = function () {
         return result;
 
     }
+
+    self.finalizeConfiguration = function () {
+
+        $.ajax({
+            type: "POST",
+            url: '/Proyecto/Configure',
+            data: ko.toJSON(ConfiguracionProyecto),
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                window.location = "/Home";
+            }
+
+        });
+
+    }
+
+    self.ActivityViewModel = new ko.simpleGrid.viewModel({
+        data: self.ActividadesUserStory,
+        columns: [
+            { headerText: "Actividad", rowText: "Descripcion" }
+        ],
+        pageSize: 7
+    });
 
     self.init();
 };
@@ -190,7 +252,7 @@ function validarConfiguracion() {
 
     if (objetivoSprint.value == "")
         mensaje += "-Objetivo del Sprint\n";
-    
+
     if (mensaje.length > 0) {
         mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
         alert(mensaje);
@@ -230,3 +292,11 @@ function isNumber(evt) {
     }
     return true;
 }
+
+
+$("#dialog-modal").dialog({
+    autoOpen: false,
+    height: 400,
+    width: 600,
+    modal: true
+});

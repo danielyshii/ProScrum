@@ -15,7 +15,7 @@ namespace RedCell.ProScrum.WebUI.Models
         public string Objetivo { get; set; }
         public string Nombre { get; set; }
         public System.DateTime Inicio { get; set; }
-        public System.DateTime Fin { get; set; }
+        public System.DateTime? Fin { get; set; }
         public int EstadoId { get; set; }
         public bool EsEliminado { get; set; }
         public virtual Proyecto Proyecto { get; set; }

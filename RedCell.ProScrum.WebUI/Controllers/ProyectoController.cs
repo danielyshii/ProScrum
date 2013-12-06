@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -176,7 +177,19 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 }
 
                 db.Proyectos.Add(oProyecto);
-                db.SaveChanges();
+
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+
+                    }
+                }
 
             }
 
@@ -278,7 +291,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 var model = new ConfigurarProyectoViewModel();
                 model.ProyectoId = id.Value;
 
-                return View();
+                return View(model);
             }
             else
             {
@@ -303,6 +316,86 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        public JsonResult Configure(ConfigurarProyectoViewModel model)
+        {
+            var proyecto = db.Proyectos.Find(model.ProyectoId);
+            var secuencialUserStory = 1;
+
+
+            // Agregar Sprint y User Stories
+            var sprint = new Sprint();
+            sprint.ProyectoId = model.ProyectoId;
+            sprint.Objetivo = model.ObjetivoSprint;
+            sprint.Nombre = model.NombreSprintInicial;
+            sprint.Inicio = model.FechaInicioSprintInicial;
+            sprint.EstadoId = this.EstadosSprint[(int)EstadoSprintEnum.Definido].EstadoId;
+
+            foreach (var elementoUserStory in model.SprintUserStories)
+            {
+                var userStory = new UserStory();
+                userStory.Codigo = proyecto.Mnemonico + "-" +secuencialUserStory.ToString();
+                userStory.Descripcion = elementoUserStory.DescripcionUserStory;
+                userStory.HorasEstimadas = elementoUserStory.HorasEstimadas;
+                userStory.ProyectoId = proyecto.ProyectoId;
+                userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.Definido].EstadoId;
+
+                foreach (var elementoActividad in elementoUserStory.ActividadesUserStory)
+                {
+                    var actividad = new Actividad();
+                    actividad.Descripcion = elementoActividad.Descripcion;
+                    actividad.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
+                    actividad.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+
+                    userStory.Actividads.Add(actividad);
+                }
+
+                secuencialUserStory++;
+                sprint.UserStories.Add(userStory);
+            }
+
+
+            // Agregar User Stories al Backlog
+            foreach (var elementoUserStory in model.BacklogUserStories)
+            {
+                var userStory = new UserStory();
+                userStory.Codigo = proyecto.Mnemonico + "-" + secuencialUserStory.ToString();
+                userStory.Descripcion = elementoUserStory.DescripcionUserStory;
+                userStory.HorasEstimadas = elementoUserStory.HorasEstimadas;
+                userStory.ProyectoId = proyecto.ProyectoId;
+                userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.Definido].EstadoId;
+
+                foreach (var elementoActividad in elementoUserStory.ActividadesUserStory)
+                {
+                    var actividad = new Actividad();
+                    actividad.Descripcion = elementoActividad.Descripcion;
+                    actividad.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
+                    actividad.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+
+                    userStory.Actividads.Add(actividad);
+                }
+                secuencialUserStory++;
+                proyecto.UserStories.Add(userStory);
+            }
+
+            //Agregamos el Sprint a la lsita de Sprints del Proyecto
+            proyecto.Sprints.Add(sprint);
+            proyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.Configurado].EstadoId;
+
+            db.SaveChanges();
+
+            try
+                {
+                    db.SaveChanges();
+                }
+            catch (EntitySqlException e)
+            {
+                var a = 1;
+            }
+
+            return Json(true);
         }
 
         [HttpGet]

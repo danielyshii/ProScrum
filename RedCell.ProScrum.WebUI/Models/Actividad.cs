@@ -7,7 +7,7 @@ namespace RedCell.ProScrum.WebUI.Models
     {
         public int ActividadId { get; set; }
         public int UserStoryId { get; set; }
-        public int UsuarioId { get; set; }
+        public int? UsuarioId { get; set; }
         public int TipoActividadId { get; set; }
         public string Descripcion { get; set; }
         public Nullable<System.DateTime> Inicio { get; set; }

@@ -234,9 +234,10 @@
     <Content Include="Scripts\JQuery\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\JQuery\jquery.event.drag-2.2.js" />
     <Content Include="Scripts\JQuery\jquery.event.drop-2.2.js" />
-    <Content Include="Scripts\knockout-2.2.0.debug.js" />
-    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\knockout.simpleGrid.3.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\knockout-3.0.0.debug.js" />
+    <Content Include="Scripts\knockout-3.0.0.js" />
     <Content Include="Scripts\Views\Proyecto\Configure\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Create\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Edit\loader.js" />

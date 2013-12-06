@@ -25,6 +25,7 @@ legend {
 
 textarea {
     min-height: 75px;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
 }
 
 .editor-label {

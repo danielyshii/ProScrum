@@ -100,7 +100,7 @@
 <div data-bind='if: EsResumen()'>
     <fieldset>
         <legend>Detalle de la configuración</legend>
-        
+
         <div class="editor-label">
             User Story Creados en Backlog
         </div>
@@ -136,7 +136,26 @@
     </fieldset>
 
     <button data-bind="click: backToDefinition">Anterior</button>
+    <button data-bind="click: finalizeConfiguration">Finalizar</button>
+</div>
 
+
+<div id="dialog-modal" title="Registro de Actividades">
+    <div>
+        <div class="editor-label">
+            Ingrese Actividad
+        </div>
+        <div class="editor-field">
+            <input id="txt-descripcionActividad" data-bind="value: DescripcionActividad, valueUpdate: 'keyup',
+    event: { keypress: addActivity }" />
+            @*<button data-bind="click: addActivity">Agregar</button>*@
+        </div>
+    </div>
+    <div data-bind='if: ActividadesUserStory().length > 0'>
+        <div data-bind='simpleGrid: ActivityViewModel'>
+        </div>
+    </div>
+    <button data-bind="click: closeActivityWindow">Cerrar</button> 
 </div>
 
 @section css
@@ -146,5 +165,6 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout-simpleGrid")
     <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Configure/loader.js")"></script>
 }

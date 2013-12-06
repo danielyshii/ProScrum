@@ -14,16 +14,129 @@
     <div class="block" data-bind="css: { 'selected-block': EsResumen() }">Resumen de Configuración</div>
 </div>
 
-<div>
-    <div class="editor-label">
-        Seleccione la duración en semanas
-    </div>
+<div data-bind='if: EsConfiguracion()'>
+
     <div>
-        <div style="width:200px">
-            <div data-bind="slider: SemanasEstimadas, sliderOptions: { min: 0, max: 10 }"></div>
-            <input data-bind="value: SemanasEstimadas" />
+        <div class="editor-label">
+            Seleccione la duración en semanas
+        </div>
+        <div class="editor-field">
+            <div style="width: 200px">
+                <div data-bind="slider: SemanasEstimadas, sliderOptions: { min: 2, max: 8 }"></div>
+                <input type="text" data-bind="value: SemanasEstimadas" />
+            </div>
         </div>
     </div>
+
+    <div>
+        <input type="checkbox" data-bind="checked: UsarSecuencial" />
+        &nbsp; Usar Secuencial de Script como nombre de 
+    </div>
+    <div>
+        Ingrese Nombre del Sprint Inicial &nbsp;
+        <input data-bind="value: NombreSprintInicial" />
+    </div>
+
+    <div>
+        Ingrese la fecha de inicio del Sprint Inicial
+    <input type="text" data-bind="datepicker: FechaInicioSprintInicial, datepickerOptions: { minDate: new Date() }" />
+    </div>
+
+    <div>
+        Ingrese el objetivo del Sprint
+    <textarea rows="2" cols="70" data-bind="value: ObjetivoSprint"></textarea>
+    </div>
+
+    <button data-bind="click: toDefinition">Siguiente</button>
+
+</div>
+
+
+<div data-bind='if: EsDefinicion()'>
+    <div>
+        <a href="#" data-bind='click: showInitialSprintUserStories'>
+            <!--ko text: SprintUserStories().length-->
+            <!--/ko-->
+            User Stories en el Sprint Inicial</a>
+        <a href="#" data-bind='click: showBacklogUserStories'>
+            <!--ko text: BacklogUserStories().length-->
+            <!--/ko-->
+            User Stories en el Product Backlog</a>
+
+    </div>
+
+
+    <fieldset>
+        <legend>User Story</legend>
+
+        <div class="editor-label">
+            Descripción
+        </div>
+        <div class="editor-field">
+            <input data-bind="value: DescripcionUserStory" />
+        </div>
+
+        <div class="editor-label">
+            Horas Estimadas
+        </div>
+        <div class="editor-field">
+            <input data-bind="value: HorasEstimadas" />
+        </div>
+
+        <div>
+            <input type="checkbox" data-bind="checked: PerteneceSprintInicial" />
+            &nbsp; Pertenece al Sprint Inicial
+            <button data-bind="click: showAddActivity">Agregar Actividades</button>
+            <button data-bind="click: addUserStory">Agregar User Story</button>
+        </div>
+
+    </fieldset>
+
+    <button data-bind="click: backToConfiguration">Anterior</button>
+    <button data-bind="click: toResume">Siguiente</button>
+
+</div>
+
+<div data-bind='if: EsResumen()'>
+    <fieldset>
+        <legend>Detalle de la configuración</legend>
+        
+        <div class="editor-label">
+            User Story Creados en Backlog
+        </div>
+        <div class="editor-field">
+            <!--ko text: BacklogUserStories().length-->
+            <!--/ko-->
+        </div>
+
+        <div class="editor-label">
+            User Story asignados al Sprint Inicial
+        </div>
+        <div class="editor-field">
+            <!--ko text: SprintUserStories().length-->
+            <!--/ko-->
+        </div>
+
+        <div class="editor-label">
+            Fecha de Inicio de Sprint Inicial
+        </div>
+        <div class="editor-field">
+            <!--ko text: showInitialSprintStart()-->
+            <!--/ko-->
+        </div>
+
+        <div class="editor-label">
+            Fecha de Fin de Sprint Inicial
+        </div>
+        <div class="editor-field">
+            <!--ko text: showInitialSprintEnd()-->
+            <!--/ko-->
+        </div>
+
+    </fieldset>
+
+    <button data-bind="click: backToDefinition">Anterior</button>
+
 </div>
 
 @section css

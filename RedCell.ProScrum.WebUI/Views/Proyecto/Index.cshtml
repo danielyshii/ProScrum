@@ -16,23 +16,34 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/Index/loader.js")"></script>
 }
 
-<h2>@Recursos.Proyecto_Titulo
-</h2>
+<div class="page-header">
+    <h2>@Recursos.Proyecto_Titulo
+    </h2>
+</div>
+
 
 <p>
     @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create", null, new { @class = "btn btn-default" })
 </p>
 
-<div id="pnl-FiltrosConsultaProyecto">
+</br>
 
-    <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione'"></select>
-    <input data-bind="value: descripcion"/>
-    <button data-bind='click: searchProject' class ="btn btn-default">Buscar</button>
+<div id="pnl-FiltrosConsultaProyecto" class="row">
+    <div class="col-xs-2">
+        <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione'" class="form-control"></select>
+    </div>
+    <div class="col-xs-2">
+        <input type="text" class="form-control" data-bind="value: descripcion" placeholder="Ingrese descripción" />
+    </div>
+    <div class="col-xs-2">
+        <button data-bind='click: searchProject' class="btn btn-default">Buscar</button>
+    </div>
 </div>
 
+</br>
 
 <div id="pnl-ProyectosActivos">
-    <table>
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>Cliente</th>
@@ -49,16 +60,18 @@
                 <td data-bind='text: Estado'></td>
                 <td data-bind='text: Encargado'></td>
                 <td>
-                    <a href="#" data-bind='click: $root.updateProject'>Actualizar</a>
-                    <a href="#" data-bind='if: EstadoProyectoId == @((int)Enums.PorConfigurar), click: $root.removeProject'>Eliminar</a>
+                    <a href="#" class="btn btn-default btn-sm" data-bind='click: $root.updateProject'>Actualizar</a>
+                    <!--ko if: EstadoProyectoId == @((int)Enums.PorConfigurar)-->
+                    <a href="#" class="btn btn-default btn-sm" data-bind="click: $root.removeProject">Eliminar</a>
+                    <!--/ko-->
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <p>
+    <h3>
         <!--ko text: proyectos().length-->
         <!--/ko-->
-        Registros Mostrados</p>
+        Registros Mostrados</h3>
 
 </div>

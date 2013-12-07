@@ -7,10 +7,13 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Proyecto/ToConfigure/loader.js")"></script>
 }
 
-<h2>Proyectos por Configurar</h2>
+<div class="page-header">
+    <h2>Proyectos por Configurar</h2>
+</div>
 
+<br />
 
-<table>
+<table class="table table-hover">
     <thead>
         <tr>
             <th>Proyecto</th>
@@ -25,7 +28,9 @@
             <td data-bind='text: Cliente'></td>
             <td data-bind='text: FechaRegistro'></td>
             <td>
-                <a href="#" data-bind='click: $root.configure'>Configurar</a>
+                <a href="#" class="btn btn-default btn-sm" data-bind="click: $root.configure">
+                    <span class="glyphicon glyphicon-cog"></span>Configurar
+                </a>
             </td>
         </tr>
     </tbody>

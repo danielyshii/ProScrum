@@ -244,25 +244,44 @@
 
 <div id="dialog-modal" title="Registro de Actividades">
 
-    <form class="form-horizontal" role="form">
         <div class="form-group">
             <label for="cb-duracion" class="col-xs-4">
                 Ingrese Actividad
             </label>
             <div class="col-xs-8">
-                <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, valueUpdate: 'keyup',
-    event: { keypress: addActivity }" />
+            <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, event: { keyup: addActivity }" />
             </div>
         </div>
-    </form>
 
-    <div data-bind='if: ActividadesUserStory().length > 0'>
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-3">
+            &nbsp;
+        </div>
+        <div class="col-xs-5" data-bind='if: ActividadesUserStory().length > 0'>
         <div data-bind='simpleGrid: ActivityViewModel'>
         </div>
+        </div>
+        <div class="col-xs-3">
+            &nbsp;
+        </div>
     </div>
-    <button data-bind="click: closeActivityWindow">
-        <span class="glyphicon glyphicon-log-out"></span> Cerrar
-    </button>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-5">
+            &nbsp;
+        </div>
+        <div class="col-xs-2" >
+            <button data-bind="click: closeActivityWindow">
+                <span class="glyphicon glyphicon-log-out"></span> Cerrar
+            </button>
+        </div>
+        <div class="col-xs-5">
+            &nbsp;
+        </div>
 </div>
 
 @section css

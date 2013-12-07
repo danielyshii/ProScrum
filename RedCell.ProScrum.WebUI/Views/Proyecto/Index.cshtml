@@ -20,14 +20,14 @@
 </h2>
 
 <p>
-    @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create")
+    @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create", null, new { @class = "btn btn-default" })
 </p>
 
 <div id="pnl-FiltrosConsultaProyecto">
 
     <select data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione'"></select>
     <input data-bind="value: descripcion"/>
-    <button data-bind='click: searchProject'>Buscar</button>
+    <button data-bind='click: searchProject' class ="btn btn-default">Buscar</button>
 </div>
 
 

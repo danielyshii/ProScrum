@@ -236,8 +236,7 @@
     };
 
     self.removeIntegrante = function (integrante) {
-        alert("dasdas");
-        //self.integrantesProyecto.remove(integrante);
+        self.integrantesProyecto.remove(integrante);
     }
 
     self.seleccionarEncargado = function (newEncargado) {

@@ -61,7 +61,7 @@ namespace RedCell.ProScrum.WebUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nuevo.
+        ///   Looks up a localized string similar to &lt;span class=&quot;glyphicon glyphicon-plus&quot;&gt;&lt;/span&gt; Nuevo.
         /// </summary>
         public static string Proyecto_LabelCrear {
             get {

@@ -92,6 +92,7 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
     {
 
         public int ProyectoId { get; set; }
+        public string NombreProyecto { get; set; }
 
         public int SemanasEstimadas { get; set; }
         public bool UsarSecuencial { get; set; }

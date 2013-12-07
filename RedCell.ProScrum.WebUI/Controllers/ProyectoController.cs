@@ -288,8 +288,11 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
             if (id.HasValue)
             {
+                var proyecto = db.Proyectos.Find(id.Value);
+
                 var model = new ConfigurarProyectoViewModel();
-                model.ProyectoId = id.Value;
+                model.ProyectoId = proyecto.ProyectoId;
+                model.NombreProyecto = proyecto.Nombre;
 
                 return View(model);
             }

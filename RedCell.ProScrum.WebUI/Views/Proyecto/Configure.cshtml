@@ -5,10 +5,10 @@
 }
 
 <div class="page-header">
-    <h2>Configurar Proyecto</h2>
+    <h2>Configurar Proyecto - @Model.NombreProyecto</h2>
 </div>
 
-@Html.HiddenFor(x => x.ProyectoId, new { id = "hd_ProyectoId" })
+@Html.HiddenFor(x => x.ProyectoId, new { id = "hd_ProyectoId" }) 
 
 <div class="row">
     <div class="col-md-4 text-center" data-bind="css: { 'selected-block': EsConfiguracion() }">Configuración de Sprint</div>
@@ -208,7 +208,7 @@
 
             <div class="form-group">
                 <label class="col-xs-4">
-                    Fecha de Fin de Sprint Inicial
+                    Fecha de Fin estimada de Sprint Inicial
                 </label>
                 <div>
                     <!--ko text: showInitialSprintEnd()-->

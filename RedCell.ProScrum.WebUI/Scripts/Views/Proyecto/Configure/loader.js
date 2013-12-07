@@ -218,7 +218,7 @@ var ConfigurarModel = function () {
             dataType: "json",
             contentType: "application/json",
             success: function (data) {
-                window.location = "/Home";
+                window.location = "/Proyecto";
             }
 
         });

@@ -163,11 +163,17 @@ var ConfigurarModel = function () {
     }
 
     self.showAddActivity = function () {
+        if (!validarUserStory())
+            return false;
+
         $("#dialog-modal").dialog("open");
     }
 
     self.addActivity = function (data, event) {
         if (event.keyCode == 13) {
+            if (!validarActividad())
+                return false;
+
             UserStory.ActividadesUserStory.push({ Descripcion: self.DescripcionActividad() });
             self.DescripcionActividad('');
         }
@@ -275,6 +281,24 @@ function validarUserStory() {
     if (horasEstimadas.value == "")
         mensaje += "-Horas Estimadas\n";
 
+    if (mensaje.length > 0) {
+        mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
+        alert(mensaje);
+        return false;
+    }
+
+    return true;
+}
+
+function validarActividad() {
+
+    var descripcionActividad = document.getElementById("txt-descripcionActividad");
+
+    var mensaje = "";
+
+    if (descripcionActividad.value == "")
+        mensaje += "-Descripción de la actividad\n";
+    
     if (mensaje.length > 0) {
         mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
         alert(mensaje);

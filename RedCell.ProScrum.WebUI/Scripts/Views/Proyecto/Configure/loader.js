@@ -155,11 +155,11 @@ var ConfigurarModel = function () {
     }
 
     self.showBacklogUserStories = function () {
-        alert(ko.toJSON(self.BacklogUserStories));
+        //alert(ko.toJSON(self.BacklogUserStories));
     }
 
     self.showInitialSprintUserStories = function () {
-        alert(ko.toJSON(self.SprintUserStories));
+        //alert(ko.toJSON(self.SprintUserStories));
     }
 
     self.showAddActivity = function () {
@@ -170,18 +170,22 @@ var ConfigurarModel = function () {
     }
 
     self.addActivity = function (data, event) {
-        if (event.keyCode == 13) {
-            if (!validarActividad())
-                return false;
 
-            UserStory.ActividadesUserStory.push({ Descripcion: self.DescripcionActividad() });
-            self.DescripcionActividad('');
+
+        if (event.keyCode == 13) {
+
+            if (validarActividad()) {
+
+                UserStory.ActividadesUserStory.push({ Descripcion: self.DescripcionActividad() });
+                self.DescripcionActividad('');
+            }
         }
+
         return true;
     }
 
     self.closeActivityWindow = function () {
-        alert(ko.toJSON(UserStory));
+        //alert(ko.toJSON(UserStory));
         $("#dialog-modal").dialog("close");
     }
 
@@ -226,7 +230,7 @@ var ConfigurarModel = function () {
         columns: [
             { headerText: "Actividad", rowText: "Descripcion" }
         ],
-        pageSize: 7
+        pageSize: 4
     });
 
     self.init();
@@ -298,7 +302,7 @@ function validarActividad() {
 
     if (descripcionActividad.value == "")
         mensaje += "-Descripción de la actividad\n";
-    
+
     if (mensaje.length > 0) {
         mensaje = "Por favor, ingrese información válida en:\n\n" + mensaje;
         alert(mensaje);

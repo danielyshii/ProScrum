@@ -90,6 +90,7 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
 
     public class ConfigurarProyectoViewModel
     {
+
         public int ProyectoId { get; set; }
 
         public int SemanasEstimadas { get; set; }

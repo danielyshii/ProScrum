@@ -172,7 +172,7 @@
                 </label>
                 <div>
                     <!--ko text: BacklogUserStories().length-->
-                <!--/ko-->
+                    <!--/ko-->
                 </div>
             </div>
 
@@ -230,23 +230,43 @@
 
 <div id="dialog-modal" title="Registro de Actividades">
 
-    <form class="form-horizontal" role="form">
-        <div class="form-group">
-            <label for="cb-duracion" class="col-xs-4">
-                Ingrese Actividad
-            </label>
-            <div class="col-xs-8">
-                <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, valueUpdate: 'keyup',
-    event: { keypress: addActivity }" />
-            </div>
-        </div>
-    </form>
-
-    <div data-bind='if: ActividadesUserStory().length > 0'>
-        <div data-bind='simpleGrid: ActivityViewModel'>
+    <div class="form-group">
+        <label for="cb-duracion" class="col-xs-4">
+            Ingrese Actividad
+        </label>
+        <div class="col-xs-8">
+            <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, event: { keyup: addActivity }" />
         </div>
     </div>
-    <button data-bind="click: closeActivityWindow">Cerrar</button>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-3">
+            &nbsp;
+        </div>
+        <div class="col-xs-5" data-bind='if: ActividadesUserStory().length > 0'>
+            <div data-bind='simpleGrid: ActivityViewModel'>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            &nbsp;
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-xs-5">
+            &nbsp;
+        </div>
+        <div class="col-xs-2" >
+            <button class="btn btn-default" data-bind="click: closeActivityWindow">Cerrar</button>
+        </div>
+        <div class="col-xs-5">
+            &nbsp;
+        </div>
+    </div>
 </div>
 
 @section css

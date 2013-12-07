@@ -60,8 +60,8 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <table data-bind="visible: integrantesProyecto().length > 0">
+        <div class="row">
+            <table class="table table-hover" data-bind="visible: integrantesProyecto().length > 0">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -73,9 +73,11 @@
                     <tr>
                         <td data-bind='text: Nombre'></td>
                         <td>
-                            <input type="checkbox" data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
+                            <input type="checkbox"  data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
                         <td>
-                            <a href="#" data-bind='ifnot: EsEncargado, click: $root.removeIntegrante'>Eliminar</a>
+                            <!--ko ifnot: EsEncargado-->
+                            <a href="#" class="btn btn-default" data-bind='click: $root.removeIntegrante'>Eliminar</a>
+                            <!--/ko-->
                         </td>
                     </tr>
                 </tbody>

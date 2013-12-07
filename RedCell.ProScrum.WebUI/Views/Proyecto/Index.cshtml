@@ -23,7 +23,7 @@
 
 
 <p>
-    @Html.ActionLink(Recursos.Proyecto_LabelCrear, "Create", null, new { @class = "btn btn-default" })
+    <a class="btn btn-default" href="/Proyecto/Create"><span class="glyphicon glyphicon-plus"></span> Nuevo</a>    
 </p>
 
 <br />
@@ -36,7 +36,9 @@
         <input type="text" class="form-control" data-bind="value: descripcion" placeholder="Ingrese descripción" />
     </div>
     <div class="col-xs-2">
-        <button data-bind='click: searchProject' class="btn btn-default">Buscar</button>
+        <button data-bind='click: searchProject' class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span> Buscar
+        </button>
     </div>
 </div>
 
@@ -60,9 +62,13 @@
                 <td data-bind='text: Estado'></td>
                 <td data-bind='text: Encargado'></td>
                 <td>
-                    <a href="#" class="btn btn-default btn-sm" data-bind='click: $root.updateProject'>Actualizar</a>
+                    <a href="#" class="btn btn-default btn-sm" data-bind='click: $root.updateProject'>
+                        <span class="glyphicon glyphicon-wrench"></span> Actualizar                        
+                    </a>
                     <!--ko if: EstadoProyectoId == @((int)Enums.PorConfigurar)-->
-                    <a href="#" class="btn btn-default btn-sm" data-bind="click: $root.removeProject">Eliminar</a>
+                    <a href="#" class="btn btn-default btn-sm" data-bind="click: $root.removeProject">
+                        <span class="glyphicon glyphicon-trash"></span> Eliminar
+                    </a>
                     <!--/ko-->
                 </td>
             </tr>

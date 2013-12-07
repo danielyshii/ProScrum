@@ -73,7 +73,9 @@
             <div class="text-center col-xs-4">
             </div>
             <div class="text-center col-xs-4">
-                <button class="btn btn-default" data-bind="click: toDefinition">Siguiente</button>
+                <button class="btn btn-default" data-bind="click: toDefinition">
+                    <span class="glyphicon glyphicon-chevron-right"></span> Siguiente
+                </button>
             </div>
             <div class="text-center col-xs-4">
             </div>
@@ -102,7 +104,7 @@
         </div>
     </div>
 
-    </br>
+    <br />
 
     <form class="form-horizontal" role="form">
         <fieldset>
@@ -138,17 +140,21 @@
                 </div>
             </div>
 
-            </br>
+            <br />
 
             <div class="form-group">
                 <div class="col-xs-4">
                     &nbsp;
                 </div>
                 <div class="col-xs-2 text-right">
-                    <button class="btn btn-default" data-bind="click: backToConfiguration">Anterior</button>
+                    <button class="btn btn-default" data-bind="click: backToConfiguration">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Anterior
+                    </button>
                 </div>
                 <div class="col-xs-2 text-left">
-                    <button class="btn btn-default" data-bind="click: toResume">Siguiente</button>
+                    <button class="btn btn-default" data-bind="click: toResume">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Siguiente
+                    </button>
                 </div>
                 <div class="col-xs-4">
                     &nbsp;
@@ -172,7 +178,7 @@
                 </label>
                 <div>
                     <!--ko text: BacklogUserStories().length-->
-                    <!--/ko-->
+                <!--/ko-->
                 </div>
             </div>
 
@@ -206,17 +212,21 @@
                 </div>
             </div>
 
-            </br>
+            <br />
 
             <div class="form-group">
                 <div class="col-xs-4">
                     &nbsp;
                 </div>
                 <div class="col-xs-2 text-right">
-                    <button class="btn btn-default" data-bind="click: backToDefinition">Anterior</button>
+                    <button class="btn btn-default" data-bind="click: backToDefinition">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Anterior
+                    </button>
                 </div>
                 <div class="col-xs-2 text-left">
-                    <button class="btn btn-default" data-bind="click: finalizeConfiguration">Finalizar</button>
+                    <button class="btn btn-default" data-bind="click: finalizeConfiguration">
+                        <span class="glyphicon glyphicon-floppy-disk"></span> Finalizar
+                    </button>
                 </div>
                 <div class="col-xs-4">
                     &nbsp;
@@ -230,14 +240,14 @@
 
 <div id="dialog-modal" title="Registro de Actividades">
 
-    <div class="form-group">
-        <label for="cb-duracion" class="col-xs-4">
-            Ingrese Actividad
-        </label>
-        <div class="col-xs-8">
+        <div class="form-group">
+            <label for="cb-duracion" class="col-xs-4">
+                Ingrese Actividad
+            </label>
+            <div class="col-xs-8">
             <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, event: { keyup: addActivity }" />
+            </div>
         </div>
-    </div>
 
     <br/>
 
@@ -246,8 +256,8 @@
             &nbsp;
         </div>
         <div class="col-xs-5" data-bind='if: ActividadesUserStory().length > 0'>
-            <div data-bind='simpleGrid: ActivityViewModel'>
-            </div>
+        <div data-bind='simpleGrid: ActivityViewModel'>
+        </div>
         </div>
         <div class="col-xs-3">
             &nbsp;
@@ -261,12 +271,13 @@
             &nbsp;
         </div>
         <div class="col-xs-2" >
-            <button class="btn btn-default" data-bind="click: closeActivityWindow">Cerrar</button>
+            <button data-bind="click: closeActivityWindow">
+                <span class="glyphicon glyphicon-log-out"></span> Cerrar
+            </button>
         </div>
         <div class="col-xs-5">
             &nbsp;
         </div>
-    </div>
 </div>
 
 @section css

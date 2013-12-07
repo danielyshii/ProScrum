@@ -78,7 +78,9 @@
                             <input type="checkbox"  data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
                         <td>
                             <!--ko ifnot: EsEncargado-->
-                            <a href="#" class="btn btn-default" data-bind='click: $root.removeIntegrante'>Eliminar</a>
+                            <a href="#" class="btn btn-default" data-bind='click: $root.removeIntegrante'>
+                                <span class="glyphicon glyphicon-trash"></span> Eliminar
+                            </a>
                             <!--/ko-->
                         </td>
                     </tr>
@@ -131,7 +133,9 @@
     </fieldset>
 
     <p>
-        <button data-bind='click: save' class="btn btn-default">Registrar</button>
+        <button data-bind='click: save' class="btn btn-default">
+            <span class="glyphicon glyphicon-floppy-disk"></span> Registrar
+        </button>
     </p>
 
 </form>

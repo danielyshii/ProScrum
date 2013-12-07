@@ -4,117 +4,133 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Nuevo Proyecto</h2>
+<form class="form-horizontal" role="form">
 
-<fieldset>
-    <legend>Datos de Proyecto</legend>
+    <h2>Nuevo Proyecto</h2>
 
-    <div class="editor-label">
-        Empresa
-    </div>
-    <div class="editor-field">
-        <select id="cb-empresa" data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione', event: { change: empresaChange }"></select>
-    </div>
+    <fieldset>
+        <legend>Datos de Proyecto</legend>
 
-    <div class="editor-label">
-        Contacto
-    </div>
-    <div class="editor-field">
-        <select id="cb-contacto" data-bind="options: contactos, optionsText: 'Nombre', optionsValue: 'ContactoId', value: contactoSeleccionado, optionsCaption: 'Seleccione'"></select>
-    </div>
+        <div class="form-group">
+            <label for="cb-empresa" class="col-xs-2">
+                Empresa
+            </label>
+            <div class="col-xs-4">
+                <select id="cb-empresa" class="form-control input-sm" data-bind="options: empresas, optionsText: 'Nombre', optionsValue: 'EmpresaId', value: empresaSeleccionada, optionsCaption: 'Seleccione', event: { change: empresaChange }"></select>
+            </div>
+        </div>
 
-    <div class="editor-label">
-        Mnemonico
-    </div>
-    <div class="editor-field">
-        <input id="txt-mnemonico" data-bind='value: mnemonico' />
-    </div>
+        <div class="form-group">
+            <label for="cb-contacto" class="col-xs-2">
+                Contacto
+            </label>
+            <div class="col-xs-4">
+                <select id="cb-contacto" class="form-control input-sm" data-bind="options: contactos, optionsText: 'Nombre', optionsValue: 'ContactoId', value: contactoSeleccionado, optionsCaption: 'Seleccione'"></select>
+            </div>
+        </div>
 
-    <div class="editor-label">
-        Nombre
-    </div>
-    <div class="editor-field">
-        <input id="txt-nombre" data-bind="value: nombre" />
-    </div>
-</fieldset>
+        <div class="form-group">
+            <label for="txt-mnemonico" class="col-xs-2" >
+                Mnemónico
+            </label>
+            <div class="col-xs-4">
+                <input id="txt-mnemonico" class="form-control input-sm" data-bind='value: mnemonico' placeholder="Ingrese el mnemónico" />
+            </div>
+        </div>
 
-<fieldset>
-    <legend>Equipo de Proyecto</legend>
+        <div class="form-group">
+            <label for="txt-nombre" class="col-xs-2">
+                Nombre
+            </label>
+            <div class="col-xs-4">
+                <input id="txt-nombre" class="form-control input-sm" data-bind="value: nombre" placeholder="Ingrese el nombre" />
+            </div>
+        </div>
+    </fieldset>
 
-    <div class="editor-label">
-        Nombre del Integrante
-    </div>
-    <div class="editor-field">
-        <input type="text" id="memo" data-bind="autoComplete: integrantesProyecto, source: '/Proyecto/ListarIntegrante'" />
-    </div>
+    <fieldset>
+        <legend>Equipo de Proyecto</legend>
 
-    <div>
-        <table data-bind="visible: integrantesProyecto().length > 0">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>¿Es Encargado?</th>
-                    <th />
-                </tr>
-            </thead>
-            <tbody data-bind='foreach: integrantesProyecto'>
-                <tr>
-                    <td data-bind='text: Nombre'></td>
-                    <td>
-                        <input type="checkbox" data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
-                    <td>
-                        <a href="#" data-bind='ifnot: EsEncargado, click: $root.removeIntegrante'>Eliminar</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="form-group">
+            <label for="memo" class="col-xs-2">
+                Nombre del Integrante
+            </label>
+            <div class="col-xs-4">
+                <input type="text" id="memo" class="form-control input-sm" data-bind="autoComplete: integrantesProyecto, source: '/Proyecto/ListarIntegrante'" placeholder="Ingrese el nombre del integrante" />
+            </div>
+        </div>
 
-</fieldset>
+        <div class="form-group">
+            <table data-bind="visible: integrantesProyecto().length > 0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>¿Es Encargado?</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody data-bind='foreach: integrantesProyecto'>
+                    <tr>
+                        <td data-bind='text: Nombre'></td>
+                        <td>
+                            <input type="checkbox" data-bind="checked: EsEncargado, click: $root.seleccionarEncargado" /></td>
+                        <td>
+                            <a href="#" data-bind='ifnot: EsEncargado, click: $root.removeIntegrante'>Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-<fieldset>
-    <legend>Datos adicionales</legend>
+    </fieldset>
 
-    <div class="editor-label">
-        Inicio Estimado
-    </div>
-    <div class="editor-field">
-        <input id="dtp-desde" data-bind="datepicker: inicioEstimado, datepickerOptions: {
-            minDate: new Date(),
-            onClose: function (fechaSeleccionada) {
-                $('#dtp-hasta').datepicker('option', 'minDate', fechaSeleccionada);
-            }
-        }" />
-    </div>
+    <fieldset>
+        <legend>Datos adicionales</legend>
 
-    <div class="editor-label">
-        Fin Estimado
-    </div>
-    <div class="editor-field">
-        <input id="dtp-hasta" data-bind="datepicker: finEstimado, datepickerOptions: {
-    minDate: new Date(),
-        onClose: function (fechaSeleccionada) {
-            $('#dtp-desde').datepicker('option', 'maxDate', fechaSeleccionada);
-            }
-        }" />
-    </div>
+        <div class="form-group">
+            <label for="dtp-desde" class="col-xs-2">
+                Inicio Estimado
+            </label>
+            <div class="col-xs-2">
+                <input id="dtp-desde" class="form-control input-sm" placeholder="Ingrese el Inicio Estimado" data-bind="datepicker: inicioEstimado, datepickerOptions: {
+                minDate: new Date(),
+                onClose: function (fechaSeleccionada) {
+                    $('#dtp-hasta').datepicker('option', 'minDate', fechaSeleccionada);
+    }
+}" />
+            </div>
+        </div>
 
-    <div class="editor-label">
-        Horas Asignadas
-    </div>
-    <div class="editor-field">
-        <input id="txt-horasAsignadas" type="text" data-bind="value: horasEstimadas" />
-    </div>
+        <div class="form-group">
+            <label for="dtp-hasta" class="col-xs-2">
+                Fin Estimado
+            </label>
+            <div class="col-xs-2">
+                <input id="dtp-hasta" class="form-control input-sm" placeholder="Ingrese el Fin Estimado" data-bind="datepicker: finEstimado, datepickerOptions: {
+                minDate: new Date(),
+                onClose: function (fechaSeleccionada) {
+                    $('#dtp-desde').datepicker('option', 'maxDate', fechaSeleccionada);
+    }
+}" />
+            </div>
+        </div>
 
-</fieldset>
+        <div class="form-group">
+            <label for="txt-horasAsignadas" class="col-xs-2">
+                Horas Asignadas
+            </label>
+            <div class="col-xs-2">
+                <input id="txt-horasAsignadas" class="form-control input-sm" placeholder="Ingrese las horas" type="text" data-bind="value: horasEstimadas" />
+            </div>
+        </div>
 
-<p>
-    <button data-bind='click: save'>Registrar</button>
-</p>
+    </fieldset>
 
-<div>
-    @Html.ActionLink("Volver", "Index")
-</div>
+    <p>
+        <button data-bind='click: save' class="btn btn-default">Registrar</button>
+    </p>
+
+</form>
 
 @section css {
     @Styles.Render("~/Content/themes/base/css")

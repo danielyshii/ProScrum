@@ -4,158 +4,249 @@
     ViewBag.Title = "Configure";
 }
 
-<h2>Configurar Proyecto</h2>
+<div class="page-header">
+    <h2>Configurar Proyecto</h2>
+</div>
 
 @Html.HiddenFor(x => x.ProyectoId, new { id = "hd_ProyectoId" })
 
 <div class="row">
-    <div class="block" data-bind="css: { 'selected-block': EsConfiguracion() }">Configuración de Script</div>
-    <div class="block" data-bind="css: { 'selected-block': EsDefinicion() }">Definición del Product Backlog</div>
-    <div class="block" data-bind="css: { 'selected-block': EsResumen() }">Resumen de Configuración</div>
+    <div class="col-md-4 text-center" data-bind="css: { 'selected-block': EsConfiguracion() }">Configuración de Sprint</div>
+    <div class="col-md-4 text-center" data-bind="css: { 'selected-block': EsDefinicion() }">Definición del Product Backlog</div>
+    <div class="col-md-4 text-center" data-bind="css: { 'selected-block': EsResumen() }">Resumen de Configuración</div>
 </div>
+
+<hr>
 
 <div data-bind='if: EsConfiguracion()'>
 
-    <div>
-        <div class="editor-label">
-            Seleccione la duración en semanas
-        </div>
-        <div class="editor-field">
-            <div style="width: 200px">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="cb-duracion" class="col-xs-4">
+                Seleccione la duración en semanas
+            </label>
+            <div class="col-xs-2">
                 <div data-bind="slider: SemanasEstimadas, sliderOptions: { min: 2, max: 8 }"></div>
-                <input id="txt-semanasEstimadas" type="text" data-bind="value: SemanasEstimadas" onkeypress="return isNumber(event)" />
+            </div>
+            <div class="col-xs-1">
+                <input id="txt-semanasEstimadas" class="form-control input-sm" type="text" data-bind="value: SemanasEstimadas" onkeypress="return isNumber(event)" />
             </div>
         </div>
-    </div>
 
-    <div>
-        <input id="chb-usarSecuencial" type="checkbox" data-bind="checked: UsarSecuencial" />
-        &nbsp; Usar Secuencial de Script como nombre de 
-    </div>
-    <div>
-        Ingrese Nombre del Sprint Inicial &nbsp;
-        <input id="txt-nombreSprintInicial" data-bind="value: NombreSprintInicial" />
-    </div>
+        <div class="form-group">
+            <div class="col-xs-5">
+                <input id="chb-usarSecuencial" type="checkbox" data-bind="checked: UsarSecuencial" />
+                &nbsp; Usar Secuencial de Script como nombre de Sprint
+            </div>
+        </div>
 
-    <div>
-        Ingrese la fecha de inicio del Sprint Inicial
-    <input id="dtp-inicio" type="text" data-bind="datepicker: FechaInicioSprintInicial, datepickerOptions: { minDate: new Date() }" />
-    </div>
+        <div class="form-group">
+            <div class="col-xs-1">
+                &nbsp;
+            </div>
+            <div class="col-xs-3">
+                Ingrese Nombre del Sprint Inicial
+            </div>
+            <div class="col-xs-2">
+                <input type="text" class="form-control input-sm" id="txt-nombreSprintInicial" data-bind="value: NombreSprintInicial, disable: UsarSecuencial" />
+            </div>
+        </div>
 
-    <div>
-        Ingrese el objetivo del Sprint
-    <textarea id="txt-objetivoSprint" rows="2" cols="70" data-bind="value: ObjetivoSprint"></textarea>
-    </div>
+        <div class="form-group">
+            <label for="cb-duracion" class="col-xs-4">
+                Ingrese la fecha de inicio del Sprint Inicial
+            </label>
+            <div class="col-xs-2">
+                <input id="dtp-inicio" class="form-control input-sm" type="text" data-bind="datepicker: FechaInicioSprintInicial, datepickerOptions: { minDate: new Date() }" />
+            </div>
+        </div>
 
-    <button data-bind="click: toDefinition">Siguiente</button>
+        <div class="form-group">
+            <label for="cb-duracion" class="col-xs-4">
+                Ingrese el objetivo del Sprint
+            </label>
+            <div class="col-xs-8">
+                <textarea id="txt-objetivoSprint" class="form-control input-sm" rows="2" cols="70" data-bind="value: ObjetivoSprint"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-center col-xs-4">
+            </div>
+            <div class="text-center col-xs-4">
+                <button class="btn btn-default" data-bind="click: toDefinition">Siguiente</button>
+            </div>
+            <div class="text-center col-xs-4">
+            </div>
+        </div>
+    </form>
+
+
 
 </div>
 
 
 <div data-bind='if: EsDefinicion()'>
-    <div>
-        <a href="#" data-bind='click: showInitialSprintUserStories'>
-            <!--ko text: SprintUserStories().length-->
-            <!--/ko-->
-            User Stories en el Sprint Inicial</a>
-        <a href="#" data-bind='click: showBacklogUserStories'>
-            <!--ko text: BacklogUserStories().length-->
-            <!--/ko-->
-            User Stories en el Product Backlog</a>
 
+    <div class="row">
+        <div class="col-xs-6 text-center">
+            <a href="#" data-bind='click: showInitialSprintUserStories'>
+                <!--ko text: SprintUserStories().length-->
+                <!--/ko-->
+                User Stories en el Sprint Inicial</a>
+        </div>
+        <div class="col-xs-6 text-center">
+            <a href="#" data-bind='click: showBacklogUserStories'>
+                <!--ko text: BacklogUserStories().length-->
+                <!--/ko-->
+                User Stories en el Product Backlog</a>
+        </div>
     </div>
 
+    </br>
 
-    <fieldset>
-        <legend>User Story</legend>
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>User Story</legend>
 
-        <div class="editor-label">
-            Descripción
-        </div>
-        <div class="editor-field">
-            <input id="txt-descripcionUserStory" data-bind="value: DescripcionUserStory" />
-        </div>
+            <div class="form-group">
+                <label for="cb-empresa" class="col-xs-3">
+                    Descripción
+                </label>
+                <div class="col-xs-4">
+                    <textarea class="form-control input-sm" rows="2" cols="70" id="txt-descripcionUserStory" data-bind="value: DescripcionUserStory"></textarea>
+                </div>
+            </div>
 
-        <div class="editor-label">
-            Horas Estimadas
-        </div>
-        <div class="editor-field">
-            <input id="txt-horasEstimadas" data-bind="value: HorasEstimadas" onkeypress="return isNumber(event)" />
-        </div>
+            <div class="form-group">
+                <label for="cb-empresa" class="col-xs-3">
+                    Horas Estimadas
+                </label>
+                <div class="col-xs-1">
+                    <input id="txt-horasEstimadas" class="form-control input-sm" data-bind="value: HorasEstimadas" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
 
-        <div>
-            <input type="checkbox" data-bind="checked: PerteneceSprintInicial" />
-            &nbsp; Pertenece al Sprint Inicial
-            <button data-bind="click: showAddActivity">Agregar Actividades</button>
-            <button data-bind="click: addUserStory">Agregar User Story</button>
-        </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <input type="checkbox" data-bind="checked: PerteneceSprintInicial" />
+                    &nbsp; Pertenece al Sprint Inicial
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-default" data-bind="click: showAddActivity">Actividades</button>
+                    &nbsp;
+                    <button class="btn btn-default" data-bind="click: addUserStory">User Story</button>
+                </div>
+            </div>
 
-    </fieldset>
+            </br>
 
-    <button data-bind="click: backToConfiguration">Anterior</button>
-    <button data-bind="click: toResume">Siguiente</button>
+            <div class="form-group">
+                <div class="col-xs-4">
+                    &nbsp;
+                </div>
+                <div class="col-xs-2 text-right">
+                    <button class="btn btn-default" data-bind="click: backToConfiguration">Anterior</button>
+                </div>
+                <div class="col-xs-2 text-left">
+                    <button class="btn btn-default" data-bind="click: toResume">Siguiente</button>
+                </div>
+                <div class="col-xs-4">
+                    &nbsp;
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
 
 </div>
 
 <div data-bind='if: EsResumen()'>
-    <fieldset>
-        <legend>Detalle de la configuración</legend>
 
-        <div class="editor-label">
-            User Story Creados en Backlog
-        </div>
-        <div class="editor-field">
-            <!--ko text: BacklogUserStories().length-->
-            <!--/ko-->
-        </div>
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>Detalle de la configuración</legend>
 
-        <div class="editor-label">
-            User Story asignados al Sprint Inicial
-        </div>
-        <div class="editor-field">
-            <!--ko text: SprintUserStories().length-->
-            <!--/ko-->
-        </div>
+            <div class="form-group">
+                <label class="col-xs-4">
+                    User Story Creados en Backlog
+                </label>
+                <div>
+                    <!--ko text: BacklogUserStories().length-->
+                <!--/ko-->
+                </div>
+            </div>
 
-        <div class="editor-label">
-            Fecha de Inicio de Sprint Inicial
-        </div>
-        <div class="editor-field">
-            <!--ko text: showInitialSprintStart()-->
-            <!--/ko-->
-        </div>
+            <div class="form-group">
+                <label class="col-xs-4">
+                    User Story asignados al Sprint Inicial
+                </label>
+                <div>
+                    <!--ko text: SprintUserStories().length-->
+                    <!--/ko-->
+                </div>
+            </div>
 
-        <div class="editor-label">
-            Fecha de Fin de Sprint Inicial
-        </div>
-        <div class="editor-field">
-            <!--ko text: showInitialSprintEnd()-->
-            <!--/ko-->
-        </div>
+            <div class="form-group">
+                <label class="col-xs-4">
+                    Fecha de Inicio de Sprint Inicial
+                </label>
+                <div>
+                    <!--ko text: showInitialSprintStart()-->
+                    <!--/ko-->
+                </div>
+            </div>
 
-    </fieldset>
+            <div class="form-group">
+                <label class="col-xs-4">
+                    Fecha de Fin de Sprint Inicial
+                </label>
+                <div>
+                    <!--ko text: showInitialSprintEnd()-->
+                    <!--/ko-->
+                </div>
+            </div>
 
-    <button data-bind="click: backToDefinition">Anterior</button>
-    <button data-bind="click: finalizeConfiguration">Finalizar</button>
+            </br>
+
+            <div class="form-group">
+                <div class="col-xs-4">
+                    &nbsp;
+                </div>
+                <div class="col-xs-2 text-right">
+                    <button class="btn btn-default" data-bind="click: backToDefinition">Anterior</button>
+                </div>
+                <div class="col-xs-2 text-left">
+                    <button class="btn btn-default" data-bind="click: finalizeConfiguration">Finalizar</button>
+                </div>
+                <div class="col-xs-4">
+                    &nbsp;
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
 </div>
 
 
 <div id="dialog-modal" title="Registro de Actividades">
-    <div>
-        <div class="editor-label">
-            Ingrese Actividad
-        </div>
-        <div class="editor-field">
-            <input id="txt-descripcionActividad" data-bind="value: DescripcionActividad, valueUpdate: 'keyup',
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="cb-duracion" class="col-xs-4">
+                Ingrese Actividad
+            </label>
+            <div class="col-xs-8">
+                <input id="txt-descripcionActividad" class="form-control input-sm" data-bind="value: DescripcionActividad, valueUpdate: 'keyup',
     event: { keypress: addActivity }" />
-            @*<button data-bind="click: addActivity">Agregar</button>*@
+            </div>
         </div>
-    </div>
+    </form>
+
     <div data-bind='if: ActividadesUserStory().length > 0'>
         <div data-bind='simpleGrid: ActivityViewModel'>
         </div>
     </div>
-    <button data-bind="click: closeActivityWindow">Cerrar</button> 
+    <button data-bind="click: closeActivityWindow">Cerrar</button>
 </div>
 
 @section css

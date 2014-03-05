@@ -6,7 +6,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link href="~/Scripts/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    @Styles.Render("~/Content/boostrap")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -25,8 +25,15 @@
                     <li>@Html.ActionLink("Actualización de Proyectos", "Index", "Proyecto")</li>
                     <li>@Html.ActionLink("Configuración de Proyectos", "Configure", "Proyecto")</li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a>Bienvenido</a>
+                    </li>
+                    <li>
+                         <a href="#">@User.Identity.Name</a>
+                    </li>
+                </ul>
             </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
     @RenderSection("featured", required: false)
@@ -36,7 +43,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
-    <script src="~/Scripts/Bootstrap/js/bootstrap.min.js"></script>
+    @Scripts.Render("~/bundles/boostrap")
     @RenderSection("css", required: false)
     @RenderSection("scripts", required: false)
 </body>

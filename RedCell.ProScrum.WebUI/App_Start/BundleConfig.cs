@@ -22,6 +22,9 @@ namespace RedCell.ProScrum.WebUI
                         "~/Scripts/JQuery/jquery.unobtrusive*",
                         "~/Scripts/JQuery/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/boostrap").Include(
+                        "~/Scripts/Bootstrap/js/bootstrap.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/Scripts/knockout-{version}.js"));
 
@@ -34,6 +37,9 @@ namespace RedCell.ProScrum.WebUI
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/BootstrapSite.css"));
+
+            bundles.Add(new StyleBundle("~/Content/boostrap").Include(
+                        "~/Scripts/Bootstrap/css/bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

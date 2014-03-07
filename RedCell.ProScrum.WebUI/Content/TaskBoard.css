@@ -79,7 +79,8 @@ body
     top: 2px;
 }
 
-.icon-member:before {
+.icon-member:before
+{
     content: "👤";
 }
 
@@ -102,6 +103,59 @@ body
     line-height: 30px;
     width: 30px;
     margin-top: -10px;
+}
+
+.icon-sm
+{
+    font-size: 40px;
+    height: 30px;
+    line-height: 18px;
+    width: 18px;
+    margin-top: -10px;
+}
+
+.icon-popup:before {
+    content: "";
+}
+
+.sidebar-boards-list .icon-popup, .board-list .icon-popup {
+    bottom: 0;
+    font-size: 30px;
+    height: 18px;
+    line-height: 18px;
+    opacity: 0;
+    padding: 9px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition-duration: 150ms;
+    transition-property: color, font-size, background;
+}
+
+.board-list li:hover a .board-list-item-name
+{
+    font-size: 20px;
+    transition-duration: 150ms;
+    transition-property: font-size;
+}
+
+.board-list li a .board-list-item-name
+{
+    font-size: 16px;
+    transition-duration: 150ms;
+    transition-property: font-size;
+}
+
+.board-list li:hover a .icon-popup:hover
+{
+    font-size: 45px;
+    opacity: 1;
+}
+
+.board-list li:hover a .icon-popup
+{
+    color: #ffffff;
+    opacity: 0.75;
 }
 
 .gutter

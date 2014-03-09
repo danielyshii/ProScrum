@@ -128,7 +128,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
             resultado = proyectos2.OrderByDescending(x => x.ProyectoId).ToList();
-
+            
             resultado.ForEach(x => x.Estado = this.EstadosProyecto[x.EstadoProyectoId].Descripcion);
 
             //var proyectos = new List<ListaProyectoViewModel>();

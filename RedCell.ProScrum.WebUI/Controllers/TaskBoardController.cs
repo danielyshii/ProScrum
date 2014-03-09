@@ -13,6 +13,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Index()
         {
+            if (true)
+            {
+                return RedirectToAction("Board");
+            }
+
+            return View();
+        }
+
+        public ActionResult Board()
+        {
             return View();
         }
 

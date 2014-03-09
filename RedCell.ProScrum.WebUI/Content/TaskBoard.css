@@ -19,6 +19,34 @@ body
     z-index: 0;
 }
 
+.body-board-background #header {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0px, rgba(0, 0, 0, 0.15) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    box-shadow: none;
+}
+
+#header {
+    background: linear-gradient(to bottom, #27709B 0px, #24688F 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    height: 30px;
+    overflow: hidden;
+    padding: 5px;
+    position: relative;
+    z-index: 10;
+}
+
+#board {
+    bottom: 12px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+
+.body-board-background {
+    background-size: cover;
+    overflow: hidden;
+}
+
 .clearfix:after
 {
     clear: both;
@@ -32,11 +60,6 @@ body
 .tabbed-page
 {
     background: none repeat scroll 0 0 #FFFFFF;
-}
-
-#content
-{
-    position: relative;
 }
 
     #content .member-notifications-view, #content .member-boards-view
@@ -82,6 +105,16 @@ body
 .icon-member:before
 {
     content: "👤";
+}
+
+.icon-checklist:before
+{
+    content: "";
+}
+
+.icon-lock:before
+{
+    content: "🔒"
 }
 
 .icon-lg, .icon-sm
@@ -276,4 +309,230 @@ a
 .sidebar-boards-list a, .board-list a
 {
     font-weight: bold;
+}
+
+.list-area-wrapper {
+    bottom: 0;
+    left: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.list:first-child {
+    margin-left: 10px;
+}
+.list {
+    background: none repeat scroll 0 0 #DBDBDB;
+    border-radius: 3px;
+    float: left;
+    margin: 0 5px;
+    padding: 4px 3px 3px;
+    position: relative;
+    width: 250px;
+}
+
+
+.list-header.editable {
+    cursor: grab;
+}
+.list-header {
+    min-height: 19px;
+    padding: 3px 26px 2px 6px;
+    position: relative;
+}
+
+.list-cards {
+    clear: both;
+    margin-bottom: 0;
+    min-height: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px 4px 1px;
+    z-index: 1;
+}
+
+.open-card-composer {
+    border-radius: 0 0 3px 3px;
+    color: #939393;
+    display: block;
+    margin: 2px -3px -3px;
+    padding: 7px 10px;
+    position: relative;
+    text-decoration: none;
+}
+
+#content {
+    position: relative;
+}
+
+.list-header-name {
+    display: inline;
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+    min-height: 19px;
+    min-width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+.list-card {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #BDBDBD;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    max-width: 300px;
+    min-height: 20px;
+    position: relative;
+    z-index: 0;
+}
+
+.list-card-labels {
+    margin: 0 8px;
+    position: relative;
+    z-index: 30;
+}
+
+
+.list-card-labels .card-label {
+    border-radius: 0;
+    float: left;
+    height: 4px;
+    margin-bottom: 1px;
+    padding: 0;
+    width: 40px;
+}
+
+.card-label-red {
+    background-color: #CB4D4D;
+}
+
+.card-label-yellow {
+    background-color: #DBDB57;
+}
+
+.card-label-green {
+    background-color: #34B27D;
+}
+
+.card-label-blue {
+    background-color: #4D77CB;
+}
+
+.card-label-orange {
+    background-color: #E09952;
+}
+
+
+
+.card-label {
+    border-radius: 3px;
+    color: #FFFFFF;
+    display: block;
+    font-weight: bold;
+    margin-right: 3px;
+    overflow: hidden;
+    padding: 3px 6px;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.4), 0 0 3px #000000;
+    white-space: nowrap;
+}
+
+.list-card-details {
+    padding: 6px 8px 4px;
+    position: relative;
+    z-index: 10;
+}
+
+.hide {
+    display: none;
+}
+
+.list-card a {
+    color: #393939;
+}
+.clear {
+    clear: both;
+}
+.list-card-title {
+    display: block;
+    font-weight: normal;
+    margin: 0 0 4px;
+    overflow: hidden;
+    padding: 0 18px 0 0;
+    text-decoration: none;
+    word-wrap: break-word;
+}
+
+.badges {
+    float: left;
+    padding-bottom: 2px;
+}
+
+.badge-state-image-only {
+    padding: 0;
+}
+.badge {
+    color: #B3B3B3;
+    float: left;
+    height: 18px;
+    margin: 0 3px 3px 0;
+    padding: 0 4px 0 0;
+    position: relative;
+    text-decoration: none;
+}
+
+.badge-icon {
+    color: #B3B3B3;
+    float: left;
+}
+
+.badge-text {
+    float: left;
+    font-size: 12px;
+}
+
+.list-card-members {
+    float: right;
+    margin: 2px -8px -4px 0;
+}
+
+.list-card-members .member {
+    float: right;
+}
+
+.member {
+    -moz-user-select: none;
+    background-color: #C7C7C7;
+    border-radius: 3px;
+    color: #444444;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 30px;
+    margin: 0 4px 4px 0;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    width: 30px;
+    z-index: 0;
+}
+
+.member-initials {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    left: 0;
+    line-height: 30px;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
 }

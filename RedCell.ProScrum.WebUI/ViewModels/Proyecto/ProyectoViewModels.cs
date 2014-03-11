@@ -88,6 +88,14 @@ namespace RedCell.ProScrum.WebUI.ViewModels.Proyecto
         public string FechaRegistro { get; set; }
     }
 
+    public class ListaProyectoEnProgreso
+    {
+        public int ProyectoId { get; set; }
+        public string Nombre { get; set; }
+        public string Cliente { get; set; }
+        public string FechaRegistro { get; set; }
+    }
+
     public class ConfigurarProyectoViewModel
     {
 

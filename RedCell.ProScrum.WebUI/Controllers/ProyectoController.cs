@@ -457,6 +457,40 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(resultado);
         }
 
+        [HttpPost]
+        public JsonResult ProyectosEnProgreso()
+        {
+            int estadoEnProgreso = (int)EstadosProyecto[(int)EstadoProyectoEnum.EnProgreso].EstadoId;
+
+            var resultado = new List<ListaProyectoEnProgreso>();
+
+            var proyectosEnProgreso = from proyecto in db.Proyectos
+                                         join integranteProyecto in db.IntegrantesProyecto
+                                         on proyecto.ProyectoId equals integranteProyecto.ProyectoId
+                                         join contacto in db.Contactos
+                                         on proyecto.ContactoId equals contacto.ContactoId
+                                         join empresa in db.Empresas
+                                         on contacto.EmpresaId equals empresa.EmpresaId
+                                         where (integranteProyecto.EsEncargado == true
+                                         && integranteProyecto.IntegranteId == EncargadoId)
+                                         && proyecto.EsEliminado == false
+                                         && proyecto.EstadoId == estadoEnProgreso
+                                         select new
+                                         {
+                                             ProyectoId = proyecto.ProyectoId,
+                                             Nombre = proyecto.Nombre,
+                                             Cliente = empresa.Nombre,
+                                             FechaRegistro = proyecto.FechaRegistro
+                                         };
+
+            foreach (var elemento in proyectosEnProgreso)
+            {
+                resultado.Add(new ListaProyectoEnProgreso() { ProyectoId = elemento.ProyectoId, Nombre = elemento.Nombre, Cliente = elemento.Cliente, FechaRegistro = elemento.FechaRegistro.ToString("dd/MM/yyyy") });
+            }
+
+            return Json(resultado);
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();

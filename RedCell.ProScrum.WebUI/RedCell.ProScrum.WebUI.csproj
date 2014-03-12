@@ -174,6 +174,7 @@
       <DependentUpon>ProyectoResourceStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\Proyecto\ProyectoViewModels.cs" />
+    <Compile Include="ViewModels\TaskBoard\TaskBoardViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\BootstrapSite.css" />
@@ -266,6 +267,8 @@
     <Content Include="Scripts\Views\Proyecto\Edit\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Index\loader.js" />
     <Content Include="Scripts\Views\Proyecto\ToConfigure\loader.js" />
+    <Content Include="Scripts\BoardWindowManager.js" />
+    <Content Include="Scripts\Views\TaskBoard\Board\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -290,6 +293,7 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\TaskBoard\Index.cshtml" />
     <Content Include="Views\TaskBoard\Board.cshtml" />
+    <Content Include="Views\TaskBoard\UserStoryDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

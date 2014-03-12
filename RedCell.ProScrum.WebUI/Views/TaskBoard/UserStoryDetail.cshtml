@@ -1,0 +1,90 @@
+﻿@model RedCell.ProScrum.WebUI.ViewModels.TaskBoard.UserStoryDetailViewModel
+
+<div class="window-header clearfix">
+    <span class="window-header-icon icon-lg icon-card"></span>
+    <div class="window-title card-detail-title non-empty inline  editable  ">
+        <h2 class="window-title-text current hide-on-edit">@Model.Codigo</h2>
+    </div>
+</div>
+<div class="window-main-col">
+    <div class="window-main-col-content clearfix">
+        <input type="hidden" id="hddUserStoryId" value="@Model.UserStoryId" />
+        <div attr="desc" class="card-detail-desc window-module gutter clearfix  editable ">
+            <div class="current markeddown hide-on-edit bottom" style="display: block;">
+                <p>@Model.Descripcion</p>
+            </div>
+        </div>
+        <div class="window-module">
+            <div class="window-module-title window-module-title-no-divider">
+                <span class="window-module-title-icon icon-lg icon-activity"></span>
+                <h3>Actividades</h3>
+                <span class="editing-members js-editing-members hide"></span>
+            </div>
+            <!-- Nueva Actividad -->
+            <div class="new-comment js-new-comment">
+                <textarea placeholder="Ingrese una nueva actividad..." class="new-comment-input js-new-comment-input"></textarea>
+                @*<a title="Agregar Inconformidades." class="deleter button-link js-change-bugs"><span class="icon-sm icon-trash"></span></a>*@
+                <div class="member member-no-menu js-add-activity"><span title="Agregar Actividad" class="member-initials">A</span></div>
+            </div>
+            <!-- Nueva Actividad -->
+            <div class="list-actions js-activity-list">
+                @foreach (var actividad in Model.ListaActividades)
+                {
+                    <div class="phenom clearfix">
+                        <div class="creator js-show-mem-menu">
+                            <div class="check-div">
+                                @if (actividad.Terminado)
+                                {
+                                    <input type="checkbox" actividadId ="@actividad.ActividadId" title="Actividad Terminada" checked="checked" disabled="disabled">
+                                }
+                                @if (!actividad.Terminado)
+                                {
+                                    <input type="checkbox" actividadId ="@actividad.ActividadId" class="js-end-activity" title="Seleccione si desea Terminar Actividad">
+                                }
+
+                            </div>
+                        </div>
+                        <div class="phenom-desc">@actividad.Descripcion</div>
+                        @if (!actividad.Terminado)
+                        {
+                            <a title="Eliminar Actividad." actividadId ="@actividad.ActividadId" class="deleter button-link js-delete-activity"><span class="icon-sm icon-trash"></span></a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="window-sidebar">
+    <div class="window-module clearfix">
+        <h3 class="inline">Colores</h3>
+        <div class="card-detail-labels clear js-card-detail-labels">
+            <input type="hidden" id="hddIdColor" value="@Model.Color"/>
+            <span title="Etiqueta Verde" class="card-label card-label-green label-to-assign colored-label" color-id="0">&nbsp; </span>
+            <span title="Etiqueta Amarilla" class="card-label card-label-yellow label-to-assign colored-label" color-id="1">&nbsp; </span>
+            <span title="Etiqueta Naranja" class="card-label card-label-orange label-to-assign colored-label" color-id="2">&nbsp; </span>
+            <span title="Etiqueta Roja" class="card-label card-label-red label-to-assign colored-label" color-id="3">&nbsp; </span>
+            <span title="Etiqueta Azul" class="card-label card-label-blue label-to-assign colored-label" color-id="4">&nbsp; </span>
+        </div>
+    </div>
+    <div class="window-module clearfix">
+        <h3>Usuario</h3>
+        <div class="card-detail-members clearfix">
+            @if (Model.UsuarioId.HasValue)
+            {
+                @Model.Usuario
+            }
+
+            @if (!Model.UsuarioId.HasValue)
+            {
+                <a title="Auto asignar User Story." class="button-link js-change-card-members"><span class="icon-sm icon-member"></span>&nbsp;Asignar</a>
+            }
+        </div>
+    </div>
+    <div class="window-module clearfix">
+        <h3>Opciones Adicionales</h3>
+        <div class="card-detail-members clearfix">
+            <a title="Agregar Inconformidades." class="button-link js-change-bugs"><span class="icon-sm icon-bug"></span>&nbsp;Inconformidades</a>
+        </div>
+    </div>
+</div>

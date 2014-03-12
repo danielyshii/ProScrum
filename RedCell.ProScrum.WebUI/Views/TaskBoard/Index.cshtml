@@ -1,4 +1,4 @@
-﻿@model List<RedCell.ProScrum.WebUI.Models.Proyecto>
+﻿@model IEnumerable<RedCell.ProScrum.WebUI.Models.Proyecto>
 
 @{    
     Layout = null;
@@ -30,7 +30,7 @@
                     @foreach (var item in Model) {
                         
                         <li>
-                            <a class="js-open-board highlight-icon unknown" style="background-color: #999999;" href="/b/ddkgJtzX/test">
+                            <a class="js-open-board highlight-icon unknown" style="background-color: #999999;" href="/TaskBoard/Board/@item.ProyectoId">
                                 <span class="fade"></span>
                                 <span class="details">
                                     <span class="board-list-item-name" title="@item.Nombre">@item.Nombre</span>

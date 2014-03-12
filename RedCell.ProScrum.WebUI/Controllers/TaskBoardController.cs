@@ -29,18 +29,14 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                         && proyecto.EstadoId == estadoEnProgreso
                                         select proyecto;
 
-            List<Proyecto> listaProyectos = new List<Proyecto>();
-
-            return View(proyectoEnProgreso);
-
-            /*if (!proyectoEnProgreso.Any() || proyectoEnProgreso.Count() > 1)
+            if (!proyectoEnProgreso.Any() || proyectoEnProgreso.Count() > 1)
             {
-                return RedirectToAction("ListToBoard");
+                return View(proyectoEnProgreso);
             }
             else
             {
                 return RedirectToAction("Board", new { id = proyectoEnProgreso.First().ProyectoId });
-            }*/
+            }
 
             }
 
@@ -61,11 +57,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             var model = userStories.ToList();
 
             return View(model);
-        }
-
-        public ActionResult ListToBoard()
-        {
-            return View();
         }
 
         [HttpGet]

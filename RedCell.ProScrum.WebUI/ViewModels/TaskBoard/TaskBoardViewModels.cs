@@ -5,6 +5,16 @@ using System.Web;
 
 namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
 {
+
+    public class UserStoryCompactViewModel
+    {
+        public int UserStoryId { get; set; }
+        public bool EstaBloqueada { get; set; }
+        public int NumeroActividadTotal { get; set; }
+        public int NumeroActividadTerminada { get; set; }
+        public int Color { get; set; }
+    }
+
     public class UserStoryDetailViewModel
     {
         public int UserStoryId { get; set; }

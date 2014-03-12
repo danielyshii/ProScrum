@@ -42,7 +42,21 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         public ActionResult Board(int? id)
         {
-            return View();
+            var userStories = from userStory in db.UserStories
+                              join actividades in db.Actividades
+                              on userStory.UserStoryId equals actividades.UserStoryId into actividadesLeft
+                              from subActividades in actividadesLeft
+                              select new UserStoryCompactViewModel { 
+                                  UserStoryId = userStory.UserStoryId,
+                                  EstaBloqueada = true,
+                                  NumeroActividadTerminada = 4,
+                                  NumeroActividadTotal = 5,
+                                  Color = 0
+                              };
+
+            var model = userStories.ToList();
+
+            return View(model);
         }
 
         public ActionResult ListToBoard()

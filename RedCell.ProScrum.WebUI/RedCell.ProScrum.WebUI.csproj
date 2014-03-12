@@ -277,6 +277,7 @@
     <Content Include="Scripts\Views\Proyecto\ToConfigure\loader.js" />
     <Content Include="Scripts\BoardWindowManager.js" />
     <Content Include="Scripts\Views\TaskBoard\Board\loader.js" />
+    <Content Include="Scripts\Views\TaskBoard\ListToBoard\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

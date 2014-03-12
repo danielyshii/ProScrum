@@ -9,46 +9,13 @@
     @using (Html.BeginForm("LogOn", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin", @role = "form" }))
     {
         <h2 class="form-signin-heading">Inicie Sesión</h2>
-        
-
-        
-        <input class="form-control" type="text" autofocus="autofocus" name="UserName" required="required" pattern="[A-Za-z]{6}" title="Codigo de 6 letras" maxlength="6" placeholder="Codigo de Usuario">
+      
+        <input class="form-control" type="text" autofocus="autofocus" name="UserName" required="required" pattern="^[a-zA-Z]+$" title="Codigo de 10 letras" maxlength="10" placeholder="Codigo de Usuario">
         <input class="form-control" type="password" required="required" name="Password" placeholder="Contraseña" title="Contraseña del sistema">
         <label class="checkbox">
             <input type="checkbox" name="RememberMe" value="true">
             Permanecer Conectado
         </label>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Iniciar Sesión"/>
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Iniciar Sesión" />
     }
 </div>
-
-
-
-@*@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>Log in Form</legend>
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </li>
-            <li>
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-            </li>
-        </ol>
-        <input type="submit" value="Log in" />
-    </fieldset>
-    <p>
-        @Html.ActionLink("Register", "Register") if you don't have an account.
-    </p>
-}*@

@@ -43,7 +43,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
             else
             {
-                WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Name = model.UserName });
+                WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Name = model.UserName , IsActive = true});
                 WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe);
                 return Redirect(returnUrl);
             }

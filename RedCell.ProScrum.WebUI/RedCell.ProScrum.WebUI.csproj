@@ -151,11 +151,19 @@
     <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Context\ProScrumContext.cs" />
     <Compile Include="Models\Empresa.cs" />
+    <Compile Include="Models\EstadoActividad.cs" />
+    <Compile Include="Models\EstadoProyecto.cs" />
+    <Compile Include="Models\EstadoSprint.cs" />
+    <Compile Include="Models\EstadoUserStory.cs" />
     <Compile Include="Models\IntegranteProyecto.cs" />
     <Compile Include="Models\Mapping\ActividadMap.cs" />
     <Compile Include="Models\Mapping\CompetenciaMap.cs" />
     <Compile Include="Models\Mapping\ContactoMap.cs" />
     <Compile Include="Models\Mapping\EmpresaMap.cs" />
+    <Compile Include="Models\Mapping\EstadoActividadMap.cs" />
+    <Compile Include="Models\Mapping\EstadoProyectoMap.cs" />
+    <Compile Include="Models\Mapping\EstadoSprintMap.cs" />
+    <Compile Include="Models\Mapping\EstadoUserStoryMap.cs" />
     <Compile Include="Models\Mapping\IntegranteProyectoMap.cs" />
     <Compile Include="Models\Mapping\ProyectoMap.cs" />
     <Compile Include="Models\Mapping\SprintMap.cs" />
@@ -293,6 +301,7 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\TaskBoard\Index.cshtml" />
     <Content Include="Views\TaskBoard\Board.cshtml" />
+    <Content Include="Views\TaskBoard\ListToBoard.cshtml" />
     <Content Include="Views\TaskBoard\UserStoryDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>

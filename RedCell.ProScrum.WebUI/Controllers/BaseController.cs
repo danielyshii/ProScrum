@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using RedCell.ProScrum.WebUI.Models;
 
 namespace RedCell.ProScrum.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+        private ProScrumContext db = new ProScrumContext();
+
         public Dictionary<int, Estado> EstadosProyecto { get; set; }
         public Dictionary<int, Estado> EstadosSprint { get; set; }
         public Dictionary<int, Estado> EstadosUserStory { get; set; }
@@ -18,20 +21,69 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public int EncargadoId = 5;
 
         public BaseController() {
-            EstadosProyecto = new Dictionary<int, Estado>();
-            EstadosProyecto.Add((int)EstadoProyectoEnum.PorConfigurar, new Estado { EstadoId = 1, Descripcion = "Por configurar" });
-            EstadosProyecto.Add((int)EstadoProyectoEnum.Configurado, new Estado { EstadoId = 2, Descripcion = "Configurado" });
-            EstadosProyecto.Add((int)EstadoProyectoEnum.EnProgreso, new Estado { EstadoId = 3, Descripcion = "En Progreso" });
-
-            EstadosSprint = new Dictionary<int, Estado>();
-            EstadosSprint.Add((int)EstadoProyectoEnum.PorConfigurar, new Estado { EstadoId = 1, Descripcion = "Definido" });
-
-            EstadosUserStory = new Dictionary<int, Estado>();
-            EstadosUserStory.Add((int)EstadoUserStoryEnum.Definido, new Estado { EstadoId = 1, Descripcion = "Definido" });
-
-            EstadosActividadStory = new Dictionary<int, Estado>();
-            EstadosActividadStory.Add((int)EstadoActividadEnum.Definido, new Estado { EstadoId = 1, Descripcion = "Definido" });
+            CargarEstadoActividad();
+            CargarEstadoProyecto();
+            CargarEstadoSprint();
+            CargarEstadoUserStory();
         }
+
+        private void CargarEstadoActividad()
+        {
+            EstadosActividadStory = new Dictionary<int, Estado>();
+
+            var EstadosActividadesQuery = from estado in db.EstadoActividades
+                                       orderby estado.EstadoActividadId ascending
+                                       select estado;
+
+            foreach (var estado in EstadosActividadesQuery)
+            {
+                EstadosActividadStory.Add(estado.EstadoActividadId, new Estado { EstadoId = estado.EstadoActividadId, Descripcion = estado.Descripcion });
+            }
+        }
+
+        private void CargarEstadoProyecto(){
+            EstadosProyecto = new Dictionary<int, Estado>();
+
+            var EstadosProyectoQuery = from estado in db.EstadoProyectos
+                                       orderby estado.EstadoProyectoId ascending
+                                       select estado;
+
+            foreach (var estado in EstadosProyectoQuery)
+            {
+                EstadosProyecto.Add(estado.EstadoProyectoId, new Estado { EstadoId = estado.EstadoProyectoId, Descripcion = estado.Descripcion });
+            }
+        }
+
+        private void CargarEstadoSprint()
+        {
+            EstadosSprint = new Dictionary<int, Estado>();
+
+            var EstadosSprintQuery = from estado in db.EstadoSprints
+                                       orderby estado.EstadoSprintId ascending
+                                       select estado;
+
+            foreach (var estado in EstadosSprintQuery)
+            {
+                EstadosSprint.Add(estado.EstadoSprintId, new Estado { EstadoId = estado.EstadoSprintId, Descripcion = estado.Descripcion });
+            }
+        }
+
+        private void CargarEstadoUserStory()
+        {
+            EstadosUserStory = new Dictionary<int, Estado>();
+
+            var EstadosUserStoryQuery = from estado in db.EstadoUserStories
+                                     orderby estado.EstadoUserStoryId ascending
+                                     select estado;
+
+            foreach (var estado in EstadosUserStoryQuery)
+            {
+                EstadosUserStory.Add(estado.EstadoUserStoryId, new Estado { EstadoId = estado.EstadoUserStoryId, Descripcion = estado.Descripcion });
+            }
+        }
+
+        
+
     }
 
     public class Estado

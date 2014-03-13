@@ -106,12 +106,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
     public enum EstadoUserStoryEnum
     {
-        Definido = 1
+        ToDo = 1,
+        InProcess = 2,
+        ToVerify = 3,
+        Done = 4
     }
 
     public enum EstadoActividadEnum
     {
-        Definido = 1
+        Definido = 1,
+        Terminado = 2
     }
 
     public enum TipoActividadEnum

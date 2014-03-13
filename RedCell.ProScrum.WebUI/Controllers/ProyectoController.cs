@@ -346,7 +346,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     userStory.Descripcion = elementoUserStory.DescripcionUserStory;
                     userStory.HorasEstimadas = elementoUserStory.HorasEstimadas;
                     userStory.ProyectoId = proyecto.ProyectoId;
-                    userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.Definido].EstadoId;
+                    userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToDo].EstadoId;
 
                     if (elementoUserStory.ActividadesUserStory != null)
                     {
@@ -376,7 +376,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                     userStory.Descripcion = elementoUserStory.DescripcionUserStory;
                     userStory.HorasEstimadas = elementoUserStory.HorasEstimadas;
                     userStory.ProyectoId = proyecto.ProyectoId;
-                    userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.Definido].EstadoId;
+                    userStory.EstadoId = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToDo].EstadoId;
 
 
                     if (elementoUserStory.ActividadesUserStory != null)
@@ -401,8 +401,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             //Agregamos el Sprint a la lsita de Sprints del Proyecto
             proyecto.Sprints.Add(sprint);
             proyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.Configurado].EstadoId;
-
-            db.SaveChanges();
 
             try
             {

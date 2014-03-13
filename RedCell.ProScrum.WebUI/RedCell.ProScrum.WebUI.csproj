@@ -277,7 +277,6 @@
     <Content Include="Scripts\Views\Proyecto\ToConfigure\loader.js" />
     <Content Include="Scripts\BoardWindowManager.js" />
     <Content Include="Scripts\Views\TaskBoard\Board\loader.js" />
-    <Content Include="Scripts\Views\TaskBoard\ListToBoard\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -302,7 +301,6 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\TaskBoard\Index.cshtml" />
     <Content Include="Views\TaskBoard\Board.cshtml" />
-    <Content Include="Views\TaskBoard\ListToBoard.cshtml" />
     <Content Include="Views\TaskBoard\UserStoryDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>

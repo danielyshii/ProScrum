@@ -31,7 +31,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             if (!proyectoEnProgreso.Any() || proyectoEnProgreso.Count() > 1)
             {
-                return RedirectToAction("ListToBoard");
+                return View(proyectoEnProgreso);
             }
             else
             {
@@ -79,11 +79,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                     };
 
             return Json(new { BoardColumns = estadoUserStories, UserStories = userStories });
-        }
-
-        public ActionResult ListToBoard()
-        {
-            return View();
         }
 
         [HttpGet]

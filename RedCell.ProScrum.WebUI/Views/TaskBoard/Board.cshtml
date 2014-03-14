@@ -32,7 +32,16 @@
             </div>
         </div>
     </div>
-    <div class="window-overlay">
+    <div class="window-overlay-userstory">
+        <div class="window" style="display: block; left: 424px; top: 50px;">
+            <div class="window-wrapper clearfix" style="">
+                <div class="dialog-close-button"><a title="Cerrar esta ventana." class="icon-lg icon-close dark-hover js-close-window"></a></div>
+                <div class="clearfix editable js-dialog-container">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="window-overlay-validate">
         <div class="window" style="display: block; left: 424px; top: 50px;">
             <div class="window-wrapper clearfix" style="">
                 <div class="dialog-close-button"><a title="Cerrar esta ventana." class="icon-lg icon-close dark-hover js-close-window"></a></div>
@@ -42,6 +51,7 @@
             </div>
         </div>
     </div>
+
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript" src="@Url.Content("~/Scripts/BoardWindowManager.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/Views/TaskBoard/Board/loader.js")"></script>

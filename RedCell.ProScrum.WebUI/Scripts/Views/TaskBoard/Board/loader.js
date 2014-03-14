@@ -4,7 +4,8 @@ function BoardController() {
     var base = this;
 
     base.Controles = {
-        WindowManager: new BoardWindowManager()
+        WindowManager: new BoardWindowManager(),
+        ValidateWindowManager : new BoardValidateWindowManager()
     }
 
     base.Funciones = {
@@ -25,6 +26,7 @@ function BoardController() {
             });
 
         },
+
         BuildColumns: function (data) {
 
             var jqColumnContainer = $('div.js-userstory-list');
@@ -47,6 +49,7 @@ function BoardController() {
             base.Funciones.BuildUserStories(data.UserStories);
 
         },
+
         BuildUserStories: function (userStoriesData) {
 
             var jqColumnColection = $('div[column-id-attr]');
@@ -118,8 +121,8 @@ function BoardController() {
                                                     '<span class="card-short-id hide">1</span>' + userStoryData.Codigo + '</a>' +
                                                 userStoryBadges +
                                                 '<div class="list-card-members">' +
-                                                    '<div class="member">' +
-                                                        '<span class="member-initials">⚙</span>' +
+                                                    '<div class="member js-validate-click">' +
+                                                        '<span class="member-initials">👍</span>' +
                                                     '</div>' +
                                                     lockIcon +
                                                 '</div>' +
@@ -132,11 +135,12 @@ function BoardController() {
 
 
             base.Eventos.OnClickCard();
+            base.Eventos.OnClickValidate();
         },
+
         LoadUserStoryWindow: function (userStoryId) {
             $.get('/TaskBoard/UserStoryDetail/' + userStoryId, base.Eventos.OnUserStoryDetailSuccess);
         }
-
     }
 
     base.Eventos = {
@@ -146,14 +150,30 @@ function BoardController() {
             base.Funciones.BuildColumns(data);
 
         },
-        OnClickCard: function () {
-            $("div.list-cards div.list-card").on("click", "div.list-card-details", function () {
 
+        OnClickCard: function () {
+            $("div.list-cards div.list-card").on("click", "div.list-card-details", function (e) {
+                e.stopPropagation();
                 var userStoryId = $(this).attr('user-story-id');
 
                 base.Funciones.LoadUserStoryWindow(userStoryId);
             });
         },
+
+        OnClickValidate: function () {
+
+            $("div.list-cards div.list-card div.list-card-details div.list-card-members").on("click", "div.js-validate-click", function (e) {
+                e.stopPropagation();
+
+                var userStoryId = $(this).attr('user-story-id');
+
+                base.Controles.ValidateWindowManager.show();
+
+                
+            });
+            
+        },
+
         OnUserStoryDetailSuccess: function (data) {
             base.Controles.WindowManager.show(data);
         }
@@ -162,6 +182,7 @@ function BoardController() {
     base.init = function () {
         console.log('Init BoardController');
         base.Controles.WindowManager.init();
+        base.Controles.ValidateWindowManager.init();
         base.Funciones.LoadBoardData();
     };
 

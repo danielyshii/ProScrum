@@ -185,7 +185,7 @@ h2
 
 .icon-lock:before
 {
-    content: "🔒";
+    content: "💥";
 }
 
 .icon-close:before
@@ -656,7 +656,7 @@ a
     width: 100%;
 }
 
-.window-overlay
+.window-overlay-userstory
 {
     background-color: rgba(0, 0, 0, 0.4);
     display: none;
@@ -669,7 +669,25 @@ a
     z-index: 20;
 }
 
-.window-up .window-overlay
+.window-up .window-overlay-userstory
+{
+    display: block;
+}
+
+.window-overlay-validate
+{
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    height: 100%;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 20;
+}
+
+.window-up-validate .window-overlay-validate
 {
     display: block;
 }

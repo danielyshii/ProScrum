@@ -12,7 +12,7 @@
     <title>Index</title>
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/TaskBoard.css")" />
 </head>
-<body class="tabbed-page">
+<body class="tabbed-page body-board-background">
     <div id="surface" class="clearfix" style="height: initial">
         <div id="header">
         </div>
@@ -30,7 +30,7 @@
                     @foreach (var item in Model) {
                         
                         <li>
-                            <a class="js-open-board highlight-icon unknown" style="background-color: #999999;" href="/TaskBoard/Board/@item.ProyectoId">
+                            <a class="js-open-board highlight-icon unknown" style="background-color: #999999;" target="_blank" href="/TaskBoard/Board/@item.ProyectoId">
                                 <span class="fade"></span>
                                 <span class="details">
                                     <span class="board-list-item-name" title="@item.Nombre">@item.Nombre</span>

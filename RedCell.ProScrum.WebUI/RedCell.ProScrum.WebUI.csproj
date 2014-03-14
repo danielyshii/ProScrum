@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Actividad.cs" />
+    <Compile Include="Models\Bloqueo.cs" />
     <Compile Include="Models\Competencia.cs" />
     <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Context\ProScrumContext.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Models\EstadoUserStory.cs" />
     <Compile Include="Models\IntegranteProyecto.cs" />
     <Compile Include="Models\Mapping\ActividadMap.cs" />
+    <Compile Include="Models\Mapping\BloqueoMap.cs" />
     <Compile Include="Models\Mapping\CompetenciaMap.cs" />
     <Compile Include="Models\Mapping\ContactoMap.cs" />
     <Compile Include="Models\Mapping\EmpresaMap.cs" />
@@ -168,11 +170,13 @@
     <Compile Include="Models\Mapping\ProyectoMap.cs" />
     <Compile Include="Models\Mapping\SprintMap.cs" />
     <Compile Include="Models\Mapping\TipoActividadMap.cs" />
+    <Compile Include="Models\Mapping\TipoBloqueoMap.cs" />
     <Compile Include="Models\Mapping\UserStoryMap.cs" />
     <Compile Include="Models\Mapping\UsuarioMap.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Sprint.cs" />
     <Compile Include="Models\TipoActividad.cs" />
+    <Compile Include="Models\TipoBloqueo.cs" />
     <Compile Include="Models\UserStory.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

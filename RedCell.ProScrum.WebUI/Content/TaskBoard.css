@@ -426,12 +426,6 @@ a
     width: 250px;
 }
 
-
-.list-header.editable
-{
-    cursor: grab;
-}
-
 .list-header
 {
     min-height: 19px;

@@ -16,9 +16,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public Dictionary<int, Estado> EstadosUserStory { get; set; }
         public Dictionary<int, Estado> EstadosActividadStory { get; set; }
 
-        public int JefeProyectoId = 4;
+        public int JefeProyectoId = 5;
 
-        public int EncargadoId = 5;
+        public int EncargadoId = 6;
 
         public BaseController() {
             CargarEstadoActividad();
@@ -95,8 +95,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
     public enum EstadoProyectoEnum
     {
         PorConfigurar = 1,
-        Configurado = 2,
-        EnProgreso = 3
+        EnProgreso = 2,
+        Concluido = 3,
+        Cerrado = 4
     }
 
     public enum EstadoSprintEnum

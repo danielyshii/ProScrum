@@ -6,9 +6,12 @@ using System.Web.Mvc;
 using RedCell.ProScrum.WebUI.Models;
 using RedCell.ProScrum.WebUI.ViewModels.Proyecto;
 using RedCell.ProScrum.WebUI.ViewModels.TaskBoard;
+using WebMatrix.WebData;
+using RedCell.ProScrum.WebUI.Filters;
 
 namespace RedCell.ProScrum.WebUI.Controllers
 {
+    [InitializeSimpleMembership]
     public class TaskBoardController : BaseController
     {
         private ProScrumContext db = new ProScrumContext();
@@ -23,8 +26,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             var proyectoEnProgreso = from proyecto in db.Proyectos
                                      join integranteProyecto in db.IntegrantesProyecto
                                      on proyecto.ProyectoId equals integranteProyecto.ProyectoId
-                                     where (integranteProyecto.EsEncargado == true
-                                         && integranteProyecto.IntegranteId == EncargadoId)
+                                     where (integranteProyecto.IntegranteId == WebSecurity.CurrentUserId)
                                         && proyecto.EsEliminado == false
                                         && proyecto.EstadoId == estadoEnProgreso
                                      select proyecto;
@@ -53,10 +55,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [HttpPost]
         public JsonResult ListBoardUserStories(int id)
         {
+            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
+
             var userStories = from userStory in db.UserStories
-                              join actividades in db.Actividades
-                              on userStory.UserStoryId equals actividades.UserStoryId into actividadesLeft
-                              from subActividades in actividadesLeft.DefaultIfEmpty()
                               where userStory.ProyectoId == id
                               && userStory.EsEliminado == false
                               select new UserStoryCompactViewModel
@@ -64,11 +65,18 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                   UserStoryId = userStory.UserStoryId,
                                   Codigo = userStory.Codigo,
                                   Descripcion = userStory.Descripcion,
-                                  EstaBloqueada = true,
-                                  NumeroActividadTerminada = 4,
-                                  NumeroActividadTotal = 5,
+                                  EstaBloqueada = userStory.BloqueoId.HasValue,
+                                  NumeroActividadTerminada = (from actividadTerminada in db.Actividades
+                                                              where actividadTerminada.UserStoryId == userStory.UserStoryId
+                                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
+                                                              && actividadTerminada.EsEliminado == false
+                                                              select actividadTerminada).Count(),
+                                  NumeroActividadTotal = (from actividadTotal in db.Actividades
+                                                          where actividadTotal.UserStoryId == userStory.UserStoryId
+                                                          && actividadTotal.EsEliminado == false
+                                                          select actividadTotal).Count(),
                                   EstadoUserStoryId = userStory.EstadoId,
-                                  Color = 0
+                                  Color = userStory.Color
                               };
 
             var estadoUserStories = from estadoUserStory in db.EstadoUserStories
@@ -97,8 +105,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                            UserStoryId = userStory.UserStoryId,
                                            Codigo = userStory.Codigo,
                                            Descripcion = userStory.Descripcion,
-                                           Color = null,
-                                           Usuario = subUsuario.Nombres + " " + subUsuario.Apellidos,
+                                           Color = userStory.Color,
+                                           Usuario = WebSecurity.CurrentUserName,
                                            UsuarioId = subUsuario.UsuarioId
                                        }).FirstOrDefault();
 
@@ -106,7 +114,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                               where actividad.UserStoryId == id
                               && actividad.EsEliminado == false
                               orderby actividad.ActividadId descending
-                              select new 
+                              select new
                               {
                                   ActividadId = actividad.ActividadId,
                                   Descripcion = actividad.Descripcion,
@@ -116,7 +124,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             userStoryEncontrado.ListaActividades = new List<ActividadesViewModel>();
 
             if (actividades.Any())
-            { 
+            {
                 var estadoTerminado = this.EstadosActividadStory[(int)EstadoActividadEnum.Terminado].EstadoId;
 
                 foreach (var elemento in actividades)
@@ -138,5 +146,121 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return PartialView(userStoryEncontrado);
         }
 
+        [HttpPost]
+        public JsonResult ChangeUserStoryColor(int usid, int? color)
+        {
+
+            var element = (from userStory in db.UserStories
+                            where userStory.UserStoryId == usid
+                            select userStory).FirstOrDefault();
+
+            element.Color = color;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            return Json(new { usid = usid, color = color });
+        }
+
+        [HttpPost]
+        public JsonResult AddActivity(string descripcion, int uid)
+        {
+            var element = new Actividad();
+            element.Descripcion = descripcion;
+            element.EsEliminado = false;
+            element.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
+            element.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+            element.UserStoryId = uid;
+            element.UsuarioId = WebSecurity.CurrentUserId;
+
+            db.Actividades.Add(element);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(new { Descripcion = descripcion, ActividadId = element.ActividadId});
+        }
+
+        [HttpPost]
+        public JsonResult DeleteActivity(int aid)
+        {
+            var element = (from activity in db.Actividades
+                           where activity.ActividadId == aid
+                           select activity).FirstOrDefault();
+
+            element.EsEliminado = true;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(null);
+        }
+
+        [HttpPost]
+        public JsonResult EndActivity(int aid)
+        {
+            var element = (from activity in db.Actividades
+                           where activity.ActividadId == aid
+                           select activity).FirstOrDefault();
+
+            element.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Terminado].EstadoId;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(null);
+        }
+
+        [HttpPost]
+        public JsonResult AssignUserStory(int usid)
+        {
+            var element = (from userStory in db.UserStories
+                           where userStory.UserStoryId == usid
+                           select userStory).FirstOrDefault();
+
+            element.ResponsableId = WebSecurity.CurrentUserId;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(new { nombre = WebSecurity.CurrentUserName });
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

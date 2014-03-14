@@ -18,9 +18,13 @@ namespace RedCell.ProScrum.WebUI.Models
         public string Descripcion { get; set; }
         public int HorasEstimadas { get; set; }
         public Nullable<int> Prioridad { get; set; }
+        public Nullable<int> Color { get; set; }
         public int EstadoId { get; set; }
+        public Nullable<int> BloqueoId { get; set; }
         public bool EsEliminado { get; set; }
+
         public virtual ICollection<Actividad> Actividads { get; set; }
+        public virtual Bloqueo Bloqueo { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual Sprint Sprint { get; set; }
         public virtual Usuario Usuario { get; set; }

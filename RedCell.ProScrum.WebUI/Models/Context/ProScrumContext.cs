@@ -30,6 +30,8 @@ namespace RedCell.ProScrum.WebUI.Models
         public DbSet<TipoActividad> TipoActividades { get; set; }
         public DbSet<UserStory> UserStories { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Bloqueo> Bloqueos { get; set; }
+        public DbSet<TipoBloqueo> TipoBloqueos { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -48,6 +50,8 @@ namespace RedCell.ProScrum.WebUI.Models
             modelBuilder.Configurations.Add(new TipoActividadMap());
             modelBuilder.Configurations.Add(new UserStoryMap());
             modelBuilder.Configurations.Add(new UsuarioMap());
+            modelBuilder.Configurations.Add(new BloqueoMap());
+            modelBuilder.Configurations.Add(new TipoBloqueoMap());
         }
     }
 }

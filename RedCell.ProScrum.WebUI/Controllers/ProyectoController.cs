@@ -400,7 +400,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             //Agregamos el Sprint a la lsita de Sprints del Proyecto
             proyecto.Sprints.Add(sprint);
-            proyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.Configurado].EstadoId;
+            proyecto.EstadoId = this.EstadosProyecto[(int)EstadoProyectoEnum.EnProgreso].EstadoId;
 
             try
             {
@@ -458,7 +458,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [HttpPost]
         public JsonResult ProyectosEnProgreso()
         {
-            int estadoEnProgreso = (int)EstadosProyecto[(int)EstadoProyectoEnum.EnProgreso].EstadoId;
+            int estadoEnProgreso = (int)EstadosProyecto[(int)EstadoProyectoEnum.Concluido].EstadoId;
 
             var resultado = new List<ListaProyectoEnProgreso>();
 

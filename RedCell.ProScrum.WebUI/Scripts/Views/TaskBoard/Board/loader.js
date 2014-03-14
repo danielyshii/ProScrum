@@ -64,7 +64,6 @@ function BoardController() {
                     lockBadge = '<div class="badge badge-state-image-only">' +
                                     '<span class="badge-icon icon-sm icon-lock"></span>' +
                                 '</div>';
-
                 }
                 else {
                     lockIcon = '<div class="member">' +
@@ -78,13 +77,13 @@ function BoardController() {
                                         '<span class="badge-text">' + userStoryData.NumeroActividadTerminada + '/' + userStoryData.NumeroActividadTotal + '</span>' +
                                     '</div>';
                 }
-
-                if (userStoriesData.Color != null) {
+                
+                if (userStoryData.Color != null) {
 
                     for (var i = 0; i < 5; i++) {
-                        if (i == userStoriesData.Color)
+                        if (i == userStoryData.Color)
                         {
-                            switch (userStoriesData.Color) {
+                            switch (userStoryData.Color) {
                                 case 0:
                                     colorString = '<span class="card-label card-label-green"></span>';
                                     break;

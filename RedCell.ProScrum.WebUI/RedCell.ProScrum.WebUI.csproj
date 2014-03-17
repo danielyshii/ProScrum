@@ -248,6 +248,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\BoardWindowManager.js" />
     <Content Include="Scripts\Bootstrap\css\bootstrap.css" />
     <Content Include="Scripts\Bootstrap\css\bootstrap.min.css" />
     <Content Include="Scripts\Bootstrap\fonts\glyphicons-halflings-regular.svg" />
@@ -279,7 +280,6 @@
     <Content Include="Scripts\Views\Proyecto\Edit\loader.js" />
     <Content Include="Scripts\Views\Proyecto\Index\loader.js" />
     <Content Include="Scripts\Views\Proyecto\ToConfigure\loader.js" />
-    <Content Include="Scripts\BoardWindowManager.js" />
     <Content Include="Scripts\Views\TaskBoard\Board\loader.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">

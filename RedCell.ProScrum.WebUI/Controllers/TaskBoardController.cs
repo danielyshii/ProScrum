@@ -65,7 +65,10 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                   UserStoryId = userStory.UserStoryId,
                                   Codigo = userStory.Codigo,
                                   Descripcion = userStory.Descripcion,
-                                  EstaBloqueada = userStory.BloqueoId.HasValue,
+                                  EstaBloqueada = (from bloqueo in db.Bloqueos
+                                                   where bloqueo.UserStoryId == userStory.UserStoryId
+                                                   && bloqueo.EsEliminado == false
+                                                   select bloqueo.BloqueoId).Count() > 0,
                                   NumeroActividadTerminada = (from actividadTerminada in db.Actividades
                                                               where actividadTerminada.UserStoryId == userStory.UserStoryId
                                                               && actividadTerminada.EstadoId == estadoTerminadoActividad

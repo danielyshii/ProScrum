@@ -27,6 +27,10 @@ namespace RedCell.ProScrum.WebUI.Models.Mapping
                 .IsRequired()
                 .HasMaxLength(30);
 
+            this.Property(t => t.UriAvatar)
+                .IsRequired()
+                .HasMaxLength(20);
+
             // Table & Column Mappings
             this.ToTable("Usuario");
             this.Property(t => t.UsuarioId).HasColumnName("UsuarioId");
@@ -34,6 +38,7 @@ namespace RedCell.ProScrum.WebUI.Models.Mapping
             this.Property(t => t.Nombres).HasColumnName("Nombres");
             this.Property(t => t.Apellidos).HasColumnName("Apellidos");
             this.Property(t => t.CorreoElectronico).HasColumnName("CorreoElectronico");
+            this.Property(t => t.UriAvatar).HasColumnName("UriAvatar");
             this.Property(t => t.EsEliminado).HasColumnName("EsEliminado");
         }
     }

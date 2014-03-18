@@ -13,6 +13,7 @@ namespace RedCell.ProScrum.WebUI.Models
 
         public int TipoActividadId { get; set; }
         public string Descripcion { get; set; }
+
         public virtual ICollection<Actividad> Actividads { get; set; }
         public virtual ICollection<Competencia> Competencias { get; set; }
     }

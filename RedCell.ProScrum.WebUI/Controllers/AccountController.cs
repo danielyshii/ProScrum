@@ -33,20 +33,18 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
-                
-
                 return Redirect(returnUrl);
             }
             else if (WebSecurity.UserExists(model.UserName))
             {
             
             }
-            else
-            {
-                WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Name = model.UserName , IsActive = true});
-                WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe);
-                return Redirect(returnUrl);
-            }
+            //else
+            //{
+            //    WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Name = model.UserName , IsActive = true});
+            //    WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe);
+            //    return Redirect(returnUrl);
+            //}
 
             model.Password = null;
 

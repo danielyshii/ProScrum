@@ -8,12 +8,18 @@ namespace RedCell.ProScrum.WebUI.Models.Mapping
         public CompetenciaMap()
         {
             // Primary Key
-            this.HasKey(t => t.CompetenciaId);
+            this.HasKey(t => new { t.UsuarioId, t.TipoActividadId });
+
+            // Properties
+            this.Property(t => t.UsuarioId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            this.Property(t => t.TipoActividadId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             // Properties
             // Table & Column Mappings
             this.ToTable("Competencia");
-            this.Property(t => t.CompetenciaId).HasColumnName("CompetenciaId");
             this.Property(t => t.UsuarioId).HasColumnName("UsuarioId");
             this.Property(t => t.TipoActividadId).HasColumnName("TipoActividadId");
             this.Property(t => t.EsEliminado).HasColumnName("EsEliminado");

@@ -27,9 +27,11 @@ namespace RedCell.ProScrum.WebUI.Models
         public DateTime FechaRegistro { get; set; }
         public int EstadoId { get; set; }
         public bool EsEliminado { get; set; }
+
         public virtual Contacto Contacto { get; set; }
-        public virtual ICollection<IntegranteProyecto> IntegranteProyectoes { get; set; }
         public virtual Usuario Usuario { get; set; }
+
+        public virtual ICollection<IntegranteProyecto> IntegranteProyectoes { get; set; }
         public virtual ICollection<Sprint> Sprints { get; set; }
         public virtual ICollection<UserStory> UserStories { get; set; }
     }

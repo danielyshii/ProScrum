@@ -31,16 +31,17 @@ namespace RedCell.ProScrum.WebUI.Models.Mapping
             this.Property(t => t.Prioridad).HasColumnName("Prioridad");
             this.Property(t => t.Color).HasColumnName("Color");
             this.Property(t => t.EstadoId).HasColumnName("EstadoId");
-            this.Property(t => t.BloqueoId).HasColumnName("BloqueoId");
             this.Property(t => t.EsEliminado).HasColumnName("EsEliminado");
 
             // Relationships
             this.HasRequired(t => t.Proyecto)
                 .WithMany(t => t.UserStories)
                 .HasForeignKey(d => d.ProyectoId);
+
             this.HasOptional(t => t.Sprint)
                 .WithMany(t => t.UserStories)
                 .HasForeignKey(d => d.SprintId);
+
             this.HasOptional(t => t.Usuario)
                 .WithMany(t => t.UserStories)
                 .HasForeignKey(d => d.ResponsableId);

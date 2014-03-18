@@ -8,25 +8,26 @@ namespace RedCell.ProScrum.WebUI.Models
         public UserStory()
         {
             this.Actividads = new List<Actividad>();
+            this.Bloqueos = new List<Bloqueo>();
         }
 
         public int UserStoryId { get; set; }
         public int ProyectoId { get; set; }
-        public Nullable<int> SprintId { get; set; }
-        public Nullable<int> ResponsableId { get; set; }
+        public int? SprintId { get; set; }
+        public int? ResponsableId { get; set; }
         public string Codigo { get; set; }
         public string Descripcion { get; set; }
         public int HorasEstimadas { get; set; }
-        public Nullable<int> Prioridad { get; set; }
-        public Nullable<int> Color { get; set; }
+        public int? Prioridad { get; set; }
+        public int? Color { get; set; }
         public int EstadoId { get; set; }
-        public Nullable<int> BloqueoId { get; set; }
         public bool EsEliminado { get; set; }
 
-        public virtual ICollection<Actividad> Actividads { get; set; }
-        public virtual Bloqueo Bloqueo { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual Sprint Sprint { get; set; }
         public virtual Usuario Usuario { get; set; }
+
+        public virtual ICollection<Actividad> Actividads { get; set; }
+        public virtual ICollection<Bloqueo> Bloqueos { get; set; }
     }
 }

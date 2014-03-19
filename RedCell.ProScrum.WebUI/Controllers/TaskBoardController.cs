@@ -169,12 +169,14 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
 
-            return Json(new { usid = usid, color = color });
+            return Json(new { UserStoryId = usid, NewColor = color });
         }
 
         [HttpPost]
         public JsonResult AddActivity(string descripcion, int uid)
         {
+            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
+
             var element = new Actividad();
             element.Descripcion = descripcion;
             element.EsEliminado = false;
@@ -194,12 +196,25 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             }
 
-            return Json(new { Descripcion = descripcion, ActividadId = element.ActividadId});
+            var cantidadActividadTotal = (from actividadTerminada in db.Actividades
+                                          where actividadTerminada.UserStoryId == uid
+                                          && actividadTerminada.EsEliminado == false
+                                          select actividadTerminada).Count();
+
+            var cantidadActividadTerminada = (from actividadTerminada in db.Actividades
+                                              where actividadTerminada.UserStoryId == uid
+                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
+                                              && actividadTerminada.EsEliminado == false
+                                              select actividadTerminada).Count();
+
+            return Json(new { Descripcion = descripcion, ActividadId = element.ActividadId, UserStoryId = uid, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
         }
 
         [HttpPost]
         public JsonResult DeleteActivity(int aid)
         {
+            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
+
             var element = (from activity in db.Actividades
                            where activity.ActividadId == aid
                            select activity).FirstOrDefault();
@@ -215,12 +230,25 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             }
 
-            return Json(null);
+            var cantidadActividadTotal = (from actividadTerminada in db.Actividades
+                                          where actividadTerminada.UserStoryId == element.UserStoryId
+                                          && actividadTerminada.EsEliminado == false
+                                          select actividadTerminada).Count();
+
+            var cantidadActividadTerminada = (from actividadTerminada in db.Actividades
+                                              where actividadTerminada.UserStoryId == element.UserStoryId
+                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
+                                              && actividadTerminada.EsEliminado == false
+                                              select actividadTerminada).Count();
+
+            return Json(new { Descripcion = element.Descripcion, ActividadId = element.ActividadId, UserStoryId = element.UserStoryId, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
         }
 
         [HttpPost]
         public JsonResult EndActivity(int aid)
         {
+            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
+
             var element = (from activity in db.Actividades
                            where activity.ActividadId == aid
                            select activity).FirstOrDefault();
@@ -236,17 +264,32 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             }
 
-            return Json(null);
+            var cantidadActividadTotal = (from actividadTerminada in db.Actividades
+                                          where actividadTerminada.UserStoryId == element.UserStoryId
+                                          && actividadTerminada.EsEliminado == false
+                                          select actividadTerminada).Count();
+
+            var cantidadActividadTerminada = (from actividadTerminada in db.Actividades
+                                              where actividadTerminada.UserStoryId == element.UserStoryId
+                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
+                                              && actividadTerminada.EsEliminado == false
+                                              select actividadTerminada).Count();
+
+            return Json(new { Descripcion = element.Descripcion, ActividadId = element.ActividadId, UserStoryId = element.UserStoryId, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
+        
         }
 
         [HttpPost]
         public JsonResult AssignUserStory(int usid)
         {
+            int nuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.InProcess].EstadoId;
+
             var element = (from userStory in db.UserStories
                            where userStory.UserStoryId == usid
                            select userStory).FirstOrDefault();
 
             element.ResponsableId = WebSecurity.CurrentUserId;
+            element.EstadoId = nuevoEstadoUserStory;
 
             try
             {
@@ -257,7 +300,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             }
 
-            return Json(new { nombre = WebSecurity.CurrentUserName });
+            return Json(new { NombreUsuario = WebSecurity.CurrentUserName, NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
         }
 
         protected override void Dispose(bool disposing)

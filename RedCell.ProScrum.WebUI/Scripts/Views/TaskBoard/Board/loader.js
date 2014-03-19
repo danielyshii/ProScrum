@@ -5,7 +5,7 @@ function BoardController() {
 
     base.Controles = {
         WindowManager: new BoardWindowManager(),
-        ValidateWindowManager : new BoardValidateWindowManager()
+        ValidateWindowManager: new BoardValidateWindowManager()
     }
 
     base.Funciones = {
@@ -39,7 +39,7 @@ function BoardController() {
                                         '<div class="list-header non-empty clearfix editable">' +
                                             '<h2 class="list-header-name hide-on-edit current">' + columnData.Descripcion + '</h2>' +
                                         '</div>' +
-                                        '<div class="list-cards fancy-scrollbar clearfix" column-id-attr="' + columnData.BoardColumnId + '" style="min-height: 40px;"></div>' +
+                                        '<div class="list-cards fancy-scrollbar js-column-container clearfix" column-id-attr="' + columnData.BoardColumnId + '" style="min-height: 40px;"></div>' +
                                     '</div>';
 
                 jqColumnContainer.append(columnString);
@@ -75,17 +75,16 @@ function BoardController() {
                 }
 
                 if (userStoryData.NumeroActividadTotal > 0) {
-                    activityBadge = '<div class="badge">' +
+                    activityBadge = '<div class="badge js-user-story-activity-badge" title="Activiades Terminadas / Actividades Totales">' +
                                         '<span class="badge-icon icon-sm icon-checklist"></span>' +
                                         '<span class="badge-text">' + userStoryData.NumeroActividadTerminada + '/' + userStoryData.NumeroActividadTotal + '</span>' +
                                     '</div>';
                 }
-                
+
                 if (userStoryData.Color != null) {
 
                     for (var i = 0; i < 5; i++) {
-                        if (i == userStoryData.Color)
-                        {
+                        if (i == userStoryData.Color) {
                             switch (userStoryData.Color) {
                                 case 0:
                                     colorString = '<span class="card-label card-label-green"></span>';
@@ -112,7 +111,7 @@ function BoardController() {
 
                 var userStoryBadges = '<div class="badges">' + lockBadge + activityBadge + '</div>';
 
-                var userStoryString = '<div class="list-card">' +
+                var userStoryString = '<div class="list-card js-user-story-container" board-user-story-id = ' + userStoryData.UserStoryId + '>' +
                                             '<div class="list-card-labels clearfix">' +
                                                colorString +
                                             '</div>' +
@@ -152,7 +151,7 @@ function BoardController() {
         },
 
         OnClickCard: function () {
-            $("div.list-cards div.list-card").on("click", "div.list-card-details", function (e) {
+            $("div.list-cards").on("click", "div.list-card div.list-card-details", function (e) {
                 e.stopPropagation();
                 var userStoryId = $(this).attr('user-story-id');
 
@@ -169,19 +168,104 @@ function BoardController() {
 
                 base.Controles.ValidateWindowManager.show();
 
-                
+
             });
-            
+
         },
 
         OnUserStoryDetailSuccess: function (data) {
             base.Controles.WindowManager.show(data);
         }
+
+    }
+
+    base.EventosBoardRender = {
+
+        // { UserStoryId = 4, NewColor = null }
+        OnUserStoryColorUpdate: function (response) {
+
+            var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
+
+            var colorString = '';
+
+            switch (response.NewColor) {
+                case 0:
+                    colorString = '<span class="card-label card-label-green"></span>';
+                    break;
+                case 1:
+                    colorString = '<span class="card-label card-label-yellow"></span>';
+                    break;
+                case 2:
+                    colorString = '<span class="card-label card-label-orange"></span>';
+                    break;
+                case 3:
+                    colorString = '<span class="card-label card-label-red"></span>';
+                    break;
+                case 4:
+                    colorString = '<span class="card-label card-label-blue"></span>';
+                    break;
+                default:
+                    colorString = ''
+                    break;
+
+            }
+
+            jqUSContainer.find('div.list-card-labels').empty();
+            jqUSContainer.find('div.list-card-labels').append(colorString);
+
+        },
+
+        // { UserStoryId = 4, NumeroActividadTerminada = 4, NumeroActividadTotal = 5 }
+        OnUserStoryActivitiesChange: function (response) {
+
+            var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
+
+            var toBeAppended = '<span class="badge-icon icon-sm icon-checklist"></span>' +
+                               '<span class="badge-text">' + response.NumeroActividadTerminada + '/' + response.NumeroActividadTotal + '</span>';
+
+            if (response.NumeroActividadTotal == 0) {
+                toBeAppended = ''
+            }
+
+            var jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
+
+            if (jqActivityBadgeContainer.length > 0) {
+                jqActivityBadgeContainer.empty();
+            }
+            else {
+                jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges');
+
+                var activityBadge = '<div class="badge js-user-story-activity-badge" title="Activiades Terminadas / Actividades Totales"></div>';
+                jqActivityBadgeContainer.append(activityBadge);
+                jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
+            }
+
+            jqActivityBadgeContainer.append(toBeAppended);
+
+        },
+
+        // { NuevoEstadoUserStory = 2, UserStoryId = 2 }
+        OnUserStoryStateChange: function (response) {
+
+            var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
+
+            jqUSContainer.remove();
+
+            var jqColumnContainer = $('div.js-column-container').filter('[column-id-attr=' + response.NuevoEstadoUserStory + ']');
+
+            jqColumnContainer.append(jqUSContainer);
+
+        }
+
     }
 
     base.init = function () {
         console.log('Init BoardController');
-        base.Controles.WindowManager.init();
+        base.Controles.WindowManager.init({
+            BoardUserStoryColorUpdate: base.EventosBoardRender.OnUserStoryColorUpdate,
+            BoardUserStoryActivityChange: base.EventosBoardRender.OnUserStoryActivitiesChange,
+            BoarUserStoryStateChange: base.EventosBoardRender.OnUserStoryStateChange
+        });
         base.Controles.ValidateWindowManager.init();
         base.Funciones.LoadBoardData();
     };

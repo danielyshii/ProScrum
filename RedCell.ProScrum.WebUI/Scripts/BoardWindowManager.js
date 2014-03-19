@@ -3,7 +3,9 @@
     var base = this;
 
     base.config = {
-        CloseEvent: null
+        BoardUserStoryColorUpdate: null,
+        BoardUserStoryActivityChange: null,
+        BoarUserStoryStateChange: null
     };
 
     base.hide = function () {
@@ -57,7 +59,10 @@
                 data: JSON.stringify({ 'aid': aId }),
                 dataType: "json",
                 contentType: "application/json",
-                success: function () { base.FuncionesOVerlayUserStory.animateDeleteActivity(domElement) }
+                success: function (response) {
+                    
+                    base.FuncionesOVerlayUserStory.animateDeleteActivity(domElement, response)
+                }
             });
         },
 
@@ -69,7 +74,7 @@
                 data: JSON.stringify({ 'aid': aId }),
                 dataType: "json",
                 contentType: "application/json",
-                success: function () { base.FuncionesOVerlayUserStory.animateEndActivity(domElement) }
+                success: function (response) { base.FuncionesOVerlayUserStory.animateEndActivity(domElement, response) }
             });
 
         },
@@ -130,7 +135,7 @@
 
                 base.AjaxCalls.deleteActivity(this, actividadId);
 
-                base.FuncionesOVerlayUserStory.animateDeleteActivity(this);
+                //base.FuncionesOVerlayUserStory.animateDeleteActivity(this);
             });
 
             // Terminar Actividad
@@ -162,16 +167,22 @@
             });
         },
 
-        animateDeleteActivity: function (domElement) {
+        animateDeleteActivity: function (domElement, response) {
             $(domElement).parent().remove();
+            
+            base.config.BoardUserStoryActivityChange(response);
         },
 
-        animateEndActivity: function (domElement) {
+        animateEndActivity: function (domElement, response) {
             $(domElement).attr('disabled', 'disabled');
             $(domElement).parent().parent().parent().find('a.js-delete-activity').remove();
+
+            base.config.BoardUserStoryActivityChange(response);
         },
 
         animateChangeColor: function (data) {
+
+            base.config.BoardUserStoryColorUpdate(data);
 
             $('span.colored-label').each(function (index) {
 
@@ -180,7 +191,7 @@
                     $(this).addClass('label-to-assign');
                 }
                 else {
-                    if (index == data.color) {
+                    if (index == data.NewColor) {
                         $(this).removeClass('label-to-assign');
                         $(this).addClass('card-label-selected');
                     }
@@ -206,12 +217,15 @@
 
             $('div.js-activity-list').prepend(nuevaActividad);
 
+            base.config.BoardUserStoryActivityChange(activityData);
+
         },
 
-        animateAssignUser: function (data)
-        {
+        animateAssignUser: function (data) {
             $('a.js-change-card-members').remove();
-            $('div.js-change-card-container').append(data.nombre);
+            $('div.js-change-card-container').append(data.NombreUsuario);
+
+            base.config.BoarUserStoryStateChange(data);
 
         },
 
@@ -272,7 +286,7 @@
 }
 
 function BoardValidateWindowManager() {
-    
+
     var base = this;
 
     base.hide = function () {
@@ -292,8 +306,7 @@ function BoardValidateWindowManager() {
         });
     }
 
-    base.init = function (config)
-    {
+    base.init = function (config) {
         $.extend(base.config, config);
         base.onClose();
 

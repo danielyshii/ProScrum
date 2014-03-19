@@ -356,6 +356,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                             actividad.Descripcion = elementoActividad.Descripcion;
                             actividad.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
                             actividad.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+                            actividad.FechaRegistro = System.DateTime.Now;
 
                             userStory.Actividads.Add(actividad);
                         }
@@ -387,6 +388,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                             actividad.Descripcion = elementoActividad.Descripcion;
                             actividad.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
                             actividad.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+                            actividad.FechaRegistro = System.DateTime.Now;
 
                             userStory.Actividads.Add(actividad);
                         }

@@ -183,6 +183,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             element.EstadoId = this.EstadosActividadStory[(int)EstadoActividadEnum.Definido].EstadoId;
             element.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
             element.UserStoryId = uid;
+            element.FechaRegistro = System.DateTime.Now;
             element.UsuarioId = WebSecurity.CurrentUserId;
 
             db.Actividades.Add(element);

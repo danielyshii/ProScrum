@@ -5,7 +5,8 @@ function BoardController() {
 
     base.Controles = {
         WindowManager: new BoardWindowManager(),
-        ValidateWindowManager: new BoardValidateWindowManager()
+        ValidateWindowManager: new BoardValidateWindowManager(),
+        BlockWindowManager: new BoardBlockWindowManager()
     }
 
     base.Funciones = {
@@ -64,18 +65,18 @@ function BoardController() {
                     lockIcon = '';
 
                 if (userStoryData.EstaBloqueada == true) {
-                    lockBadge = '<div class="badge badge-state-image-only">' +
+                    lockBadge = '<div class="badge badge-state-image-only" title="Este User Story se encuentra Bloqueado">' +
                                     '<span class="badge-icon icon-sm icon-lock"></span>' +
                                 '</div>';
                 }
                 else {
-                    lockIcon = '<div class="member">' +
+                    lockIcon = '<div class="member js-block-click" title="Seleccione si desea bloquear el User Story">' +
                                 '<span class="member-initials">B</span>' +
                                '</div>';
                 }
 
                 if (userStoryData.NumeroActividadTotal > 0) {
-                    activityBadge = '<div class="badge js-user-story-activity-badge" title="Activiades Terminadas / Actividades Totales">' +
+                    activityBadge = '<div class="badge js-user-story-activity-badge" title="Actividades Terminadas / Actividades Totales">' +
                                         '<span class="badge-icon icon-sm icon-checklist"></span>' +
                                         '<span class="badge-text">' + userStoryData.NumeroActividadTerminada + '/' + userStoryData.NumeroActividadTotal + '</span>' +
                                     '</div>';
@@ -116,11 +117,11 @@ function BoardController() {
                                                colorString +
                                             '</div>' +
                                             '<div class="list-card-details clearfix" user-story-id="' + userStoryData.UserStoryId + '">' +
-                                                '<a class="list-card-title clear js-card-name" href="#">' +
-                                                    '<span class="card-short-id hide">1</span>' + userStoryData.Codigo + '</a>' +
+                                                '<a class="list-card-title clear js-card-name" title="' + userStoryData.Descripcion + '">' +
+                                                    '<span class="card-short-id hide"></span>' + userStoryData.Codigo + '</a>' +
                                                 userStoryBadges +
                                                 '<div class="list-card-members">' +
-                                                    '<div class="member js-validate-click">' +
+                                                    '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
                                                         '<span class="member-initials">👍</span>' +
                                                     '</div>' +
                                                     lockIcon +
@@ -135,11 +136,17 @@ function BoardController() {
 
             base.Eventos.OnClickCard();
             base.Eventos.OnClickValidate();
+            base.Eventos.OnClickBlock();
         },
 
         LoadUserStoryWindow: function (userStoryId) {
             $.get('/TaskBoard/UserStoryDetail/' + userStoryId, base.Eventos.OnUserStoryDetailSuccess);
+        },
+        LoadBlockUserStoryWindow: function (userStoryId) {
+            $.get('/TaskBoard/BlockUserStory/' + userStoryId, base.Eventos.OnUserStoryBlockSuccess);
         }
+
+
     }
 
     base.Eventos = {
@@ -161,7 +168,7 @@ function BoardController() {
 
         OnClickValidate: function () {
 
-            $("div.list-cards div.list-card div.list-card-details div.list-card-members").on("click", "div.js-validate-click", function (e) {
+            $("div.list-cards").on("click", "div.list-card div.list-card-details div.list-card-members div.js-validate-click", function (e) {
                 e.stopPropagation();
 
                 var userStoryId = $(this).attr('user-story-id');
@@ -173,10 +180,25 @@ function BoardController() {
 
         },
 
+        OnClickBlock: function() {
+            $("div.list-cards").on("click", "div.list-card div.list-card-details div.list-card-members div.js-block-click", function (e) {
+                e.stopPropagation();
+
+                var userStoryId = $(this).parent().parent().attr('user-story-id');
+
+                //base.Controles.BlockWindowManager.show();
+
+                base.Funciones.LoadBlockUserStoryWindow(userStoryId);
+            });
+        },
+
         OnUserStoryDetailSuccess: function (data) {
             base.Controles.WindowManager.show(data);
+        },
+        
+        OnUserStoryBlockSuccess: function (data) {
+            base.Controles.BlockWindowManager.show(data);
         }
-
     }
 
     base.EventosBoardRender = {
@@ -235,7 +257,7 @@ function BoardController() {
             else {
                 jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges');
 
-                var activityBadge = '<div class="badge js-user-story-activity-badge" title="Activiades Terminadas / Actividades Totales"></div>';
+                var activityBadge = '<div class="badge js-user-story-activity-badge" title="Actividades Terminadas / Actividades Totales"></div>';
                 jqActivityBadgeContainer.append(activityBadge);
                 jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
             }
@@ -255,6 +277,24 @@ function BoardController() {
 
             jqColumnContainer.append(jqUSContainer);
 
+        },
+
+        // { IdUserStory = 11, IsBloqued = true }
+        OnUserStoryBlockChange: function (response){
+
+            var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
+
+            var toBeAppended =  '<div class="badge badge-state-image-only" title="Este User Story se encuentra Bloqueado">' +
+                                    '<span class="badge-icon icon-sm icon-lock"></span>' +
+                                '</div>';
+
+            var jqBlockBadgeContainer = jqUSContainer.find('div.list-card-details div.badges');
+
+            jqBlockBadgeContainer.prepend(toBeAppended);
+
+            var jqBlockMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members div.js-block-click')
+
+            jqBlockMemberContainer.remove();
         }
 
     }
@@ -267,6 +307,9 @@ function BoardController() {
             BoarUserStoryStateChange: base.EventosBoardRender.OnUserStoryStateChange
         });
         base.Controles.ValidateWindowManager.init();
+        base.Controles.BlockWindowManager.init({
+            BoardUserStoryBlockUpdate : base.EventosBoardRender.OnUserStoryBlockChange
+        });
         base.Funciones.LoadBoardData();
     };
 

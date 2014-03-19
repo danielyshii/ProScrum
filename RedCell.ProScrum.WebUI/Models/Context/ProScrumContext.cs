@@ -24,6 +24,7 @@ namespace RedCell.ProScrum.WebUI.Models
         public DbSet<EstadoProyecto> EstadoProyectos { get; set; }
         public DbSet<EstadoSprint> EstadoSprints { get; set; }
         public DbSet<EstadoUserStory> EstadoUserStories { get; set; }
+        public DbSet<Inconformidad> Infonformidades { get; set; }
         public DbSet<IntegranteProyecto> IntegrantesProyecto { get; set; }
         public DbSet<Proyecto> Proyectos { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
@@ -44,6 +45,7 @@ namespace RedCell.ProScrum.WebUI.Models
             modelBuilder.Configurations.Add(new EstadoProyectoMap());
             modelBuilder.Configurations.Add(new EstadoSprintMap());
             modelBuilder.Configurations.Add(new EstadoUserStoryMap());
+            modelBuilder.Configurations.Add(new InconformidadMap());
             modelBuilder.Configurations.Add(new IntegranteProyectoMap());
             modelBuilder.Configurations.Add(new ProyectoMap());
             modelBuilder.Configurations.Add(new SprintMap());

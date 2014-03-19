@@ -47,4 +47,31 @@ namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
         public string Descripcion { get; set; }
         public bool Terminado { get; set; }
     }
+
+    public class BlockUserStoryViewModel
+    {
+        public int UserStoryId { get; set; }
+        public List<TipoABloqueoViewModel> TiposBloqueo { get; set; }
+    }
+
+    public class TipoABloqueoViewModel
+    {
+        public int TipoBloqueoId { get; set; }
+        public string Descripcion { get; set; }
+    }
+
+    public class SaveBlockUserStory
+    {
+        public int UserStoryId { get; set; }
+        public int TipoBloqueoId { get; set; }
+        public string Descripcion { get; set; }
+    }
+
+    public class ValidateUserStory
+    {
+        public int UserStoryId { get; set; }
+        public string Codigo { get; set; }
+        public string Descripcion { get; set; }
+        public string NombreUsuario { get; set; }
+    }
 }

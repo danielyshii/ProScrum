@@ -60,7 +60,7 @@
                 dataType: "json",
                 contentType: "application/json",
                 success: function (response) {
-                    
+
                     base.FuncionesOVerlayUserStory.animateDeleteActivity(domElement, response)
                 }
             });
@@ -169,7 +169,7 @@
 
         animateDeleteActivity: function (domElement, response) {
             $(domElement).parent().remove();
-            
+
             base.config.BoardUserStoryActivityChange(response);
         },
 
@@ -304,6 +304,145 @@ function BoardValidateWindowManager() {
         $("div.window-overlay-validate div.window div.window-wrapper div.dialog-close-button").on("click", "a.js-close-window", function () {
             base.hide();
         });
+    }
+
+    base.init = function (config) {
+        $.extend(base.config, config);
+        base.onClose();
+
+        console.log('I am Initializing!');
+    }
+}
+
+function BoardBlockWindowManager() {
+    var base = this;
+
+    base.config = {
+        BoardUserStoryBlockUpdate: null
+    }
+
+    base.hide = function () {
+        $('body').removeClass('window-up-block');
+        $('div.window-overlay-block div.window div.window-wrapper div.js-dialog-container').contents().remove('div');
+    }
+
+    base.show = function (data) {
+        $('body').addClass('window-up-block');
+        $("div.window-overlay-block div.window div.window-wrapper div.js-dialog-container").html(data);
+
+        base.Funciones.InicializarHandler();
+    }
+
+    base.onClose = function () {
+
+        $("div.window-overlay-block div.window div.window-wrapper div.dialog-close-button").on("click", "a.js-close-window", function () {
+            base.Funciones.RemoveHandler();
+            base.hide();
+        });
+    }
+
+    base.AjaxCall = {
+
+        saveBlock: function (uid, tbid, desc) {
+
+            $.ajax({
+                type: "POST",
+                url: '/TaskBoard/SaveBlock',
+                data: JSON.stringify({ 'UserStoryId': uid, 'TipoBloqueoId': tbid, 'Descripcion': desc }),
+                dataType: "json",
+                contentType: "application/json",
+                success: base.Eventos.AnimateBlockUS
+            });
+
+        },
+
+    }
+
+    base.Funciones = {
+
+        InicializarHandler: function () {
+
+            //Accept Button
+            $('div.window-main-footer').on('click', 'input#block-user-story-btn-ok', function () {
+                base.Eventos.AddSaveButtonHandler();
+            });
+
+            //Close Button
+            $('div.window-main-footer').on('click', 'input#block-user-story-btn-cancel', function () {
+                base.Eventos.AddCloseButtonHandler();
+            });
+
+
+        },
+
+        RemoveHandler: function () {
+            $('div.window-main-footer').off('click');
+        }
+
+
+    }
+
+    base.Eventos = {
+
+        AddCloseButtonHandler: function () {
+            base.Funciones.RemoveHandler();
+            base.hide();
+        },
+
+        AddSaveButtonHandler: function () {
+
+            var uid = null,
+                tbid = null,
+                desc = null,
+                isValid = true;
+            //Obtener Valores de Envio de formulario
+            uid = $('#block-user-story-id').val();
+            tbid = $('select[name="TipoBloqueoId"]').val();
+            desc = $('textarea[name="Descripcion"]').val();
+
+            if (isNaN(tbid))
+            {
+                base.Eventos.AnimateInputError($('select[name="TipoBloqueoId"]'));
+                isValid = false;
+            }
+
+            if (!(desc && desc != null && desc != ''))
+            {
+                base.Eventos.AnimateInputError($('textarea[name="Descripcion"]'));
+                isValid = false;
+            }
+
+            //alert(uid);
+            //alert(tbid);
+            //alert(desc);
+
+            //Llamar a SaveBlock
+            if (isValid)
+            {
+                base.AjaxCall.saveBlock(uid, tbid, desc);
+            }
+        },
+
+        AnimateBlockUS: function (response) {
+
+            //Llamar a Cerrar Ventana
+            base.Funciones.RemoveHandler();
+            base.hide();
+
+            //Llamar a evento delegado de asignar badge de block
+            base.config.BoardUserStoryBlockUpdate(response);
+        },
+
+        AnimateInputError: function (jqDomElement) {
+            if (!jqDomElement.hasClass("shake")) {
+                jqDomElement.addClass("shake");
+
+                setTimeout(function () {
+                    jqDomElement.removeClass("shake");
+                }, 1000);
+            }
+        },
+
     }
 
     base.init = function (config) {

@@ -154,8 +154,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
 
             var element = (from userStory in db.UserStories
-                            where userStory.UserStoryId == usid
-                            select userStory).FirstOrDefault();
+                           where userStory.UserStoryId == usid
+                           select userStory).FirstOrDefault();
 
             element.Color = color;
 
@@ -277,7 +277,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               select actividadTerminada).Count();
 
             return Json(new { Descripcion = element.Descripcion, ActividadId = element.ActividadId, UserStoryId = element.UserStoryId, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
-        
+
         }
 
         [HttpPost]
@@ -302,6 +302,49 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
             return Json(new { NombreUsuario = WebSecurity.CurrentUserName, NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
+        }
+
+        [HttpGet]
+        public ActionResult BlockUserStory(int id)
+        {
+            var model = new BlockUserStoryViewModel();
+
+            var listaBloqueo = (from tipoBloqueo in db.TipoBloqueos
+                                select new TipoABloqueoViewModel
+                                {
+                                    TipoBloqueoId = tipoBloqueo.TipoBloqueoId,
+                                    Descripcion = tipoBloqueo.Descripcion
+                                }).ToList();
+
+            model.UserStoryId = id;
+            model.TiposBloqueo = listaBloqueo;
+
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public JsonResult SaveBlock(SaveBlockUserStory model)
+        {
+            //Aca va la magia de Lucho
+
+            return Json(new { UserStoryId = model.UserStoryId, IsBloqued = true });
+        }
+
+        public ActionResult ValidateUserStory(int id)
+        { 
+            var model = new ValidateUserStory();
+
+            var userStoryFound = (from userStory in db.UserStories
+                                   where userStory.UserStoryId == id
+                                   select userStory).FirstOrDefault();
+
+            model.UserStoryId = userStoryFound.UserStoryId;
+            model.Codigo = userStoryFound.Codigo;
+            model.Descripcion = userStoryFound.Descripcion;
+            model.NombreUsuario = "Memo"; //Cambiar
+            
+
+            return PartialView();
         }
 
         protected override void Dispose(bool disposing)

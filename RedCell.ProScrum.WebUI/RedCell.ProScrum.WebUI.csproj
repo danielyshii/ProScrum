@@ -156,6 +156,7 @@
     <Compile Include="Models\EstadoProyecto.cs" />
     <Compile Include="Models\EstadoSprint.cs" />
     <Compile Include="Models\EstadoUserStory.cs" />
+    <Compile Include="Models\Inconformidad.cs" />
     <Compile Include="Models\IntegranteProyecto.cs" />
     <Compile Include="Models\Mapping\ActividadMap.cs" />
     <Compile Include="Models\Mapping\BloqueoMap.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Models\Mapping\EstadoProyectoMap.cs" />
     <Compile Include="Models\Mapping\EstadoSprintMap.cs" />
     <Compile Include="Models\Mapping\EstadoUserStoryMap.cs" />
+    <Compile Include="Models\Mapping\InconformidadMap.cs" />
     <Compile Include="Models\Mapping\IntegranteProyectoMap.cs" />
     <Compile Include="Models\Mapping\ProyectoMap.cs" />
     <Compile Include="Models\Mapping\SprintMap.cs" />
@@ -190,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\BootstrapSite.css" />
+    <Content Include="Content\images\black-down-arrow.gif" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\TaskBoard.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -307,6 +310,7 @@
     <Content Include="Views\TaskBoard\Board.cshtml" />
     <Content Include="Views\TaskBoard\UserStoryDetail.cshtml" />
     <Content Include="Views\TaskBoard\ValidateUserStory.cshtml" />
+    <Content Include="Views\TaskBoard\BlockUserStory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,5 +29,6 @@ namespace RedCell.ProScrum.WebUI.Models
 
         public virtual ICollection<Actividad> Actividads { get; set; }
         public virtual ICollection<Bloqueo> Bloqueos { get; set; }
+        public virtual ICollection<Inconformidad> Inconformidades { get; set; }
     }
 }

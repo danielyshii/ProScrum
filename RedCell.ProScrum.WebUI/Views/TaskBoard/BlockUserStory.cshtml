@@ -1,0 +1,34 @@
+﻿@model RedCell.ProScrum.WebUI.ViewModels.TaskBoard.BlockUserStoryViewModel
+
+<div class="window-header clearfix">
+    <span class="window-header-icon icon-lg icon-card"></span>
+    <div class="window-title card-detail-title non-empty inline  editable  ">
+        <h2 class="window-title-text current hide-on-edit">Bloquear User Story</h2>
+    </div>
+</div>
+<div class="window-main-whole">
+    <div class="window-main-whole-content clearfix">
+        <form id="block-user-story-btn-frm" action="AddBlock" method="post" class="STYLE-NAME">
+            <input type="hidden" id="block-user-story-id" value="@Model.UserStoryId" />
+            <label>
+                <span>Tipo de Bloqueo</span>
+                <select name="TipoBloqueoId">
+                    <option class="placeholder" selected="selected">Elija la opción</option>
+                    @foreach (var tipoBloqueo in Model.TiposBloqueo)
+                    {
+                        <option value="@tipoBloqueo.TipoBloqueoId">@tipoBloqueo.Descripcion</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Descripción</span>
+                <textarea name="Descripcion" placeholder="Ingrese la descripción del bloqueo"></textarea>
+            </label>
+        </form>
+        <div class="window-main-footer clearfix">
+            <input id="block-user-story-btn-ok" type="button" class="button" value="Crear" />
+            &nbsp;
+            <input id="block-user-story-btn-cancel" type="button" class="button" value="Cerrar" />
+        </div>
+    </div>
+</div>

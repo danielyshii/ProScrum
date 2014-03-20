@@ -208,7 +208,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
-            return Json(new { Descripcion = descripcion, ActividadId = element.ActividadId, UserStoryId = uid, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
+            return Json(new
+            {
+                Descripcion = descripcion,
+                ActividadId = element.ActividadId,
+                UserStoryId = uid,
+                NumeroActividadTerminada = cantidadActividadTerminada,
+                NumeroActividadTotal = cantidadActividadTotal,
+                IsUserStoryStateAfected = false,
+                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.InProcess].EstadoId
+            });
         }
 
         [HttpPost]
@@ -242,7 +251,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
-            return Json(new { Descripcion = element.Descripcion, ActividadId = element.ActividadId, UserStoryId = element.UserStoryId, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
+            return Json(new
+            {
+                Descripcion = element.Descripcion,
+                ActividadId = element.ActividadId,
+                UserStoryId = element.UserStoryId,
+                NumeroActividadTerminada = cantidadActividadTerminada,
+                NumeroActividadTotal = cantidadActividadTotal,
+                IsUserStoryStateAfected = true,
+                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId
+            });
         }
 
         [HttpPost]
@@ -276,7 +294,16 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
-            return Json(new { Descripcion = element.Descripcion, ActividadId = element.ActividadId, UserStoryId = element.UserStoryId, NumeroActividadTerminada = cantidadActividadTerminada, NumeroActividadTotal = cantidadActividadTotal });
+            return Json(new
+            {
+                Descripcion = element.Descripcion,
+                ActividadId = element.ActividadId,
+                UserStoryId = element.UserStoryId,
+                NumeroActividadTerminada = cantidadActividadTerminada,
+                NumeroActividadTotal = cantidadActividadTotal,
+                IsUserStoryStateAfected = true,
+                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId
+            });
 
         }
 
@@ -399,14 +426,15 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         [HttpGet]
         public ActionResult ValidateUserStory(int id)
-        { 
+        {
             var model = new ValidateUserStoryViewModel();
 
             var userStoryFound = (from userStory in db.UserStories
                                   join usuario in db.Usuarios
                                   on userStory.ResponsableId equals usuario.UsuarioId
                                   where userStory.UserStoryId == id
-                                  select new {
+                                  select new
+                                  {
                                       UserStoryId = usuario.UsuarioId,
                                       Codigo = userStory.Codigo,
                                       Descripcion = userStory.Descripcion,
@@ -419,6 +447,14 @@ namespace RedCell.ProScrum.WebUI.Controllers
             model.NombreUsuario = userStoryFound.NombreUsuario;
 
             return PartialView(model);
+        }
+
+        [HttpPost]
+        public JsonResult EndUserStoryInProcess(int UserStoryId)
+        {
+            //Llamar al metodo de lucho para efectuar el cambio
+
+            return Json(new { UserStoryId = UserStoryId, NuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId });
         }
 
         protected override void Dispose(bool disposing)

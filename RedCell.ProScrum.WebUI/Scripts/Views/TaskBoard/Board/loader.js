@@ -3,10 +3,34 @@ function BoardController() {
 
     var base = this;
 
+    base.Data = {
+        ToDoState: 1,
+        InProcessState: 2,
+        ToVerifyState: 3,
+        DoneState: 4
+    }
+
     base.Controles = {
         WindowManager: new BoardWindowManager(),
         ValidateWindowManager: new BoardValidateWindowManager(),
         BlockWindowManager: new BoardBlockWindowManager()
+    }
+
+    base.AjaxCall = {
+
+        EndUserStoryInProcess: function (uid) {
+
+            $.ajax({
+                type: "POST",
+                url: '/TaskBoard/EndUserStoryInProcess',
+                data: JSON.stringify({ 'UserStoryId': uid }),
+                dataType: "json",
+                contentType: "application/json",
+                success: base.EventosBoardRender.OnUserStoryStateChange
+            });
+
+        },
+
     }
 
     base.Funciones = {
@@ -61,6 +85,8 @@ function BoardController() {
 
                 var lockBadge = '',
                     activityBadge = '',
+                    verifyIcon = '',
+                    inProcessIcon = '',
                     colorString = '',
                     lockIcon = '';
 
@@ -110,6 +136,20 @@ function BoardController() {
                     }
                 }
 
+                if (userStoryData.EstadoUserStoryId == base.Data.ToVerifyState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
+                    verifyIcon = '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
+                                        '<span class="member-initials">👍</span>' +
+                                    '</div>';
+                }
+
+                if (userStoryData.EstadoUserStoryId == base.Data.InProcessState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
+                    inProcessIcon = '<div class="member js-in-process-click" title="Seleccione si desea notificar el fin del desarrollo del User Story">' +
+                                        '<span class="member-initials">✓</span>' +
+                                    '</div>';
+                }
+
+
+
                 var userStoryBadges = '<div class="badges">' + lockBadge + activityBadge + '</div>';
 
                 var userStoryString = '<div class="list-card js-user-story-container" board-user-story-id = ' + userStoryData.UserStoryId + '>' +
@@ -121,9 +161,8 @@ function BoardController() {
                                                     '<span class="card-short-id hide"></span>' + userStoryData.Codigo + '</a>' +
                                                 userStoryBadges +
                                                 '<div class="list-card-members">' +
-                                                    '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
-                                                        '<span class="member-initials">👍</span>' +
-                                                    '</div>' +
+                                                    verifyIcon +
+                                                    inProcessIcon +
                                                     lockIcon +
                                                 '</div>' +
                                             '</div>' +
@@ -136,6 +175,7 @@ function BoardController() {
 
             base.Eventos.OnClickCard();
             base.Eventos.OnClickValidate();
+            base.Eventos.OnClickToProcess();
             base.Eventos.OnClickBlock();
         },
 
@@ -183,7 +223,18 @@ function BoardController() {
 
         },
 
-        OnClickBlock: function() {
+        OnClickToProcess: function () {
+            $("div.list-cards").on("click", "div.list-card div.list-card-details div.list-card-members div.js-in-process-click", function (e) {
+                e.stopPropagation();
+
+                var userStoryId = $(this).parent().parent().attr('user-story-id');
+
+                base.AjaxCall.EndUserStoryInProcess(userStoryId);
+
+            });
+        },
+
+        OnClickBlock: function () {
             $("div.list-cards").on("click", "div.list-card div.list-card-details div.list-card-members div.js-block-click", function (e) {
                 e.stopPropagation();
 
@@ -196,13 +247,12 @@ function BoardController() {
         OnUserStoryDetailSuccess: function (data) {
             base.Controles.WindowManager.show(data);
         },
-        
+
         OnUserStoryBlockSuccess: function (data) {
             base.Controles.BlockWindowManager.show(data);
         },
 
-        OnUserStoryValidateSuccess: function (data)
-        {
+        OnUserStoryValidateSuccess: function (data) {
             base.Controles.ValidateWindowManager.show(data);
         }
     }
@@ -270,6 +320,37 @@ function BoardController() {
 
             jqActivityBadgeContainer.append(toBeAppended);
 
+            var jqMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members')
+
+            if (response.IsUserStoryStateAfected == true) {
+
+                var toAppend = '';
+
+                if (response.NewUserStoryState == base.Data.ToVerifyState) {
+                    toAppend = '<div class="member js-in-process-click" title="Seleccione si desea notificar el fin del desarrollo del User Story">' +
+                                    '<span class="member-initials">✓</span>' +
+                               '</div>';
+
+                }
+                else if (response.NewUserStoryState == base.Data.ToDoState) {
+                    toAppend = '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
+                                    '<span class="member-initials">👍</span>' +
+                                '</div>';
+                }
+
+                jqMemberContainer.prepend(toAppend);
+            }
+            else {
+
+                if (response.NewUserStoryState == base.Data.InProcessState) {
+                    jqMemberContainer.find('div.js-in-process-click').remove();
+                }
+                else if (response.NewUserStoryState == base.Data.ToVerifyState) {
+                    jqMemberContainer.find('div.js-validate-click').remove();
+                }
+
+            }
+
         },
 
         // { NuevoEstadoUserStory = 2, UserStoryId = 2 }
@@ -283,14 +364,26 @@ function BoardController() {
 
             jqColumnContainer.append(jqUSContainer);
 
+            //Retirar o Agregar nuevo estado de UserStory
+
+            var jqMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members');
+
+            if (response.NuevoEstadoUserStory == base.Data.ToVerifyState) {
+                jqMemberContainer.find('div.js-in-process-click').remove();
+            }
+            else if (response.NuevoEstadoUserStory == base.Data.ToDoState)
+            {
+                jqMemberContainer.find('div.js-validate-click').remove();
+            }
+
         },
 
         // { IdUserStory = 11, IsBloqued = true }
-        OnUserStoryBlockChange: function (response){
+        OnUserStoryBlockChange: function (response) {
 
             var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
 
-            var toBeAppended =  '<div class="badge badge-state-image-only" title="Este User Story se encuentra Bloqueado">' +
+            var toBeAppended = '<div class="badge badge-state-image-only" title="Este User Story se encuentra Bloqueado">' +
                                     '<span class="badge-icon icon-sm icon-lock"></span>' +
                                 '</div>';
 
@@ -314,7 +407,7 @@ function BoardController() {
         });
         base.Controles.ValidateWindowManager.init();
         base.Controles.BlockWindowManager.init({
-            BoardUserStoryBlockUpdate : base.EventosBoardRender.OnUserStoryBlockChange
+            BoardUserStoryBlockUpdate: base.EventosBoardRender.OnUserStoryBlockChange
         });
         base.Funciones.LoadBoardData();
     };

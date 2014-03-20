@@ -203,6 +203,11 @@ h2
     content: "📈";
 }
 
+.icon-check:before
+{
+    content: "✓"
+}
+
 .icon-lg, .icon-sm
 {
     color: #A9A9A9;

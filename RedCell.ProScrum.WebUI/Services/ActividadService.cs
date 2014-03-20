@@ -5,6 +5,7 @@ using System.Web;
 using RedCell.ProScrum.WebUI.Controllers;
 using RedCell.ProScrum.WebUI.Models;
 using RedCell.ProScrum.WebUI.TransferObjects;
+using WebMatrix.WebData;
 
 namespace RedCell.ProScrum.WebUI.Services
 {
@@ -17,7 +18,7 @@ namespace RedCell.ProScrum.WebUI.Services
             db = dbContext;
         }
 
-        public UserStoryChangeStatus VerifyUserStoryChangeStatus(int aid)
+        public UserStoryChangeStatus VerifyUserStoryChangeStatus(int usid)
         {
             var userStoryChangeStatus = new UserStoryChangeStatus();
 
@@ -26,22 +27,20 @@ namespace RedCell.ProScrum.WebUI.Services
 
             int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
 
-            var actividadByIdQuery = (from actividad in db.Actividades
-                                 where actividad.ActividadId == aid
-                                 select actividad).FirstOrDefault();
-
             var userStoryByIdQuery = (from userStory in db.UserStories
-                                      where userStory.UserStoryId == actividadByIdQuery.UserStoryId
+                                      where userStory.UserStoryId == usid
                                       select userStory).FirstOrDefault();
 
             totalTerminadas = (from actividad in db.Actividades
-                               where actividad.UserStoryId == actividadByIdQuery.UserStoryId
+                               where actividad.UserStoryId == userStoryByIdQuery.UserStoryId
                                && actividad.EstadoId == estadoTerminadoActividad
+                               && actividad.EsEliminado == false
                                select actividad).Count();
 
             totalActividades = (from actividad in db.Actividades
-                                              where actividad.UserStoryId == actividadByIdQuery.UserStoryId
-                                               select actividad).Count();
+                                where actividad.UserStoryId == userStoryByIdQuery.UserStoryId
+                                && actividad.EsEliminado == false
+                                select actividad).Count();
 
             if (totalTerminadas == totalActividades && totalTerminadas != 0 && totalActividades != 0)
             {
@@ -61,9 +60,39 @@ namespace RedCell.ProScrum.WebUI.Services
             
         }
 
-        public UserStoryChangeStatus VerifyUserStoryToComplete() {
+        public UserStoryChangeStatus SaveUserStoryStatus(int usid) {
 
-            return null;
+            int estadoInProcessUserStory = (int)EstadoUserStoryEnum.InProcess;            
+
+            var userStoryChangeStatus = VerifyUserStoryChangeStatus(usid);
+
+            if (userStoryChangeStatus.requiereCambio)
+            {
+                var element = (from userStory in db.UserStories
+                               where userStory.UserStoryId == usid
+                               select userStory).FirstOrDefault();
+
+                element.EstadoId = userStoryChangeStatus.estadoNuevoUserStory;                
+
+                if (userStoryChangeStatus.estadoAnteriorUserStory == estadoInProcessUserStory)
+                {
+                    var actividad = new Actividad();
+                    actividad.Descripcion = "Pruebas de aceptación";
+                    actividad.EsEliminado = false;
+                    actividad.EstadoId = (int)EstadoActividadEnum.Definido;
+                    actividad.TipoActividadId = (int)TipoActividadEnum.Calidad;
+                    actividad.UserStoryId = usid;
+                    actividad.FechaRegistro = System.DateTime.Now;
+                    actividad.UsuarioId = WebSecurity.CurrentUserId;
+
+                    db.Actividades.Add(actividad);
+                }
+
+                db.SaveChanges();
+
+            }
+
+            return userStoryChangeStatus;
         }
 
 

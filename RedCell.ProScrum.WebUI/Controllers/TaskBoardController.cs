@@ -325,8 +325,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [HttpPost]
         public JsonResult SaveBlock(SaveBlockUserStoryViewModel model)
         {
-            //Aca va la magia de Lucho
-
             var nuevoBloqueo = new Bloqueo();
 
             nuevoBloqueo.TipoBloqueoId = model.TipoBloqueoId;
@@ -349,6 +347,30 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
             return Json(new { UserStoryId = model.UserStoryId, IsBloqued = true });
+        }
+
+        [HttpPost]
+        public JsonResult SaveAcceptance(int usid)
+        {
+            int nuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId;
+
+            var element = (from userStory in db.UserStories
+                           where userStory.UserStoryId == usid
+                           select userStory).FirstOrDefault();
+
+            element.EstadoId = nuevoEstadoUserStory;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(new { NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
+
         }
 
         [HttpGet]

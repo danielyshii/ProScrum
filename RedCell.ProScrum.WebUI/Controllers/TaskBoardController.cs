@@ -8,6 +8,7 @@ using RedCell.ProScrum.WebUI.ViewModels.Proyecto;
 using RedCell.ProScrum.WebUI.ViewModels.TaskBoard;
 using WebMatrix.WebData;
 using RedCell.ProScrum.WebUI.Filters;
+using RedCell.ProScrum.WebUI.Services;
 
 namespace RedCell.ProScrum.WebUI.Controllers
 {
@@ -281,7 +282,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             catch (Exception e)
             {
 
-            }
+            }            
 
             var cantidadActividadTotal = (from actividadTerminada in db.Actividades
                                           where actividadTerminada.UserStoryId == element.UserStoryId

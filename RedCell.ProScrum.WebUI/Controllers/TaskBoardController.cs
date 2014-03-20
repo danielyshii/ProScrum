@@ -209,6 +209,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
+            var service = new ActividadService(db);
+            var retorno = service.VerifyUserStoryChangeStatus(element.UserStoryId);
+
             return Json(new
             {
                 Descripcion = descripcion,
@@ -216,8 +219,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 UserStoryId = uid,
                 NumeroActividadTerminada = cantidadActividadTerminada,
                 NumeroActividadTotal = cantidadActividadTotal,
-                IsUserStoryStateAfected = false,
-                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.InProcess].EstadoId
+                IsUserStoryStateAfected = retorno.requiereCambio,
+                NewUserStoryState = retorno.estadoNuevoUserStory
             });
         }
 
@@ -252,6 +255,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
+            var service = new ActividadService(db);
+            var retorno = service.VerifyUserStoryChangeStatus(element.UserStoryId);
+
             return Json(new
             {
                 Descripcion = element.Descripcion,
@@ -259,8 +265,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 UserStoryId = element.UserStoryId,
                 NumeroActividadTerminada = cantidadActividadTerminada,
                 NumeroActividadTotal = cantidadActividadTotal,
-                IsUserStoryStateAfected = true,
-                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId
+                IsUserStoryStateAfected = retorno.requiereCambio,
+                NewUserStoryState = retorno.estadoNuevoUserStory
             });
         }
 
@@ -295,6 +301,9 @@ namespace RedCell.ProScrum.WebUI.Controllers
                                               && actividadTerminada.EsEliminado == false
                                               select actividadTerminada).Count();
 
+            var service = new ActividadService(db);
+            var retorno = service.VerifyUserStoryChangeStatus(element.UserStoryId);
+
             return Json(new
             {
                 Descripcion = element.Descripcion,
@@ -302,8 +311,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 UserStoryId = element.UserStoryId,
                 NumeroActividadTerminada = cantidadActividadTerminada,
                 NumeroActividadTotal = cantidadActividadTotal,
-                IsUserStoryStateAfected = true,
-                NewUserStoryState = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId
+                IsUserStoryStateAfected = retorno.requiereCambio,
+                NewUserStoryState = retorno.estadoNuevoUserStory
             });
 
         }
@@ -477,9 +486,12 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [HttpPost]
         public JsonResult EndUserStoryInProcess(int UserStoryId)
         {
-            //Llamar al metodo de lucho para efectuar el cambio
+            var service = new ActividadService(db);
+            var loggedUserId = WebSecurity.CurrentUserId;
 
-            return Json(new { UserStoryId = UserStoryId, NuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId });
+            var retorno = service.SaveUserStoryStatus(UserStoryId, loggedUserId);
+
+            return Json(new { UserStoryId = UserStoryId, NuevoEstadoUserStory = retorno.estadoNuevoUserStory });
         }
 
         protected override void Dispose(bool disposing)

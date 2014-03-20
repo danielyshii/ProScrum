@@ -74,6 +74,8 @@ namespace RedCell.ProScrum.WebUI.Services
                                where userStory.UserStoryId == usid
                                select userStory).FirstOrDefault();
 
+                
+
                 element.EstadoId = userStoryChangeStatus.estadoNuevoUserStory;                
 
                 if (userStoryChangeStatus.estadoAnteriorUserStory == estadoInProcessUserStory)
@@ -94,12 +96,68 @@ namespace RedCell.ProScrum.WebUI.Services
 
                 db.SaveChanges();
 
+                var sprintChangeStatus = VerifySprintChangeStatus((int)element.SprintId);
+
+                if (sprintChangeStatus.requiereCambio)
+                {
+                    var sprintPorTerminar = (from sprint in db.Sprints
+                                             where sprint.SprintId == usid
+                                             select sprint).FirstOrDefault();
+
+                    sprintPorTerminar.EstadoId = sprintChangeStatus.estadoNuevoSprint;
+
+                    db.SaveChanges();
+                }
+
             }
 
             return userStoryChangeStatus;
         }
 
-        
+        public SprintChangeStatus VerifySprintChangeStatus(int sid)
+        {
+            var sprintChangeStatus = new SprintChangeStatus();
+
+            int totalTerminados = 0;
+            int totalUserStories = 0;
+
+            int estadoDoneUserStory = (int)EstadoUserStoryEnum.Done;
+
+            var sprintByIdQuery = (from sprint in db.Sprints
+                                   where sprint.SprintId == sid
+                                   select sprint).FirstOrDefault();
+
+            totalTerminados = (from userStory in db.UserStories
+                               where userStory.SprintId == sid
+                               && userStory.EstadoId == estadoDoneUserStory
+                               && userStory.EsEliminado == false
+                               select userStory).Count();
+
+            totalUserStories = (from userStory in db.UserStories
+                                where userStory.SprintId == sid
+                                && userStory.EsEliminado == false
+                                select userStory).Count();
+
+            if (totalTerminados == totalUserStories && totalTerminados != 0 && totalUserStories != 0)
+            {
+                sprintChangeStatus.estadoAnteriorSprint = sprintByIdQuery.EstadoId;
+                sprintChangeStatus.estadoNuevoSprint = sprintByIdQuery.EstadoId + 1;
+                sprintChangeStatus.requiereCambio = true;                
+            }
+            else
+            {
+                sprintChangeStatus.estadoAnteriorSprint = sprintByIdQuery.EstadoId;
+                sprintChangeStatus.estadoNuevoSprint = sprintByIdQuery.EstadoId;
+                sprintChangeStatus.requiereCambio = false;
+            }
+
+            sprintChangeStatus.SprintId = sprintByIdQuery.SprintId;
+            sprintChangeStatus.totalTerminados = totalTerminados;
+            sprintChangeStatus.totalUserStories = totalUserStories;
+
+            return sprintChangeStatus;
+
+        }
 
 
     }

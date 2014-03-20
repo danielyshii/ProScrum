@@ -102,7 +102,8 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
     public enum EstadoSprintEnum
     {
-        Definido = 1
+        Definido = 1,
+        Terminado = 2
     }
 
     public enum EstadoUserStoryEnum

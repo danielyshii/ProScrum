@@ -323,28 +323,35 @@ namespace RedCell.ProScrum.WebUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveBlock(SaveBlockUserStory model)
+        public JsonResult SaveBlock(SaveBlockUserStoryViewModel model)
         {
             //Aca va la magia de Lucho
 
             return Json(new { UserStoryId = model.UserStoryId, IsBloqued = true });
         }
 
+        [HttpGet]
         public ActionResult ValidateUserStory(int id)
         { 
-            var model = new ValidateUserStory();
+            var model = new ValidateUserStoryViewModel();
 
             var userStoryFound = (from userStory in db.UserStories
-                                   where userStory.UserStoryId == id
-                                   select userStory).FirstOrDefault();
+                                  join usuario in db.Usuarios
+                                  on userStory.ResponsableId equals usuario.UsuarioId
+                                  where userStory.UserStoryId == id
+                                  select new {
+                                      UserStoryId = usuario.UsuarioId,
+                                      Codigo = userStory.Codigo,
+                                      Descripcion = userStory.Descripcion,
+                                      NombreUsuario = usuario.Nombres + " " + usuario.Apellidos
+                                  }).FirstOrDefault();
 
             model.UserStoryId = userStoryFound.UserStoryId;
             model.Codigo = userStoryFound.Codigo;
             model.Descripcion = userStoryFound.Descripcion;
-            model.NombreUsuario = "Memo"; //Cambiar
-            
+            model.NombreUsuario = userStoryFound.NombreUsuario;
 
-            return PartialView();
+            return PartialView(model);
         }
 
         protected override void Dispose(bool disposing)

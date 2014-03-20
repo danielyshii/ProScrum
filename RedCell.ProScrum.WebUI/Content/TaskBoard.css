@@ -809,7 +809,7 @@ a
     min-height: 20px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 6px 12px 12px;
+    padding: 6px 12px 6px;
 }
 
 
@@ -1129,3 +1129,30 @@ a
     {
         text-align: center;
     }
+
+.window-main-split-form
+{
+    margin-bottom: 15px;
+}
+
+    .window-main-split-form label
+    {
+        display: inline-block;
+        width: 45%;
+        margin-right: 4%;
+    }
+
+        .window-main-split-form label > span
+        {
+            display: inline-block;
+            text-align: left;
+            width: 30%;
+        }
+
+        .window-main-split-form label > label
+        {
+            display: inline-block;
+            margin-top: 7px;
+            text-align: left;
+            width: 60%;
+        }

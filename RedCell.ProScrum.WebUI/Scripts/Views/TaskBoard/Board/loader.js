@@ -142,10 +142,14 @@ function BoardController() {
         LoadUserStoryWindow: function (userStoryId) {
             $.get('/TaskBoard/UserStoryDetail/' + userStoryId, base.Eventos.OnUserStoryDetailSuccess);
         },
+
         LoadBlockUserStoryWindow: function (userStoryId) {
             $.get('/TaskBoard/BlockUserStory/' + userStoryId, base.Eventos.OnUserStoryBlockSuccess);
-        }
+        },
 
+        LoadValidateUserStoryWindow: function (userStoryId) {
+            $.get('/TaskBoard/ValidateUserStory/' + userStoryId, base.Eventos.OnUserStoryValidateSuccess);
+        }
 
     }
 
@@ -171,10 +175,9 @@ function BoardController() {
             $("div.list-cards").on("click", "div.list-card div.list-card-details div.list-card-members div.js-validate-click", function (e) {
                 e.stopPropagation();
 
-                var userStoryId = $(this).attr('user-story-id');
+                var userStoryId = $(this).parent().parent().attr('user-story-id');
 
-                base.Controles.ValidateWindowManager.show();
-
+                base.Funciones.LoadValidateUserStoryWindow(userStoryId);
 
             });
 
@@ -186,8 +189,6 @@ function BoardController() {
 
                 var userStoryId = $(this).parent().parent().attr('user-story-id');
 
-                //base.Controles.BlockWindowManager.show();
-
                 base.Funciones.LoadBlockUserStoryWindow(userStoryId);
             });
         },
@@ -198,6 +199,11 @@ function BoardController() {
         
         OnUserStoryBlockSuccess: function (data) {
             base.Controles.BlockWindowManager.show(data);
+        },
+
+        OnUserStoryValidateSuccess: function (data)
+        {
+            base.Controles.ValidateWindowManager.show(data);
         }
     }
 

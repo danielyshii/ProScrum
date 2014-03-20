@@ -1,6 +1,32 @@
-﻿<div class="window-header clearfix">
+﻿@model RedCell.ProScrum.WebUI.ViewModels.TaskBoard.ValidateUserStoryViewModel
+
+<div class="window-header clearfix">
     <span class="window-header-icon icon-lg icon-card"></span>
     <div class="window-title card-detail-title non-empty inline  editable  ">
         <h2 class="window-title-text current hide-on-edit">Validar User Story</h2>
+    </div>
+</div>
+
+<div class="window-main-whole">
+    <div class="window-main-whole-content clearfix">
+        <input type="hidden" id="validate-user-story-id" value="@Model.UserStoryId" />
+        <div class="window-main-split-form clearfix">
+            <label>
+                <span>Codigo :</span>
+                <label>@Model.Codigo</label>
+            </label>
+            <label>
+                <span>Asignado a :</span>
+                <label>@Model.NombreUsuario</label>
+            </label>
+        </div>
+        <div class="window-main-footer clearfix js-validate-user-story-div">
+            <input id="validate-user-story-btn-ok" type="button" class="button" value="👍 Conforme" />
+            &nbsp;
+            <input id="validate-user-story-btn-noOk" type="button" class="button" value="👎 No Conforme" />
+        </div>
+        <div class="window-main-footer clearfix hide js-reject-user-story-div">
+            <h1>LArlalalaalalalalalalalalaalalalalalalaalalala</h1>
+        </div>
     </div>
 </div>

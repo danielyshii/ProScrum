@@ -60,14 +60,14 @@ namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
         public string Descripcion { get; set; }
     }
 
-    public class SaveBlockUserStory
+    public class SaveBlockUserStoryViewModel
     {
         public int UserStoryId { get; set; }
         public int TipoBloqueoId { get; set; }
         public string Descripcion { get; set; }
     }
 
-    public class ValidateUserStory
+    public class ValidateUserStoryViewModel
     {
         public int UserStoryId { get; set; }
         public string Codigo { get; set; }

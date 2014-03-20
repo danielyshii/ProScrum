@@ -297,13 +297,84 @@ function BoardValidateWindowManager() {
     base.show = function (data) {
         $('body').addClass('window-up-validate');
         $("div.window-overlay-validate div.window div.window-wrapper div.js-dialog-container").html(data);
+
+        base.Funciones.InicializarHandler();
     }
 
     base.onClose = function () {
 
         $("div.window-overlay-validate div.window div.window-wrapper div.dialog-close-button").on("click", "a.js-close-window", function () {
+            base.Funciones.RemoveHandler();
             base.hide();
         });
+    }
+
+    base.AjaxCall = {
+
+        SaveAcceptance: function (uid) {
+
+            $.ajax({
+                type: "POST",
+                url: '/TaskBoard/SaveAcceptance',
+                data: JSON.stringify({ 'UserStoryId': uid }),
+                dataType: "json",
+                contentType: "application/json",
+                success: base.Eventos.SaveAcceptanceSuccess
+            });
+
+        },
+
+    }
+
+    base.Funciones = {
+
+        InicializarHandler: function () {
+
+            //Accept Button
+            $('div.js-validate-user-story-div').on('click', 'input#validate-user-story-btn-ok', function () {
+                base.Eventos.SaveAcceptanceButtonHandler();
+            });
+
+            //Close Button
+            $('div.js-validate-user-story-div').on('click', 'input#validate-user-story-btn-noOk', function () {
+                base.Eventos.ShowRejectionFormButtonHandler();
+            });
+
+
+        },
+
+        RemoveHandler: function () {
+            $('div.window-main-footer').off('click');
+        }
+
+    }
+
+    base.Eventos = {
+
+        ShowRejectionFormButtonHandler: function () {
+
+            $('div.js-validate-user-story-div').addClass('hide');
+            $('div.js-reject-user-story-div').removeClass('hide');
+
+        },
+
+        SaveAcceptanceButtonHandler: function () {
+            
+            alert('No Go');
+            //var uid = $('input#validate-user-story-id').val();
+            //base.AjaxCall.SaveAcceptance(uid);
+        },
+
+        SaveAcceptanceSuccess: function (data) {
+
+            //Cerrar Ventana
+            base.Funciones.RemoveHandler();
+            base.hide();
+
+            //Llamar Handler del Board de Mover Estado
+
+        }
+
     }
 
     base.init = function (config) {

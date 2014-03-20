@@ -60,7 +60,7 @@ namespace RedCell.ProScrum.WebUI.Services
             
         }
 
-        public UserStoryChangeStatus SaveUserStoryStatus(int usid) {
+        public UserStoryChangeStatus SaveUserStoryStatus(int usid, int currentUserId) {
 
             int estadoInProcessUserStory = (int)EstadoUserStoryEnum.InProcess;            
 
@@ -83,7 +83,7 @@ namespace RedCell.ProScrum.WebUI.Services
                     actividad.TipoActividadId = (int)TipoActividadEnum.Calidad;
                     actividad.UserStoryId = usid;
                     actividad.FechaRegistro = System.DateTime.Now;
-                    actividad.UsuarioId = WebSecurity.CurrentUserId;
+                    actividad.UsuarioId = currentUserId;
 
                     db.Actividades.Add(actividad);
                 }

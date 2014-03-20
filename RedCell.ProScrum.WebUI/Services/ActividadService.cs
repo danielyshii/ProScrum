@@ -46,15 +46,17 @@ namespace RedCell.ProScrum.WebUI.Services
             {
                 userStoryChangeStatus.estadoAnteriorUserStory = userStoryByIdQuery.EstadoId;
                 userStoryChangeStatus.estadoNuevoUserStory = userStoryByIdQuery.EstadoId + 1;
-                userStoryChangeStatus.requiereCambio = true;
-                userStoryChangeStatus.UserStoryId = userStoryByIdQuery.UserStoryId;                
+                userStoryChangeStatus.requiereCambio = true;                
             }
             else {
                 userStoryChangeStatus.estadoAnteriorUserStory = userStoryByIdQuery.EstadoId;
                 userStoryChangeStatus.estadoNuevoUserStory = userStoryByIdQuery.EstadoId;
                 userStoryChangeStatus.requiereCambio = false;
-                userStoryChangeStatus.UserStoryId = userStoryByIdQuery.UserStoryId;
             }
+
+            userStoryChangeStatus.UserStoryId = userStoryByIdQuery.UserStoryId;
+            userStoryChangeStatus.totalTerminadas = totalTerminadas;
+            userStoryChangeStatus.totalActividades = totalActividades;
 
             return userStoryChangeStatus;
             
@@ -86,6 +88,8 @@ namespace RedCell.ProScrum.WebUI.Services
                     actividad.UsuarioId = currentUserId;
 
                     db.Actividades.Add(actividad);
+
+                    userStoryChangeStatus.totalActividades += 1;
                 }
 
                 db.SaveChanges();
@@ -94,6 +98,8 @@ namespace RedCell.ProScrum.WebUI.Services
 
             return userStoryChangeStatus;
         }
+
+        
 
 
     }

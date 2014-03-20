@@ -15,6 +15,8 @@ namespace RedCell.ProScrum.WebUI.TransferObjects
         public int estadoNuevoUserStory { get; set; }
         public bool requiereCambio { get; set; }
         public int UserStoryId { get; set; }
+        public int totalTerminadas { get; set; }
+        public int totalActividades { get; set; }
 
     }
 }

@@ -327,6 +327,27 @@ namespace RedCell.ProScrum.WebUI.Controllers
         {
             //Aca va la magia de Lucho
 
+            var nuevoBloqueo = new Bloqueo();
+
+            nuevoBloqueo.TipoBloqueoId = model.TipoBloqueoId;
+            nuevoBloqueo.UserStoryId = model.UserStoryId;
+            nuevoBloqueo.UsuarioId = WebSecurity.CurrentUserId;
+            nuevoBloqueo.Descripcion = model.Descripcion;
+            nuevoBloqueo.InicioBloqueo = DateTime.Now;
+            nuevoBloqueo.FinBloqueo = null;
+            nuevoBloqueo.EsEliminado = false;
+
+            db.Bloqueos.Add(nuevoBloqueo);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
             return Json(new { UserStoryId = model.UserStoryId, IsBloqued = true });
         }
 

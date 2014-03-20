@@ -13,7 +13,7 @@ namespace RedCell.ProScrum.WebUI.Models
         public int UsuarioId { get; set; }
         public string Descripcion { get; set; }
         public DateTime InicioBloqueo { get; set; }
-        public DateTime FinBloqueo { get; set; }
+        public DateTime? FinBloqueo { get; set; }
         public bool EsEliminado { get; set; }
 
         public virtual TipoBloqueo TipoBloqueo { get; set; }

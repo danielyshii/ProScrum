@@ -350,9 +350,33 @@ namespace RedCell.ProScrum.WebUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveAcceptance(int usid)
+        public JsonResult SaveToVerify(int usid)
         {
             int nuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.ToVerify].EstadoId;
+
+            var element = (from userStory in db.UserStories
+                           where userStory.UserStoryId == usid
+                           select userStory).FirstOrDefault();
+
+            element.EstadoId = nuevoEstadoUserStory;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(new { NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
+
+        }
+
+        [HttpPost]
+        public JsonResult SaveAcceptance(int usid)
+        {
+            int nuevoEstadoUserStory = this.EstadosUserStory[(int)EstadoUserStoryEnum.Done].EstadoId;
 
             var element = (from userStory in db.UserStories
                            where userStory.UserStoryId == usid

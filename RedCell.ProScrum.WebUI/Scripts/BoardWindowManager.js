@@ -101,55 +101,6 @@
         },
 
         addEventsToUserStory: function () {
-            // Asignar Usuario
-            $('a.js-change-card-members').on('click', function () {
-
-                var userStoryId = $('#hddUserStoryId').val();
-
-                //alert('Click en Asignar');
-
-                base.AjaxCalls.assignUser(userStoryId);
-            })
-
-            // Agregar Actividad
-            $('div.js-add-activity').on('click', function () {
-
-                var descripcion = $("textarea.js-new-comment-input").val();
-                var userStoryId = $('#hddUserStoryId').val();
-
-                if (descripcion != '') {
-                    base.AjaxCalls.addActivity(descripcion, userStoryId);
-                }
-                else {
-                    base.FuncionesOVerlayUserStory.animateNewActivityError();
-                }
-
-            });
-
-            // Eliminar Actividad
-            $('div.js-activity-list').on('click', 'div.phenom  a.js-delete-activity', function () {
-
-                var actividadId = $(this).attr('actividadId');
-
-                //alert('Click en Eliminar Actividad: ' + actividadId);
-
-                base.AjaxCalls.deleteActivity(this, actividadId);
-
-                //base.FuncionesOVerlayUserStory.animateDeleteActivity(this);
-            });
-
-            // Terminar Actividad
-            $('div.js-activity-list').on('click', 'div.phenom div.creator div.check-div input.js-end-activity', function () {
-
-                var actividadId = $(this).attr('actividadId');
-
-                //alert('Click en Terminar Actividad: ' + actividadId);
-
-                base.AjaxCalls.endActivity(this, actividadId);
-
-                //base.FuncionesOVerlayUserStory.animateEndActivity(this);
-
-            });
 
             // Cambiar Color
             $('span.colored-label').on('click', function () {
@@ -165,6 +116,73 @@
                 base.AjaxCalls.changeUserStoryColor(userStoryId, newColorId, isSelected)
 
             });
+
+            var esBloqueado = parseInt($('input#user-story-detail-EsBloqueada').val())
+
+            if (esBloqueado == 0) {
+                // Asignar Usuario
+                $('a.js-change-card-members').on('click', function () {
+
+                    var userStoryId = $('#hddUserStoryId').val();
+
+                    //alert('Click en Asignar');
+
+                    base.AjaxCalls.assignUser(userStoryId);
+                })
+
+                // Agregar Actividad
+                $('div.js-add-activity').on('click', function () {
+
+                    var descripcion = $("textarea.js-new-comment-input").val();
+                    var userStoryId = $('#hddUserStoryId').val();
+
+                    if (descripcion != '') {
+                        base.AjaxCalls.addActivity(descripcion, userStoryId);
+                    }
+                    else {
+                        base.FuncionesOVerlayUserStory.animateNewActivityError();
+                    }
+
+                });
+
+                // Eliminar Actividad
+                $('div.js-activity-list').on('click', 'div.phenom  a.js-delete-activity', function () {
+
+                    var actividadId = $(this).attr('actividadId');
+
+                    //alert('Click en Eliminar Actividad: ' + actividadId);
+
+                    base.AjaxCalls.deleteActivity(this, actividadId);
+
+                    //base.FuncionesOVerlayUserStory.animateDeleteActivity(this);
+                });
+
+                // Terminar Actividad
+                $('div.js-activity-list').on('click', 'div.phenom div.creator div.check-div input.js-end-activity', function () {
+
+                    var actividadId = $(this).attr('actividadId');
+
+                    //alert('Click en Terminar Actividad: ' + actividadId);
+
+                    base.AjaxCalls.endActivity(this, actividadId);
+
+                    //base.FuncionesOVerlayUserStory.animateEndActivity(this);
+
+                });
+            }
+            else {
+
+                //Retirar Checkbox
+                $('input[type="checkbox"]').remove();
+
+                //Retirar Trash Icon
+                $('a.js-delete-activity').remove();
+
+                //Ocultar AddActivity
+                $('div.js-new-comment').remove();
+
+            }
+
         },
 
         animateDeleteActivity: function (domElement, response) {
@@ -289,6 +307,10 @@ function BoardValidateWindowManager() {
 
     var base = this;
 
+    base.config = {
+        BoarUserStoryStateChange: null
+    };
+
     base.hide = function () {
         $('body').removeClass('window-up-validate');
         $('div.window-overlay-validate div.window div.window-wrapper div.js-dialog-container').contents().remove('div');
@@ -316,7 +338,7 @@ function BoardValidateWindowManager() {
             $.ajax({
                 type: "POST",
                 url: '/TaskBoard/SaveAcceptance',
-                data: JSON.stringify({ 'UserStoryId': uid }),
+                data: JSON.stringify({ 'usid': uid }),
                 dataType: "json",
                 contentType: "application/json",
                 success: base.Eventos.SaveAcceptanceSuccess
@@ -359,10 +381,9 @@ function BoardValidateWindowManager() {
         },
 
         SaveAcceptanceButtonHandler: function () {
-            
-            alert('No Go');
-            //var uid = $('input#validate-user-story-id').val();
-            //base.AjaxCall.SaveAcceptance(uid);
+
+            var uid = $('input#validate-user-story-id').val();
+            base.AjaxCall.SaveAcceptance(uid);
         },
 
         SaveAcceptanceSuccess: function (data) {
@@ -372,7 +393,7 @@ function BoardValidateWindowManager() {
             base.hide();
 
             //Llamar Handler del Board de Mover Estado
-
+            base.config.BoarUserStoryStateChange(data);
         }
 
     }
@@ -471,14 +492,12 @@ function BoardBlockWindowManager() {
             tbid = $('select[name="TipoBloqueoId"]').val();
             desc = $('textarea[name="Descripcion"]').val();
 
-            if (isNaN(tbid))
-            {
+            if (isNaN(tbid)) {
                 base.Eventos.AnimateInputError($('select[name="TipoBloqueoId"]'));
                 isValid = false;
             }
 
-            if (!(desc && desc != null && desc != ''))
-            {
+            if (!(desc && desc != null && desc != '')) {
                 base.Eventos.AnimateInputError($('textarea[name="Descripcion"]'));
                 isValid = false;
             }
@@ -488,8 +507,7 @@ function BoardBlockWindowManager() {
             //alert(desc);
 
             //Llamar a SaveBlock
-            if (isValid)
-            {
+            if (isValid) {
                 base.AjaxCall.saveBlock(uid, tbid, desc);
             }
         },

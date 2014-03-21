@@ -136,19 +136,19 @@ function BoardController() {
                     }
                 }
 
-                if (userStoryData.EstadoUserStoryId == base.Data.ToVerifyState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
-                    verifyIcon = '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
-                                        '<span class="member-initials">👍</span>' +
-                                    '</div>';
+                if (!userStoryData.EstaBloqueada) {
+                    if (userStoryData.EstadoUserStoryId == base.Data.ToVerifyState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
+                        verifyIcon = '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
+                                            '<span class="member-initials">👍</span>' +
+                                        '</div>';
+                    }
+
+                    if (userStoryData.EstadoUserStoryId == base.Data.InProcessState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
+                        inProcessIcon = '<div class="member js-in-process-click" title="Seleccione si desea notificar el fin del desarrollo del User Story">' +
+                                            '<span class="member-initials">✓</span>' +
+                                        '</div>';
+                    }
                 }
-
-                if (userStoryData.EstadoUserStoryId == base.Data.InProcessState && userStoryData.NumeroActividadTotal > 0 && userStoryData.NumeroActividadTerminada == userStoryData.NumeroActividadTotal) {
-                    inProcessIcon = '<div class="member js-in-process-click" title="Seleccione si desea notificar el fin del desarrollo del User Story">' +
-                                        '<span class="member-initials">✓</span>' +
-                                    '</div>';
-                }
-
-
 
                 var userStoryBadges = '<div class="badges">' + lockBadge + activityBadge + '</div>';
 
@@ -189,6 +189,38 @@ function BoardController() {
 
         LoadValidateUserStoryWindow: function (userStoryId) {
             $.get('/TaskBoard/ValidateUserStory/' + userStoryId, base.Eventos.OnUserStoryValidateSuccess);
+        },
+
+        // { UserStoryId = 4, NumeroActividadTerminada = 4, NumeroActividadTotal = 5 }
+        UpdateListActivity: function (response) {
+
+
+                var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
+
+                var toBeAppended = '<span class="badge-icon icon-sm icon-checklist"></span>' +
+                                   '<span class="badge-text">' + response.NumeroActividadTerminada + '/' + response.NumeroActividadTotal + '</span>';
+
+                if (!response.NumeroActividadTotal || response.NumeroActividadTotal == 0) {
+                    toBeAppended = ''
+                }
+
+                var jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
+
+                if (jqActivityBadgeContainer.length > 0) {
+                    jqActivityBadgeContainer.empty();
+                }
+                else {
+                    jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges');
+
+                    var activityBadge = '<div class="badge js-user-story-activity-badge" title="Actividades Terminadas / Actividades Totales"></div>';
+                    jqActivityBadgeContainer.append(activityBadge);
+                    jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
+                }
+
+                jqActivityBadgeContainer.append(toBeAppended);
+
+
+
         }
 
     }
@@ -293,32 +325,13 @@ function BoardController() {
 
         },
 
-        // { UserStoryId = 4, NumeroActividadTerminada = 4, NumeroActividadTotal = 5 }
+        // { UserStoryId = 4, NumeroActividadTerminada = 4, NumeroActividadTotal = 5, NewUserStoryState = 5 }
         OnUserStoryActivitiesChange: function (response) {
 
+
+            base.Funciones.UpdateListActivity(response);
+
             var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
-
-            var toBeAppended = '<span class="badge-icon icon-sm icon-checklist"></span>' +
-                               '<span class="badge-text">' + response.NumeroActividadTerminada + '/' + response.NumeroActividadTotal + '</span>';
-
-            if (response.NumeroActividadTotal == 0) {
-                toBeAppended = ''
-            }
-
-            var jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
-
-            if (jqActivityBadgeContainer.length > 0) {
-                jqActivityBadgeContainer.empty();
-            }
-            else {
-                jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges');
-
-                var activityBadge = '<div class="badge js-user-story-activity-badge" title="Actividades Terminadas / Actividades Totales"></div>';
-                jqActivityBadgeContainer.append(activityBadge);
-                jqActivityBadgeContainer = jqUSContainer.find('div.list-card-details div.badges div.js-user-story-activity-badge');
-            }
-
-            jqActivityBadgeContainer.append(toBeAppended);
 
             var jqMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members')
 
@@ -332,7 +345,7 @@ function BoardController() {
                                '</div>';
 
                 }
-                else if (response.NewUserStoryState == base.Data.ToDoState) {
+                else if (response.NewUserStoryState == base.Data.DoneState) {
                     toAppend = '<div class="member js-validate-click" title="Seleccione si desea iniciar la validación del User Story">' +
                                     '<span class="member-initials">👍</span>' +
                                 '</div>';
@@ -353,7 +366,7 @@ function BoardController() {
 
         },
 
-        // { NuevoEstadoUserStory = 2, UserStoryId = 2 }
+        // { NuevoEstadoUserStory = 2, UserStoryId = 2 , NumeroActividadTerminada = 4, NumeroActividadTotal = 5}
         OnUserStoryStateChange: function (response) {
 
             var jqUSContainer = $('div.js-user-story-container').filter('[board-user-story-id=' + response.UserStoryId + ']');
@@ -371,10 +384,11 @@ function BoardController() {
             if (response.NuevoEstadoUserStory == base.Data.ToVerifyState) {
                 jqMemberContainer.find('div.js-in-process-click').remove();
             }
-            else if (response.NuevoEstadoUserStory == base.Data.ToDoState)
-            {
+            else if (response.NuevoEstadoUserStory == base.Data.DoneState) {
                 jqMemberContainer.find('div.js-validate-click').remove();
             }
+
+            base.Funciones.UpdateListActivity(response);
 
         },
 
@@ -394,6 +408,13 @@ function BoardController() {
             var jqBlockMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members div.js-block-click')
 
             jqBlockMemberContainer.remove();
+
+
+            var jqMemberContainer = jqUSContainer.find('div.list-card-details div.list-card-members');
+
+            jqMemberContainer.find('div.js-in-process-click').remove();
+            jqMemberContainer.find('div.js-validate-click').remove();
+
         }
 
     }
@@ -405,7 +426,9 @@ function BoardController() {
             BoardUserStoryActivityChange: base.EventosBoardRender.OnUserStoryActivitiesChange,
             BoarUserStoryStateChange: base.EventosBoardRender.OnUserStoryStateChange
         });
-        base.Controles.ValidateWindowManager.init();
+        base.Controles.ValidateWindowManager.init({
+            BoarUserStoryStateChange: base.EventosBoardRender.OnUserStoryStateChange
+        });
         base.Controles.BlockWindowManager.init({
             BoardUserStoryBlockUpdate: base.EventosBoardRender.OnUserStoryBlockChange
         });

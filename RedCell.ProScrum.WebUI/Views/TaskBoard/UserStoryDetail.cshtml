@@ -9,6 +9,7 @@
 <div class="window-main-col">
     <div class="window-main-col-content clearfix">
         <input type="hidden" id="hddUserStoryId" value="@Model.UserStoryId" />
+        <input type="hidden" id="user-story-detail-EsBloqueada" value="@(Model.EsBloqueada ? 1 : 0 )" />
         <div attr="desc" class="card-detail-desc window-module gutter clearfix  editable ">
             <div class="current markeddown hide-on-edit bottom" style="display: block;">
                 <p>@Model.Descripcion</p>

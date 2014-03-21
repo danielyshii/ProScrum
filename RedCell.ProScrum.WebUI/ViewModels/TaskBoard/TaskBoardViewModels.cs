@@ -38,6 +38,7 @@ namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
         public int? Color { get; set; }
         public int? UsuarioId { get; set; }
         public string Usuario { get; set; }
+        public bool EsBloqueada { get; set; }
         public List<ActividadesViewModel> ListaActividades { get; set; }
     }
 

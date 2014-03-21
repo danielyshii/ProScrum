@@ -1167,3 +1167,17 @@ a
             text-align: left;
             width: 60%;
         }
+
+.boardHeader
+{
+    display: inline;
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+    min-height: 19px;
+    min-width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    font-weight: bold;
+}

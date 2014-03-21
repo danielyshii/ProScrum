@@ -9,6 +9,10 @@ namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
     public class BoardViewModel
     {
         public int ProyectoId { get; set; }
+        public string NombreProyecto { get; set; }
+        public string EstadoProyecto { get; set; }
+        public string NombreSprint { get; set; }
+        public string EstadoSprint { get; set; }
     }
 
 

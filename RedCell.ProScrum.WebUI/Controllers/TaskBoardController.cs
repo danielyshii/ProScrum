@@ -56,9 +56,26 @@ namespace RedCell.ProScrum.WebUI.Controllers
         [HttpGet]
         public ActionResult Board(int id)
         {
+            int estadoSprintIniciado = (int)EstadoSprintEnum.Iniciado;
 
             var model = new BoardViewModel();
             model.ProyectoId = id;
+
+            var proyectoQuery = (from p in db.Proyectos
+                                 join ep in db.EstadoProyectos on p.EstadoId equals ep.EstadoProyectoId
+                                 where p.ProyectoId == id
+                                 select new { NombreProyecto = p.Nombre, EstadoProyecto = ep.Descripcion }).FirstOrDefault();
+
+            var sprintQuery = (from s in db.Sprints
+                               join es in db.EstadoSprints on s.EstadoId equals es.EstadoSprintId
+                               where s.ProyectoId == id
+                               && s.EstadoId == estadoSprintIniciado
+                               select new { NombreSprint = s.Nombre, EstadoSprint = es.Descripcion }).FirstOrDefault();
+
+            model.NombreProyecto = proyectoQuery.NombreProyecto;
+            model.EstadoProyecto = proyectoQuery.EstadoProyecto;
+            model.NombreSprint = sprintQuery.NombreSprint;
+            model.EstadoSprint = sprintQuery.EstadoSprint;
 
             return View(model);
         }

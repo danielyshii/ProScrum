@@ -403,16 +403,33 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             element.EstadoId = nuevoEstadoUserStory;
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (Exception e)
-            {
+            var service = new ActividadService(db);
 
-            }
+            var retorno = service.VerifyUserStoryChangeStatus(usid);
 
-            return Json(new { NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
+
+            var actividad = new Actividad();
+            actividad.Descripcion = "Resolver inconformidades pendientes";
+            actividad.EsEliminado = false;
+            actividad.EstadoId = (int)EstadoActividadEnum.Definido;
+            actividad.TipoActividadId = (int)TipoActividadEnum.Desarrollo;
+            actividad.UserStoryId = usid;
+            actividad.FechaRegistro = System.DateTime.Now;
+            actividad.UsuarioId = WebSecurity.CurrentUserId;
+
+            db.Actividades.Add(actividad);
+
+            retorno.totalActividades += 1;
+                       
+            db.SaveChanges();
+
+            return Json(new
+            {
+                NuevoEstadoUserStory = element.EstadoId,
+                UserStoryId = retorno.UserStoryId,
+                NumeroActividadTerminada = retorno.totalTerminadas,
+                NumeroActividadTotal = retorno.totalActividades
+            });
 
         }
 

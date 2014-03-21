@@ -335,7 +335,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
             sprint.Objetivo = model.ObjetivoSprint;
             sprint.Nombre = model.NombreSprintInicial;
             sprint.Inicio = model.FechaInicioSprintInicial;
-            sprint.EstadoId = this.EstadosSprint[(int)EstadoSprintEnum.Definido].EstadoId;
+            sprint.EstadoId = this.EstadosSprint[(int)EstadoSprintEnum.Iniciado].EstadoId;
 
             if (model.SprintUserStories != null)
             {

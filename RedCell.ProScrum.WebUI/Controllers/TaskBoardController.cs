@@ -23,14 +23,24 @@ namespace RedCell.ProScrum.WebUI.Controllers
         public ActionResult Index()
         {
             int estadoEnProgreso = (int)EstadosProyecto[(int)EstadoProyectoEnum.EnProgreso].EstadoId;
+            int estadoSprintIniciado = (int)this.EstadosSprint[(int)EstadoSprintEnum.Iniciado].EstadoId;
 
             var proyectoEnProgreso = from proyecto in db.Proyectos
                                      join integranteProyecto in db.IntegrantesProyecto
                                      on proyecto.ProyectoId equals integranteProyecto.ProyectoId
+                                     join sprint in db.Sprints
+                                     on proyecto.ProyectoId equals sprint.ProyectoId
                                      where (integranteProyecto.IntegranteId == WebSecurity.CurrentUserId)
                                         && proyecto.EsEliminado == false
                                         && proyecto.EstadoId == estadoEnProgreso
-                                     select proyecto;
+                                        && sprint.EsEliminado == false
+                                        && sprint.EstadoId == estadoSprintIniciado
+                                     select new IndexViewModel
+                                     { 
+                                               ProyectoId = proyecto.ProyectoId,
+                                               Nombre = proyecto.Nombre,
+                                               Sprint = sprint.Nombre
+                                     };
 
             if (!proyectoEnProgreso.Any() || proyectoEnProgreso.Count() > 1)
             {

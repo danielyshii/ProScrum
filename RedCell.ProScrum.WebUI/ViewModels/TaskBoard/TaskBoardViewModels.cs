@@ -75,4 +75,11 @@ namespace RedCell.ProScrum.WebUI.ViewModels.TaskBoard
         public string Descripcion { get; set; }
         public string NombreUsuario { get; set; }
     }
+
+    public class IndexViewModel
+    {
+        public int ProyectoId { get; set; }
+        public string Nombre { get; set; }
+        public string Sprint { get; set; }
+    }
 }

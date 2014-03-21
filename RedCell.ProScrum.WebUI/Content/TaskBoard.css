@@ -205,7 +205,7 @@ h2
 
 .icon-check:before
 {
-    content: "✓"
+    content: "✓";
 }
 
 .icon-lg, .icon-sm
@@ -374,6 +374,12 @@ a
 {
     height: 84px;
     padding-right: 36px;
+}
+
+.board-list .footer
+{
+    display: block;
+    padding-top: 30px;
 }
 
 .sidebar-boards-list .details, .board-list .details

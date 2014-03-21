@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RedCell.ProScrum.WebUI.Models.Proyecto>
+﻿@model IEnumerable<RedCell.ProScrum.WebUI.ViewModels.TaskBoard.IndexViewModel>
 
 @{    
     Layout = null;
@@ -26,8 +26,9 @@
                 </div>
                 <!-- Zona de Proyextos !-->
                 <ul class="board-list gutter js-board-list clearfix">
-                    
-                    @foreach (var item in Model) {
+
+                    @foreach (var item in Model)
+                    {
                         
                         <li>
                             <a class="js-open-board highlight-icon unknown" style="background-color: #999999;" target="_blank" href="/TaskBoard/Board/@item.ProyectoId">
@@ -35,6 +36,9 @@
                                 <span class="details">
                                     <span class="board-list-item-name" title="@item.Nombre">@item.Nombre</span>
                                     <span class="icon-sm icon-popup"></span>
+                                </span>
+                                <span class="footer">
+                                    @item.Sprint
                                 </span>
                             </a>
                         </li>

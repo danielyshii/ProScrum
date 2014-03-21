@@ -17,9 +17,7 @@ namespace RedCell.ProScrum.WebUI.Controllers
     {
         private ProScrumContext db = new ProScrumContext();
 
-        //
-        // GET: /TaskBoard/
-
+        [HttpGet]
         public ActionResult Index()
         {
             int estadoEnProgreso = (int)EstadosProyecto[(int)EstadoProyectoEnum.EnProgreso].EstadoId;
@@ -80,46 +78,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public JsonResult ListBoardUserStories(int id)
-        {
-            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
-
-            var userStories = from userStory in db.UserStories
-                              where userStory.ProyectoId == id
-                              && userStory.EsEliminado == false
-                              select new UserStoryCompactViewModel
-                              {
-                                  UserStoryId = userStory.UserStoryId,
-                                  Codigo = userStory.Codigo,
-                                  Descripcion = userStory.Descripcion,
-                                  EstaBloqueada = (from bloqueo in db.Bloqueos
-                                                   where bloqueo.UserStoryId == userStory.UserStoryId
-                                                   && bloqueo.EsEliminado == false
-                                                   select bloqueo.BloqueoId).Count() > 0,
-                                  NumeroActividadTerminada = (from actividadTerminada in db.Actividades
-                                                              where actividadTerminada.UserStoryId == userStory.UserStoryId
-                                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
-                                                              && actividadTerminada.EsEliminado == false
-                                                              select actividadTerminada).Count(),
-                                  NumeroActividadTotal = (from actividadTotal in db.Actividades
-                                                          where actividadTotal.UserStoryId == userStory.UserStoryId
-                                                          && actividadTotal.EsEliminado == false
-                                                          select actividadTotal).Count(),
-                                  EstadoUserStoryId = userStory.EstadoId,
-                                  Color = userStory.Color
-                              };
-
-            var estadoUserStories = from estadoUserStory in db.EstadoUserStories
-                                    select new BoardColumnViewModel
-                                    {
-                                        BoardColumnId = estadoUserStory.EstadoUserStoryId,
-                                        Descripcion = estadoUserStory.Descripcion
-                                    };
-
-            return Json(new { BoardColumns = estadoUserStories, UserStories = userStories });
-        }
-
         [HttpGet]
         public ActionResult UserStoryDetail(int id)
         {
@@ -173,6 +131,89 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
             return PartialView(userStoryEncontrado);
         }
+
+        [HttpGet]
+        public ActionResult BlockUserStory(int id)
+        {
+            var model = new BlockUserStoryViewModel();
+
+            var listaBloqueo = (from tipoBloqueo in db.TipoBloqueos
+                                select new TipoABloqueoViewModel
+                                {
+                                    TipoBloqueoId = tipoBloqueo.TipoBloqueoId,
+                                    Descripcion = tipoBloqueo.Descripcion
+                                }).ToList();
+
+            model.UserStoryId = id;
+            model.TiposBloqueo = listaBloqueo;
+
+            return PartialView(model);
+        }
+
+        [HttpGet]
+        public ActionResult ValidateUserStory(int id)
+        {
+            var model = new ValidateUserStoryViewModel();
+
+            var userStoryFound = (from userStory in db.UserStories
+                                  join usuario in db.Usuarios
+                                  on userStory.ResponsableId equals usuario.UsuarioId
+                                  where userStory.UserStoryId == id
+                                  select new
+                                  {
+                                      UserStoryId = userStory.UserStoryId,
+                                      Codigo = userStory.Codigo,
+                                      Descripcion = userStory.Descripcion,
+                                      NombreUsuario = usuario.Nombres + " " + usuario.Apellidos
+                                  }).FirstOrDefault();
+
+            model.UserStoryId = userStoryFound.UserStoryId;
+            model.Codigo = userStoryFound.Codigo;
+            model.Descripcion = userStoryFound.Descripcion;
+            model.NombreUsuario = userStoryFound.NombreUsuario;
+
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public JsonResult ListBoardUserStories(int id)
+        {
+            int estadoTerminadoActividad = (int)EstadoActividadEnum.Terminado;
+
+            var userStories = from userStory in db.UserStories
+                              where userStory.ProyectoId == id
+                              && userStory.EsEliminado == false
+                              select new UserStoryCompactViewModel
+                              {
+                                  UserStoryId = userStory.UserStoryId,
+                                  Codigo = userStory.Codigo,
+                                  Descripcion = userStory.Descripcion,
+                                  EstaBloqueada = (from bloqueo in db.Bloqueos
+                                                   where bloqueo.UserStoryId == userStory.UserStoryId
+                                                   && bloqueo.EsEliminado == false
+                                                   select bloqueo.BloqueoId).Count() > 0,
+                                  NumeroActividadTerminada = (from actividadTerminada in db.Actividades
+                                                              where actividadTerminada.UserStoryId == userStory.UserStoryId
+                                                              && actividadTerminada.EstadoId == estadoTerminadoActividad
+                                                              && actividadTerminada.EsEliminado == false
+                                                              select actividadTerminada).Count(),
+                                  NumeroActividadTotal = (from actividadTotal in db.Actividades
+                                                          where actividadTotal.UserStoryId == userStory.UserStoryId
+                                                          && actividadTotal.EsEliminado == false
+                                                          select actividadTotal).Count(),
+                                  EstadoUserStoryId = userStory.EstadoId,
+                                  Color = userStory.Color
+                              };
+
+            var estadoUserStories = from estadoUserStory in db.EstadoUserStories
+                                    select new BoardColumnViewModel
+                                    {
+                                        BoardColumnId = estadoUserStory.EstadoUserStoryId,
+                                        Descripcion = estadoUserStory.Descripcion
+                                    };
+
+            return Json(new { BoardColumns = estadoUserStories, UserStories = userStories });
+        } 
 
         [HttpPost]
         public JsonResult ChangeUserStoryColor(int usid, int? color)
@@ -331,24 +372,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(new { NombreUsuario = WebSecurity.CurrentUserName, NuevoEstadoUserStory = nuevoEstadoUserStory, UserStoryId = usid });
         }
 
-        [HttpGet]
-        public ActionResult BlockUserStory(int id)
-        {
-            var model = new BlockUserStoryViewModel();
-
-            var listaBloqueo = (from tipoBloqueo in db.TipoBloqueos
-                                select new TipoABloqueoViewModel
-                                {
-                                    TipoBloqueoId = tipoBloqueo.TipoBloqueoId,
-                                    Descripcion = tipoBloqueo.Descripcion
-                                }).ToList();
-
-            model.UserStoryId = id;
-            model.TiposBloqueo = listaBloqueo;
-
-            return PartialView(model);
-        }
-
         [HttpPost]
         public JsonResult SaveBlock(SaveBlockUserStoryViewModel model)
         {
@@ -458,31 +481,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
                 NumeroActividadTotal = retorno.totalActividades
             });
 
-        }
-
-        [HttpGet]
-        public ActionResult ValidateUserStory(int id)
-        {
-            var model = new ValidateUserStoryViewModel();
-
-            var userStoryFound = (from userStory in db.UserStories
-                                  join usuario in db.Usuarios
-                                  on userStory.ResponsableId equals usuario.UsuarioId
-                                  where userStory.UserStoryId == id
-                                  select new
-                                  {
-                                      UserStoryId = userStory.UserStoryId,
-                                      Codigo = userStory.Codigo,
-                                      Descripcion = userStory.Descripcion,
-                                      NombreUsuario = usuario.Nombres + " " + usuario.Apellidos
-                                  }).FirstOrDefault();
-
-            model.UserStoryId = userStoryFound.UserStoryId;
-            model.Codigo = userStoryFound.Codigo;
-            model.Descripcion = userStoryFound.Descripcion;
-            model.NombreUsuario = userStoryFound.NombreUsuario;
-
-            return PartialView(model);
         }
 
         [HttpPost]

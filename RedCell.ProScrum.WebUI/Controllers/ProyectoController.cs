@@ -15,10 +15,53 @@ namespace RedCell.ProScrum.WebUI.Controllers
     {
         private ProScrumContext db = new ProScrumContext();
 
-        //
-        // GET: /Proyecto/
-
+        [HttpGet]
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Configure(int? id)
+        {
+            if (id.HasValue)
+            {
+                var proyecto = db.Proyectos.Find(id.Value);
+
+                var model = new ConfigurarProyectoViewModel();
+                model.ProyectoId = proyecto.ProyectoId;
+                model.NombreProyecto = proyecto.Nombre;
+
+                return View(model);
+            }
+            else
+            {
+                int estadoPorConfigurar = (int)EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
+
+                var proyectoPorConfigurar = from proyecto in db.Proyectos
+                                            join integranteProyecto in db.IntegrantesProyecto
+                                            on proyecto.ProyectoId equals integranteProyecto.ProyectoId
+                                            where (integranteProyecto.EsEncargado == true
+                                            && integranteProyecto.IntegranteId == EncargadoId)
+                                            && proyecto.EsEliminado == false
+                                            && proyecto.EstadoId == estadoPorConfigurar
+                                            select proyecto;
+
+                if (!proyectoPorConfigurar.Any() || proyectoPorConfigurar.Count() > 1)
+                {
+                    return RedirectToAction("ToConfigure");
+                }
+                else
+                {
+                    return RedirectToAction("Configure", new { id = proyectoPorConfigurar.First().ProyectoId });
+                }
+            }
+
+
+        }
+
+        [HttpGet]
+        public ActionResult ToConfigure()
         {
             return View();
         }
@@ -134,15 +177,11 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(resultado);
         }
 
-        //
-        // GET: /Proyecto/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        //
-        // POST: /Proyecto/Create
         [HttpPost]
         public JsonResult Create(RegistroProyectoViewModel proyecto)
         {
@@ -190,9 +229,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(true);
         }
 
-        //
-        // GET: /Proyecto/Edit/5
-
         public ActionResult Edit(int id)
         {
             var proyectoViewModel = new EdicionProyectoViewModel();
@@ -233,9 +269,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(true);
         }
 
-        //
-        // POST: /Proyecto/BuscarProyecto/5
-
         public JsonResult BuscarProyecto(int id)
         {
             Proyecto proyecto = db.Proyectos.Find(id);
@@ -264,9 +297,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             return Json(proyectoViewModel);
         }
 
-        //
-        // POST: /Proyecto/Delete/5
-
         [HttpPost, ActionName("Delete")]
         public JsonResult DeleteConfirmed(int id)
         {
@@ -274,46 +304,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             proyecto.EsEliminado = true;
             db.SaveChanges();
             return Json(true);
-        }
-
-
-        [HttpGet]
-        public ActionResult Configure(int? id)
-        {
-            if (id.HasValue)
-            {
-                var proyecto = db.Proyectos.Find(id.Value);
-
-                var model = new ConfigurarProyectoViewModel();
-                model.ProyectoId = proyecto.ProyectoId;
-                model.NombreProyecto = proyecto.Nombre;
-
-                return View(model);
-            }
-            else
-            {
-                int estadoPorConfigurar = (int)EstadosProyecto[(int)EstadoProyectoEnum.PorConfigurar].EstadoId;
-
-                var proyectoPorConfigurar = from proyecto in db.Proyectos
-                                            join integranteProyecto in db.IntegrantesProyecto
-                                            on proyecto.ProyectoId equals integranteProyecto.ProyectoId
-                                            where (integranteProyecto.EsEncargado == true
-                                            && integranteProyecto.IntegranteId == EncargadoId)
-                                            && proyecto.EsEliminado == false
-                                            && proyecto.EstadoId == estadoPorConfigurar
-                                            select proyecto;
-
-                if (!proyectoPorConfigurar.Any() || proyectoPorConfigurar.Count() > 1)
-                {
-                    return RedirectToAction("ToConfigure");
-                }
-                else
-                {
-                    return RedirectToAction("Configure", new { id = proyectoPorConfigurar.First().ProyectoId });
-                }
-            }
-
-
         }
 
         [HttpPost]
@@ -408,13 +398,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             }
 
             return Json(true);
-        }
-
-        [HttpGet]
-        public ActionResult ToConfigure()
-        {
-
-            return View();
         }
 
         [HttpPost]

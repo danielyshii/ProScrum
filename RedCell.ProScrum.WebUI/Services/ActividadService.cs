@@ -18,6 +18,59 @@ namespace RedCell.ProScrum.WebUI.Services
             db = dbContext;
         }
 
+        public UserStoryChangeStatus SaveUserStoryStatus(int usid, int currentUserId)
+        {
+
+            int estadoInProcessUserStory = (int)EstadoUserStoryEnum.InProcess;
+
+            var userStoryChangeStatus = VerifyUserStoryChangeStatus(usid);
+
+            if (userStoryChangeStatus.requiereCambio)
+            {
+                var element = (from userStory in db.UserStories
+                               where userStory.UserStoryId == usid
+                               select userStory).FirstOrDefault();
+
+
+
+                element.EstadoId = userStoryChangeStatus.estadoNuevoUserStory;
+
+                if (userStoryChangeStatus.estadoAnteriorUserStory == estadoInProcessUserStory)
+                {
+                    var actividad = new Actividad();
+                    actividad.Descripcion = "Pruebas de aceptación";
+                    actividad.EsEliminado = false;
+                    actividad.EstadoId = (int)EstadoActividadEnum.Definido;
+                    actividad.TipoActividadId = (int)TipoActividadEnum.Calidad;
+                    actividad.UserStoryId = usid;
+                    actividad.FechaRegistro = System.DateTime.Now;
+                    actividad.UsuarioId = currentUserId;
+
+                    db.Actividades.Add(actividad);
+
+                    userStoryChangeStatus.totalActividades += 1;
+                }
+
+                db.SaveChanges();
+
+                var sprintChangeStatus = VerifySprintChangeStatus((int)element.SprintId);
+
+                if (sprintChangeStatus.requiereCambio)
+                {
+                    var sprintPorTerminar = (from sprint in db.Sprints
+                                             where sprint.SprintId == usid
+                                             select sprint).FirstOrDefault();
+
+                    sprintPorTerminar.EstadoId = sprintChangeStatus.estadoNuevoSprint;
+
+                    db.SaveChanges();
+                }
+
+            }
+
+            return userStoryChangeStatus;
+        }
+
         public UserStoryChangeStatus VerifyUserStoryChangeStatus(int usid)
         {
             var userStoryChangeStatus = new UserStoryChangeStatus();
@@ -60,58 +113,6 @@ namespace RedCell.ProScrum.WebUI.Services
 
             return userStoryChangeStatus;
             
-        }
-
-        public UserStoryChangeStatus SaveUserStoryStatus(int usid, int currentUserId) {
-
-            int estadoInProcessUserStory = (int)EstadoUserStoryEnum.InProcess;            
-
-            var userStoryChangeStatus = VerifyUserStoryChangeStatus(usid);
-
-            if (userStoryChangeStatus.requiereCambio)
-            {
-                var element = (from userStory in db.UserStories
-                               where userStory.UserStoryId == usid
-                               select userStory).FirstOrDefault();
-
-                
-
-                element.EstadoId = userStoryChangeStatus.estadoNuevoUserStory;                
-
-                if (userStoryChangeStatus.estadoAnteriorUserStory == estadoInProcessUserStory)
-                {
-                    var actividad = new Actividad();
-                    actividad.Descripcion = "Pruebas de aceptación";
-                    actividad.EsEliminado = false;
-                    actividad.EstadoId = (int)EstadoActividadEnum.Definido;
-                    actividad.TipoActividadId = (int)TipoActividadEnum.Calidad;
-                    actividad.UserStoryId = usid;
-                    actividad.FechaRegistro = System.DateTime.Now;
-                    actividad.UsuarioId = currentUserId;
-
-                    db.Actividades.Add(actividad);
-
-                    userStoryChangeStatus.totalActividades += 1;
-                }
-
-                db.SaveChanges();
-
-                var sprintChangeStatus = VerifySprintChangeStatus((int)element.SprintId);
-
-                if (sprintChangeStatus.requiereCambio)
-                {
-                    var sprintPorTerminar = (from sprint in db.Sprints
-                                             where sprint.SprintId == usid
-                                             select sprint).FirstOrDefault();
-
-                    sprintPorTerminar.EstadoId = sprintChangeStatus.estadoNuevoSprint;
-
-                    db.SaveChanges();
-                }
-
-            }
-
-            return userStoryChangeStatus;
         }
 
         public SprintChangeStatus VerifySprintChangeStatus(int sid)
@@ -158,7 +159,6 @@ namespace RedCell.ProScrum.WebUI.Services
             return sprintChangeStatus;
 
         }
-
 
     }
 }

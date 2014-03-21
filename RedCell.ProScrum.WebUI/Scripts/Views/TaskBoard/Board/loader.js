@@ -387,6 +387,9 @@ function BoardController() {
             else if (response.NuevoEstadoUserStory == base.Data.DoneState) {
                 jqMemberContainer.find('div.js-validate-click').remove();
             }
+            else if (response.NuevoEstadoUserStory == base.Data.InProcessState) {
+                jqMemberContainer.find('div.js-validate-click').remove();
+            }
 
             base.Funciones.UpdateListActivity(response);
 

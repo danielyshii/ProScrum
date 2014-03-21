@@ -346,6 +346,18 @@ function BoardValidateWindowManager() {
 
         },
 
+        SaveNotPassed : function (uid) {
+        
+            $.ajax({
+                type: "POST",
+                url: '/TaskBoard/VerificationNotPassedUserStory',
+                data: JSON.stringify({ 'usid': uid }),
+                dataType: "json",
+                contentType: "application/json",
+                success: base.Eventos.SaveAcceptanceSuccess
+            });
+
+        }
     }
 
     base.Funciones = {
@@ -375,8 +387,11 @@ function BoardValidateWindowManager() {
 
         ShowRejectionFormButtonHandler: function () {
 
-            $('div.js-validate-user-story-div').addClass('hide');
-            $('div.js-reject-user-story-div').removeClass('hide');
+            //$('div.js-validate-user-story-div').addClass('hide');
+            //$('div.js-reject-user-story-div').removeClass('hide');
+
+            var uid = $('input#validate-user-story-id').val();
+            base.AjaxCall.SaveNotPassed(uid);
 
         },
 
@@ -394,7 +409,18 @@ function BoardValidateWindowManager() {
 
             //Llamar Handler del Board de Mover Estado
             base.config.BoarUserStoryStateChange(data);
+        },
+
+        SaveRejectionSuccess: function (data) {
+
+            //Cerrar Ventana
+            base.Funciones.RemoveHandler();
+            base.hide();
+
+            //Llamar Handler del Board de Mover Estado
+            base.config.BoarUserStoryStateChange(data);
         }
+
 
     }
 

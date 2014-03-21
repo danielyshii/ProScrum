@@ -131,10 +131,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
             
             resultado.ForEach(x => x.Estado = this.EstadosProyecto[x.EstadoProyectoId].Descripcion);
 
-            //var proyectos = new List<ListaProyectoViewModel>();
-            //proyectos.Add(new ListaProyectoViewModel { ProyectoId = 1, Cliente = "Pepo", Descripcion = "Miro", Estado = "Cerrao", Encargado = "CDLL1" });
-            //proyectos.Add(new ListaProyectoViewModel { ProyectoId = 2, Cliente = "Papa", Descripcion = "Nada", Estado = "Abierto", Encargado = "CDLL2" });
-
             return Json(resultado);
         }
 
@@ -147,8 +143,6 @@ namespace RedCell.ProScrum.WebUI.Controllers
 
         //
         // POST: /Proyecto/Create
-
-        //[ValidateAntiForgeryToken]
         [HttpPost]
         public JsonResult Create(RegistroProyectoViewModel proyecto)
         {

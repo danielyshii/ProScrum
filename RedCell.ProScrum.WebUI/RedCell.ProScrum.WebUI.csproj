@@ -188,6 +188,7 @@
       <DependentUpon>ProyectoResourceStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\ActividadService.cs" />
+    <Compile Include="TransferObjects\SprintChangeStatus.cs" />
     <Compile Include="TransferObjects\UserStoryChangeStatus.cs" />
     <Compile Include="ViewModels\Proyecto\ProyectoViewModels.cs" />
     <Compile Include="ViewModels\TaskBoard\TaskBoardViewModels.cs" />
